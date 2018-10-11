@@ -61,12 +61,55 @@ testData::lidarData testData::getLidarData()
 {
     std::vector<std::string> temp = read();
     lidarData data;
-    std::string::size_type sz;
     for (unsigned int i = 0; i < temp.size(); i++)
     {
-        float angle = std::stof(temp[i],&sz);
-        float range = std::stof(temp[i].substr(sz));
+        unsigned int index = 0;
+        std::string angle_string;
+        for (unsigned int j = index; j < temp[i].length(); j++)
+        {
+            if (temp[i][j] != ' ')
+                break;
+            else
+                index++;
+        }
+
+        for (unsigned int j = index; j < temp[i].length(); j++)
+        {
+            if (temp[i][j] == ' ')
+                break;
+            else
+            {
+                std::string ch(1,temp[i][j]);
+                angle_string += ch;
+                index++;
+            }
+        }
+        float angle = std::strtof(angle_string.c_str(),0);
         data.angle.push_back(angle);
+
+        std::string range_string;
+        for (unsigned int j = index; j < temp[i].length(); j++)
+        {
+            if (temp[i][j] != ' ')
+                break;
+            else
+                index++;
+        }
+
+        for (unsigned int j = index; j < temp[i].length(); j++)
+        {
+            if (temp[i][j] == ' ')
+                break;
+            else
+            {
+                std::string ch(1,temp[i][j]);
+                range_string += ch;
+                index++;
+            }
+        }
+        float range = std::strtof(range_string.c_str(),0);
         data.range.push_back(range);
     }
+
+    return data;
 }
