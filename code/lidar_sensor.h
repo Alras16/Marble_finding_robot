@@ -17,7 +17,7 @@ public:
         float range;
     };
 
-    void init_data(testData::lidarData data);
+    void init_data(std::vector<lidarPoint> data);
     void visualize_lidar(std::string name);
     void filter_data();
     void find_marbles();
@@ -34,6 +34,7 @@ private:
 
     int start_point = 0;
     int number_of_points = 1;
+    bool lidar_data_updated;
 
 };
 
