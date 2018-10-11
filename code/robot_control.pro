@@ -6,8 +6,7 @@ CONFIG -= qt
 SOURCES += main.cpp \
     c_vision.cpp \
     testdata.cpp \
-    lidar_sensor.cpp \
-    fuzzycontrol.cpp
+    lidar_sensor.cpp
 
 CONFIG += link_pkgconfig
 PKGCONFIG += gazebo
@@ -16,5 +15,4 @@ PKGCONFIG += opencv
 HEADERS += \
     c_vision.h \
     testdata.h \
-    lidar_sensor.h \
-    fuzzycontrol.h
+    lidar_sensor.h
