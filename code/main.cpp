@@ -11,10 +11,12 @@
 
 #include "c_vision.h"
 #include "testdata.h"
+#include "lidar_sensor.h"
 
 static boost::mutex mutex;
-bool lidarCalledOne = true;
 
+lidar_sensor lidar;
+//c_vision camera;
 
 void hls_histogram(cv::Mat &image)
 {
@@ -117,7 +119,7 @@ void poseCallback(ConstPosesStampedPtr &_msg) {
   }
 }
 
-c_vision camera;
+
 
 void cameraCallback(ConstImageStampedPtr &msg) {
 
@@ -134,74 +136,40 @@ void cameraCallback(ConstImageStampedPtr &msg) {
   mutex.lock();
   cv::imshow("camera", im);
   //hls_histogram(im);
-  camera.set_image(im);
+  //camera.set_image(im);
   mutex.unlock();
 }
 
-void lidarCallback(ConstLaserScanStampedPtr &msg) {
+void lidarCallback(ConstLaserScanStampedPtr &msg)
+{
+    float angle_min = float(msg->scan().angle_min());
+    float angle_increment = float(msg->scan().angle_step());
 
-  //  std::cout << ">> " << msg->DebugString() << std::endl;
-  float angle_min = float(msg->scan().angle_min());
-  //  double angle_max = msg->scan().angle_max();
-  float angle_increment = float(msg->scan().angle_step());
+    float range_max = float(msg->scan().range_max());
 
-  float range_min = float(msg->scan().range_min());
-  float range_max = float(msg->scan().range_max());
+    int nranges = msg->scan().ranges_size();
+    int nintensities = msg->scan().intensities_size();
 
-  int sec = msg->time().sec();
-  int nsec = msg->time().nsec();
+    assert(nranges == nintensities);
 
-  int nranges = msg->scan().ranges_size();
-  int nintensities = msg->scan().intensities_size();
+    std::vector<lidar_sensor::lidarPoint> temp_data;
 
-  assert(nranges == nintensities);
-
-  int width = 400;
-  int height = 400;
-  float px_per_m = 200 / range_max;
-
-  cv::Mat im(height, width, CV_8UC3);
-  im.setTo(0);
-
-  testData lidar("lidarTestFive");
-  //testData::lidarData data = lidar.getLidarData();
-
-  for (int i = 0; i < nranges; i++) {
-    float angle = angle_min + i * angle_increment;
-    float range = std::min(float(msg->scan().ranges(i)), range_max);
-    //float angle = data.angle[i];
-    //float range = data.range[i];
-
-
-    if (!lidarCalledOne)
+    for (int i = 0; i < nranges; i++)
     {
-        std::string temp_string = std::to_string(angle)  + " " + std::to_string(range);
-        lidar.write(temp_string);
+        float angle = angle_min + i * angle_increment;
+        float range = std::min(float(msg->scan().ranges(i)), range_max);
+
+        lidar_sensor::lidarPoint temp_point;
+        temp_point.angle = angle;
+        temp_point.range = range;
+
+        temp_data.push_back(temp_point);
     }
 
-    //    double intensity = msg->scan().intensities(i);
-    cv::Point2f startpt(200.5f + range_min * px_per_m * std::cos(angle),
-                        200.5f - range_min * px_per_m * std::sin(angle));
-    cv::Point2f endpt(200.5f + range * px_per_m * std::cos(angle),
-                      200.5f - range * px_per_m * std::sin(angle));
-    cv::line(im, startpt * 16, endpt * 16, cv::Scalar(255, 255, 255, 255), 1,
-             cv::LINE_AA, 4);
-
-    //    std::cout << angle << " " << range << " " << intensity << std::endl;
-  }
-    if (!lidarCalledOne)
-        std::cout << "new data generated!" << std::endl;
-  lidarCalledOne = true;
-
-
-  cv::circle(im, cv::Point(200, 200), 2, cv::Scalar(0, 0, 255));
-  cv::putText(im, std::to_string(sec) + ":" + std::to_string(nsec),
-              cv::Point(10, 20), cv::FONT_HERSHEY_PLAIN, 1.0,
-              cv::Scalar(255, 0, 0));
-
-  mutex.lock();
-  cv::imshow("lidar", im);
-  mutex.unlock();
+    mutex.lock();
+    lidar.init_data(temp_data);
+    //cv::imshow("lidar", im);
+    mutex.unlock();
 }
 
 int main(int _argc, char **_argv) {
@@ -258,8 +226,7 @@ int main(int _argc, char **_argv) {
     mutex.unlock();
 
     if (key == key_esc)
-      lidarCalledOne = false;
-        //break;
+      break;
 
     if ((key == key_up) && (speed <= 1.2f))
       speed += 0.5;
@@ -285,6 +252,13 @@ int main(int _argc, char **_argv) {
     camera.find_marbles();
     diff = ((clock() - start) / (double)CLOCKS_PER_SEC)*1000;
     std::cout << "Execution time: " << diff << std::endl;*/
+
+    mutex.lock();
+    lidar.filter_data();
+    lidar.find_marbles();
+    lidar.visualize_lidar("lidar");
+    mutex.unlock();
+
 
     // Generate a pose
     ignition::math::Pose3d pose(double(speed), 0, 0, 0, 0, double(dir));
