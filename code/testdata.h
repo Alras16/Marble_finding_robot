@@ -22,7 +22,6 @@ public:
     void erase();
     lidarData getLidarData();
 
-
 private:
     std::string fileName;
     bool firstTimeCall = true;
