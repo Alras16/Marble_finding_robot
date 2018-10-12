@@ -169,13 +169,13 @@ void lidar_sensor::find_marbles()
             if ((circleCamber > 0.05) && (circleChord > 0.05) && (dist_circles > prev_radius))
             {
                 {
-                    std::cout<< "calculating new marble" << std::endl;
+                    /*std::cout<< "calculating new marble" << std::endl;
                     std::cout << "  circle chord: " << circleChord << std::endl;
                     std::cout << "  chord angle:  " << chordAngle << std::endl;
                     std::cout << "  alpha: " << alpha << std::endl;
                     std::cout << "  range to line: " << rangeLine << std::endl;
                     std::cout << "  circle camber: " << circleCamber << std::endl;
-                    std::cout << "  circle radius: " << circleRadius << std::endl << std::endl;
+                    std::cout << "  circle radius: " << circleRadius << std::endl << std::endl;*/
 
                     found_marbles_point.push_back(temp);
                     found_marbles_radius.push_back(circleRadius);
