@@ -100,30 +100,79 @@ void statCallback(ConstWorldStatisticsPtr &_msg) {
   //  std::cout << std::flush;
 }
 
+clock_t pose_start;
+bool pose_call_once = false;
+bool pose_first = false;
+int pose_called_ten = 0;
+
 void poseCallback(ConstPosesStampedPtr &_msg) {
   // Dump the message contents to stdout.
-  //  std::cout << _msg->DebugString();
+    //std::cout << _msg->DebugString();
+
+    if (!pose_first)
+    {
+        pose_start = clock();
+        pose_first = true;
+    }
+    else
+    {
+        if (!pose_call_once)
+            pose_called_ten++;
+        if (pose_called_ten == 100)
+        {
+            double diff;
+            diff = ((clock() - pose_start) / (double)CLOCKS_PER_SEC)*1000;
+            std::cout << "pose callback" << std::endl;
+            std::cout << "  Execution time:" << std::setw(8) << diff/100 << " ms" << std::endl << std::endl;
+            pose_call_once = true;
+            pose_called_ten = 0;
+        }
+    }
 
   for (int i = 0; i < _msg->pose_size(); i++) {
     if (_msg->pose(i).name() == "pioneer2dx") {
 
-      //std::cout << std::setprecision(2) << std::fixed << std::setw(6)
-        //        << _msg->pose(i).position().x() << std::setw(6)
-        //        << _msg->pose(i).position().y() << std::setw(6)
-        //        << _msg->pose(i).position().z() << std::setw(6)
-        //        << _msg->pose(i).orientation().w() << std::setw(6)
-        //        << _msg->pose(i).orientation().x() << std::setw(6)
-        //        << _msg->pose(i).orientation().y() << std::setw(6)
-        //        << _msg->pose(i).orientation().z() << std::endl;
+      /*std::cout << std::setprecision(2) << std::fixed << std::setw(6)
+                << _msg->pose(i).position().x() << std::setw(6)
+                << _msg->pose(i).position().y() << std::setw(6)
+                << _msg->pose(i).position().z() << std::setw(6)
+                << _msg->pose(i).orientation().w() << std::setw(6)
+                << _msg->pose(i).orientation().x() << std::setw(6)
+                << _msg->pose(i).orientation().y() << std::setw(6)
+                << _msg->pose(i).orientation().z() << std::endl;*/
     }
   }
 }
 
 
+clock_t camera_start;
+bool camera_call_once = false;
+bool camera_first = false;
+int camera_called_ten = 0;
 
 void cameraCallback(ConstImageStampedPtr &msg) {
 
-  std::size_t width = msg->image().width();
+    if (!camera_first)
+    {
+        camera_start = clock();
+        camera_first = true;
+    }
+    else
+    {
+        if (!camera_call_once)
+            camera_called_ten++;
+        if (camera_called_ten == 100)
+        {
+            double diff;
+            diff = ((clock() - camera_start) / (double)CLOCKS_PER_SEC)*1000;
+            std::cout << "camera callback" << std::endl;
+            std::cout << "  Execution time:" << std::setw(8) << diff/100 << " ms" << std::endl << std::endl;
+            camera_call_once = true;
+            camera_called_ten = 0;
+        }
+    }
+
+    std::size_t width = msg->image().width();
   std::size_t height = msg->image().height();
   const char *data = msg->image().data().c_str();
   cv::Mat im(int(height), int(width), CV_8UC3, const_cast<char *>(data));
@@ -140,8 +189,34 @@ void cameraCallback(ConstImageStampedPtr &msg) {
   mutex.unlock();
 }
 
+clock_t lidar_start;
+bool lidar_call_once = false;
+bool lidar_first = false;
+int lidar_called_ten = 0;
+
 void lidarCallback(ConstLaserScanStampedPtr &msg)
 {
+    if (!lidar_first)
+    {
+        lidar_start = clock();
+        lidar_first = true;
+    }
+    else
+    {
+        if (!lidar_call_once)
+            lidar_called_ten++;
+        if (lidar_called_ten == 100)
+        {
+            double diff;
+            diff = ((clock() - lidar_start) / (double)CLOCKS_PER_SEC)*1000;
+            std::cout << "lidar callback" << std::endl;
+            std::cout << "  Execution time:" << std::setw(8) << diff/100 << " ms" << std::endl << std::endl;
+            lidar_call_once = true;
+            lidar_called_ten = 0;
+        }
+    }
+
+
     float angle_min = float(msg->scan().angle_min());
     float angle_increment = float(msg->scan().angle_step());
 
@@ -253,11 +328,16 @@ int main(int _argc, char **_argv) {
     diff = ((clock() - start) / (double)CLOCKS_PER_SEC)*1000;
     std::cout << "Execution time: " << diff << std::endl;*/
 
-    mutex.lock();
+    /*mutex.lock();
+    clock_t start;
+    double diff;
+    start = clock();
     lidar.filter_data();
     lidar.find_marbles();
     lidar.visualize_lidar("lidar");
-    mutex.unlock();
+    diff = ((clock() - start) / (double)CLOCKS_PER_SEC)*1000;
+    std::cout << "Execution time: " << diff << std::endl;
+    mutex.unlock();*/
 
 
     // Generate a pose
