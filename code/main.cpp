@@ -100,34 +100,9 @@ void statCallback(ConstWorldStatisticsPtr &_msg) {
   //  std::cout << std::flush;
 }
 
-clock_t pose_start;
-bool pose_call_once = false;
-bool pose_first = false;
-int pose_called_ten = 0;
-
 void poseCallback(ConstPosesStampedPtr &_msg) {
   // Dump the message contents to stdout.
     //std::cout << _msg->DebugString();
-
-    if (!pose_first)
-    {
-        pose_start = clock();
-        pose_first = true;
-    }
-    else
-    {
-        if (!pose_call_once)
-            pose_called_ten++;
-        if (pose_called_ten == 100)
-        {
-            double diff;
-            diff = ((clock() - pose_start) / (double)CLOCKS_PER_SEC)*1000;
-            std::cout << "pose callback" << std::endl;
-            std::cout << "  Execution time:" << std::setw(8) << diff/100 << " ms" << std::endl << std::endl;
-            pose_call_once = true;
-            pose_called_ten = 0;
-        }
-    }
 
   for (int i = 0; i < _msg->pose_size(); i++) {
     if (_msg->pose(i).name() == "pioneer2dx") {
@@ -189,34 +164,8 @@ void cameraCallback(ConstImageStampedPtr &msg) {
   mutex.unlock();
 }
 
-clock_t lidar_start;
-bool lidar_call_once = false;
-bool lidar_first = false;
-int lidar_called_ten = 0;
-
 void lidarCallback(ConstLaserScanStampedPtr &msg)
 {
-    if (!lidar_first)
-    {
-        lidar_start = clock();
-        lidar_first = true;
-    }
-    else
-    {
-        if (!lidar_call_once)
-            lidar_called_ten++;
-        if (lidar_called_ten == 100)
-        {
-            double diff;
-            diff = ((clock() - lidar_start) / (double)CLOCKS_PER_SEC)*1000;
-            std::cout << "lidar callback" << std::endl;
-            std::cout << "  Execution time:" << std::setw(8) << diff/100 << " ms" << std::endl << std::endl;
-            lidar_call_once = true;
-            lidar_called_ten = 0;
-        }
-    }
-
-
     float angle_min = float(msg->scan().angle_min());
     float angle_increment = float(msg->scan().angle_step());
 
@@ -243,112 +192,114 @@ void lidarCallback(ConstLaserScanStampedPtr &msg)
 
     mutex.lock();
     lidar.init_data(temp_data);
-    //cv::imshow("lidar", im);
     mutex.unlock();
 }
 
-int main(int _argc, char **_argv) {
+int main(int _argc, char **_argv)
+{
+    // Load gazebo
+    gazebo::client::setup(_argc, _argv);
+    std::cout << "Gazebo client started" << std::endl;
 
-  // Load gazebo
-  gazebo::client::setup(_argc, _argv);
-  std::cout << "Gazebo client started" << std::endl;
+    // Create our node for communication
+    gazebo::transport::NodePtr node(new gazebo::transport::Node());
+    node->Init();
+    std::cout << "Communication started" << std::endl;
 
-  // Create our node for communication
-  gazebo::transport::NodePtr node(new gazebo::transport::Node());
-  node->Init();
-  std::cout << "Communication started" << std::endl;
+    // Listen to Gazebo topics
+    gazebo::transport::SubscriberPtr statSubscriber =
+        node->Subscribe("~/world_stats", statCallback);
 
-  // Listen to Gazebo topics
-  gazebo::transport::SubscriberPtr statSubscriber =
-      node->Subscribe("~/world_stats", statCallback);
+    gazebo::transport::SubscriberPtr poseSubscriber =
+        node->Subscribe("~/pose/info", poseCallback);
 
-  gazebo::transport::SubscriberPtr poseSubscriber =
-      node->Subscribe("~/pose/info", poseCallback);
+    gazebo::transport::SubscriberPtr cameraSubscriber =
+        node->Subscribe("~/pioneer2dx/camera/link/camera/image", cameraCallback);
 
-  gazebo::transport::SubscriberPtr cameraSubscriber =
-      node->Subscribe("~/pioneer2dx/camera/link/camera/image", cameraCallback);
+    gazebo::transport::SubscriberPtr lidarSubscriber =
+        node->Subscribe("~/pioneer2dx/hokuyo/link/laser/scan", lidarCallback);
 
-  gazebo::transport::SubscriberPtr lidarSubscriber =
-      node->Subscribe("~/pioneer2dx/hokuyo/link/laser/scan", lidarCallback);
+    // Publish to the robot vel_cmd topic
+    gazebo::transport::PublisherPtr movementPublisher =
+        node->Advertise<gazebo::msgs::Pose>("~/pioneer2dx/vel_cmd");
 
-  // Publish to the robot vel_cmd topic
-  gazebo::transport::PublisherPtr movementPublisher =
-      node->Advertise<gazebo::msgs::Pose>("~/pioneer2dx/vel_cmd");
+    // Publish a reset of the world
+    gazebo::transport::PublisherPtr worldPublisher =
+        node->Advertise<gazebo::msgs::WorldControl>("~/world_control");
+    gazebo::msgs::WorldControl controlMessage;
+    controlMessage.mutable_reset()->set_all(true);
+    worldPublisher->WaitForConnection();
+    worldPublisher->Publish(controlMessage);
 
-  // Publish a reset of the world
-  gazebo::transport::PublisherPtr worldPublisher =
-      node->Advertise<gazebo::msgs::WorldControl>("~/world_control");
-  gazebo::msgs::WorldControl controlMessage;
-  controlMessage.mutable_reset()->set_all(true);
-  worldPublisher->WaitForConnection();
-  worldPublisher->Publish(controlMessage);
 
-  const int key_left = 81;
-  const int key_up = 82;
-  const int key_down = 84;
-  const int key_right = 83;
-  const int key_esc = 27;
+    const int key_left = 81;
+    const int key_up = 82;
+    const int key_down = 84;
+    const int key_right = 83;
+    const int key_esc = 27;
 
-  float speed = 0.0;
-  float dir = 0.0;
+    float speed = 0.0;
+    float dir = 0.0;
 
-  // Loop
-  while (true) {
-    gazebo::common::Time::MSleep(10);
+    // Loop
+    while (true)
+    {
+        gazebo::common::Time::MSleep(10);
 
-    mutex.lock();
-    int key = cv::waitKey(1);
-    mutex.unlock();
+        mutex.lock();
+        int key = cv::waitKey(1);
+        mutex.unlock();
 
-    if (key == key_esc)
-      break;
+        if (key == key_esc)
+            break;
 
-    if ((key == key_up) && (speed <= 1.2f))
-      speed += 0.5;
+        if ((key == key_up) && (speed <= 1.2f))
+            speed += 0.5;
         //speed += 0.05;
-    else if ((key == key_down) && (speed >= -1.2f))
-      speed -= 0.5;
+        else if ((key == key_down) && (speed >= -1.2f))
+            speed -= 0.5;
         //speed -= 0.05;
-    else if ((key == key_right) && (dir <= 0.4f))
-      dir += 0.05;
-    else if ((key == key_left) && (dir >= -0.4f))
-      dir -= 0.05;
-    else {
-      // slow down
+        else if ((key == key_right) && (dir <= 0.4f))
+            dir += 0.05;
+        else if ((key == key_left) && (dir >= -0.4f))
+            dir -= 0.05;
+        else
+        {
+            // slow down
             //speed = 0;
-      //      dir *= 0.1;
+            //dir *= 0.1;
+        }
+
+        //camera.find_color();
+        /*clock_t start;
+        double diff;
+        start = clock();
+        //camera.find_color();
+        camera.find_marbles();
+        diff = ((clock() - start) / (double)CLOCKS_PER_SEC)*1000;
+        std::cout << "Execution time: " << diff << std::endl;*/
+
+        mutex.lock();
+        clock_t start;
+        double diff;
+        start = clock();
+        lidar.filter_data();
+        lidar.find_marbles();
+        lidar.visualize_lidar("lidar");
+        diff = ((clock() - start) / (double)CLOCKS_PER_SEC)*1000;
+        std::cout << "Execution time: " << diff << std::endl;
+        mutex.unlock();
+
+
+        // Generate a pose
+        ignition::math::Pose3d pose(double(speed), 0, 0, 0, 0, double(dir));
+
+        // Convert to a pose message
+        gazebo::msgs::Pose msg;
+        gazebo::msgs::Set(&msg, pose);
+        movementPublisher->Publish(msg);
     }
 
-    //camera.find_color();
-    /*clock_t start;
-    double diff;
-    start = clock();
-    //camera.find_color();
-    camera.find_marbles();
-    diff = ((clock() - start) / (double)CLOCKS_PER_SEC)*1000;
-    std::cout << "Execution time: " << diff << std::endl;*/
-
-    /*mutex.lock();
-    clock_t start;
-    double diff;
-    start = clock();
-    lidar.filter_data();
-    lidar.find_marbles();
-    lidar.visualize_lidar("lidar");
-    diff = ((clock() - start) / (double)CLOCKS_PER_SEC)*1000;
-    std::cout << "Execution time: " << diff << std::endl;
-    mutex.unlock();*/
-
-
-    // Generate a pose
-    ignition::math::Pose3d pose(double(speed), 0, 0, 0, 0, double(dir));
-
-    // Convert to a pose message
-    gazebo::msgs::Pose msg;
-    gazebo::msgs::Set(&msg, pose);
-    movementPublisher->Publish(msg);
-  }
-
-  // Make sure to shut everything down.
-  gazebo::client::shutdown();
+    // Make sure to shut everything down.
+    gazebo::client::shutdown();
 }
