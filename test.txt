@@ -1,2 +1,6 @@
 Master branch document created
 	Test branch 1: Text added
+<<<<<<< HEAD
+=======
+	Test branch 2: Text added
+>>>>>>> test2
