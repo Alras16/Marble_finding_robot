@@ -2,3 +2,4 @@ Master branch document created
 	Test branch 1: Text added
 	Test branch 2: Text added
 	Test branch 3: Text added
+	Test branch 4: Text added
