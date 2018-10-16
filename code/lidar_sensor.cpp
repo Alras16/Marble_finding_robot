@@ -57,7 +57,7 @@ void lidar_sensor::visualize_lidar(std::string name)
     for (unsigned int i = 0; i < filtered_data.size(); i++)
     {
 
-        if ((i == start_point) || (i == start_point + number_of_points - 1))
+        if ((signed(i) == start_point) || (signed(i) == start_point + number_of_points - 1))
         {
             float angle = filtered_data[i].angle;
             float range = filtered_data[i].range;
@@ -113,10 +113,10 @@ void lidar_sensor::find_marbles()
         float maxRange = 10;
         start_point = 0;
         number_of_points = 1;
-        while ((start_point < filtered_data.size() - 1))
+        while ((start_point < signed(filtered_data.size() - 1)))
         {
             number_of_points = 1;
-            while ((number_of_points < 3) && (start_point < filtered_data.size() - 1))
+            while ((number_of_points < 3) && (start_point < signed(filtered_data.size() - 1)))
             {
                 start_point++;
                 for (unsigned int i = start_point; i < filtered_data.size(); i++)
@@ -143,7 +143,7 @@ void lidar_sensor::find_marbles()
             //std::cout << "number of points: " << number_of_points << std::endl;
 
             float circleChord = distP2P(filtered_data[start_point],filtered_data[start_point + number_of_points - 1]);
-            float chordAngle = angleP2P(filtered_data[start_point],filtered_data[start_point + number_of_points - 1]);
+            //float chordAngle = angleP2P(filtered_data[start_point],filtered_data[start_point + number_of_points - 1]);
 
             float alpha = filtered_data[start_point + ((number_of_points - 1) / 2)].angle;
 
