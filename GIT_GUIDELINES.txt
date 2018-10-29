@@ -13,6 +13,16 @@ COMMIT CHANGES
 GET CHANGES FROM BRANCH
     git pull origin yourBranchName
 
+GET CHANGES FROM MASTER
+    git checkout yourBranchName
+    git fetch origin master
+    git rebase origin/master
+    (if merge conflicts occur do following)
+        <solve merge conflicts>
+	    (often you can just delete conflicts from conflicted files)
+        git add <conflicted files>
+    git rebase --continue
+
 CREATE BRANCH
     git branch yourBranchName
     git checkout yourBranchName
