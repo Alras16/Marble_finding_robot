@@ -50,5 +50,12 @@ DELETE BRANCH
     git push origin --delete yourBranchName #deletes remote branch (GITHub)
 
 USEFULL COMANDS
-    git merge --abort #aborts the merge (usefull if there are merge conflicts)
+    git merge --abort #aborts the merge 
+	- usefull if there are merge conflicts
+
+    git push --force-with-lease origin yourBranchName 
+	- forces the changes on local to be on remote 
+	- needed if you get new changes from master 
+	- deletes old history and replaces with new one
+	- normally not recomended 
 
