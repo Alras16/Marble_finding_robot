@@ -19,7 +19,8 @@ CREATE BRANCH
 
 MERGE BRANCH TO MASTER (MASTER IS AHEAD OF YOUR BRANCH)
     git checkout yourBranchName
-    git rebase master
+    git fetch origin master
+    git rebase origin/master
     (if merge conflicts occur do following)
         <solve merge conflicts>
 	    (often you can just delete conflicts from conflicted files)
