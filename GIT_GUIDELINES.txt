@@ -1,24 +1,24 @@
 This file contains guidelines to GIT
 
 MERGE BRANCH TO MASTER (BRANCH BOTH LOCAL AND REMOTE)
-git checkout master
-git pull origin master
-git checkout yourBranchName
-git merge origin/yourBranchName
-git checkout master
-git merge yourBranchName
-git push origin master
+    git checkout master
+    git pull origin master
+    git checkout yourBranchName
+    git merge origin/yourBranchName
+    git checkout master
+    git merge yourBranchName
+    git push origin master
 
 CREATE BRANCH
-git branch yourBranchName
-git checkout yourBranchName
+    git branch yourBranchName
+    git checkout yourBranchName
 
 MERGE BRANCH TO MASTER (YOUR BRANCH IS AHEAD OF MASTER)
-git checkout master
-git merge yourBranchName
-git push origin master
+    git checkout master
+    git merge yourBranchName
+    git push origin master
 
 DELETE BRANCH
-git branch -d yourBranchName #deletes your local branch
-git push origin --delete yourBranchName #deletes remote branch (GITHub)
+    git branch -d yourBranchName #deletes your local branch
+    git push origin --delete yourBranchName #deletes remote branch (GITHub)
 
