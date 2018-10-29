@@ -7,6 +7,7 @@
 #include <vector>
 #include <QCoreApplication>
 #include <QDir>
+#include "map_class.h"
 
 #define FILEPATH_ROOM "/test_files/loggin/rooms/"
 #define FILEPATH_STATS "/test_files/loggin/statistics/"
@@ -15,11 +16,15 @@
 class dataloggin
 {
 public:
-    dataloggin(std::string afileName, int runNumb, char type);
+    dataloggin(std::string aBaseName,int testNumb, int runNumb, char type);
 
     void write(std::string text);
     std::vector<std::string> read();
     void erase();
+
+    void writeMarble(map_class::foundMarble marble, int numb);
+    std::vector<map_class::foundMarble> readMarbles();
+
 
 private:
     std::string filePath;
