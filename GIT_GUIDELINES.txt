@@ -1,1 +1,10 @@
 This file contains guidelines to GIT
+
+MERGE BRANCH TO MASTER (BRANCH BOTH LOCAL AND REMOTE)
+git checkout master
+git pull origin master
+git checkout yourBranchName
+git merge origin/yourBranchName
+git checkout master
+git merge yourBranchName
+git push origin master
