@@ -71,6 +71,10 @@ void lidar_sensor::visualize_lidar(std::string name)
     }
     cv::circle(im, cv::Point(center, center), 2, cv::Scalar(0, 0, 255));
 
+    cv::Point2f temp_startpt(0.0,center - y_start*20);
+    cv::Point2f temp_endpt(450.0,center - y_end*20);
+    cv::line(im, temp_startpt * 16, temp_endpt * 16, cv::Scalar(255, 255, 255), 2, cv::LINE_AA, 4);
+
     for (unsigned int i = 0; i < found_marbles_point.size(); i++)
     {
         float xMarble = center + found_marbles_point[i].range*px_per_m*std::cos(found_marbles_point[i].angle);
@@ -188,6 +192,48 @@ void lidar_sensor::find_marbles()
     }
 }
 
+void lidar_sensor::find_obstacles()
+{
+    // Define parameters for least square fitting
+    float max_distance_to_point = 0.0;
+    float position_of_max_distance = 0.0;
+    float threshold = 0.8;
+    // Checks if the size of vector of the filtered data is not 0.
+    if(filtered_data.size() != 0)
+    {
+        // Define a set N of a collection of 10 points.
+        int N = 10;
+        for(unsigned int i = 0; i < N; i++)
+        {
+            lidarPoint temp;
+            temp.range = filtered_data[i].range;
+            temp.angle = filtered_data[i].angle;
+            temp_list.push_back(temp);
+        }
+    }
+    float alpha = calAlpha(temp_list);
+    float range = calRange(temp_list, alpha);
+    y_start = - (x_start*std::cos(alpha) - range)/std::sin(alpha);
+    y_end = - (x_end*std::cos(alpha) - range)/std::sin(alpha);
+    for (unsigned int j = 0; j < temp_list.size(); j++)
+    {
+        distance_to_points.push_back((temp_list[j].range * std::cos(temp_list[j].angle - alpha) - range));
+        max_distance_to_point = *max_element(distance_to_points.begin(),distance_to_points.end());
+        position_of_max_distance = distance(distance_to_points.begin(),distance_to_points.end());
+    }
+    std::cout << "The maximum distance is " << max_distance_to_point << std::endl;
+    std::cout << "The position in the vector is " << position_of_max_distance << std::endl;
+    std::cout << temp_list[20].range << "  " << temp_list[20].angle << std::endl;
+    if (max_distance_to_point > threshold)
+    {
+        std::vector<lidarPoint> set1(temp_list.begin(), temp_list.begin() + (position_of_max_distance - 1));
+        std::vector<lidarPoint> set2(temp_list.begin() + position_of_max_distance, temp_list.end());
+    }
+    std::cout << "range: " << range << "   alpha: " << alpha * (180/M_PI) << std::endl;
+    std::cout << "startpoint: " << x_start*20 << ", " << y_start*20 << std::endl;
+    std::cout << "startpoint: " << x_end*20 << ", " << y_end*20 << std::endl;
+}
+
 float lidar_sensor::distP2P(lidarPoint pointOne, lidarPoint pointTwo)
 {
     float xOne = pointOne.range*std::cos(pointOne.angle);
@@ -212,4 +258,39 @@ float lidar_sensor::angleP2P(lidarPoint pointOne, lidarPoint pointTwo)
     float dist_y = abs(yTwo - yOne);
 
     return atan(dist_y / dist_x);
+}
+
+float lidar_sensor::calRange(std::vector<lidarPoint> points, float alpha)
+{
+    float range = 0.0;
+    float weight = 1.0;
+    float num = 0.0;
+    float den = 0.0;
+
+    for(unsigned int i = 0; i < points.size(); i++)
+    {
+        num += weight * points[i].range * std::cos(points[i].angle - alpha);
+        den += weight;
+    }
+    return range = num/den;
+}
+
+float lidar_sensor::calAlpha(std::vector<lidarPoint> points)
+{
+    float alpha = 0.0;
+    float weight = 1.0;
+    float num = 0;
+    float den = 0;
+    for(unsigned int i = 0; i < points.size() - 1; i++)
+    {
+        for(unsigned int j = 1; j < points.size(); j++)
+        {
+            num = weight * std::pow(points[i].range, 2.0) * std::sin(2*points[i].angle) - ((2 / weight) * weight * weight* points[i].range * points[j].range * std::cos(points[i].angle) * std::sin(points[j].angle));
+            den = weight * std::pow(points[i].range, 2.0) * std::cos(2*points[i].angle) - ((1 / weight) * weight * weight * points[i].range * points[j].range * std::cos(points[i].angle + points[j].angle));
+        }
+    }
+    return alpha = 0.5 * std::atan2(num, den);
+    /*float temp_angle = angleP2P(points[0],points[points.size()-1]);
+    alpha = -std::atan(-1/std::tan(temp_angle));
+    return alpha;*/
 }
