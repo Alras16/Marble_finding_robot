@@ -15,8 +15,6 @@ c_vision::c_vision()
 void c_vision::set_image(cv::Mat &image)
 {
     resize(image,ori_image,cv::Size(image.cols / 2, image.rows / 2));
-
-    //ori_image = image.clone();
     image_updated = true;
 }
 
@@ -59,67 +57,18 @@ void c_vision::find_color()
 
 void c_vision::find_marbles()
 {
-    //int canny_min = 5;
-    //int canny_max = 15;
-
     if (image_updated)
     {
         find_color();
-
-        cv::imshow("marbles", processed_image);
 
         int image_w = processed_image.cols; // cols
         int image_h = processed_image.rows; // rows
         cv::Mat temp_image(image_h,image_w,CV_8UC3,cv::Scalar(0,0,0));
 
-        /*std::vector<cv::Vec3f> circles;
-        std::vector<cv::Vec3f> final_circles;
-        cv::HoughCircles( processed_image, circles, CV_HOUGH_GRADIENT, 1, 20, 75, canny_threshold, 0, 0 );
-
-        for (unsigned int i = 0; i < circles.size(); i++)
-        {
-            int pix_val = *processed_image.ptr(cvRound(circles[i][1]), cvRound(circles[i][0]));
-            if (pix_val == 255)
-                final_circles.push_back({circles[i][0],circles[i][1],circles[i][2]});
-        }
-
-        int detected_area = 0;
-        for (unsigned int i = 0; i < final_circles.size(); i++)
-            detected_area += M_PI * pow(final_circles[i][2],2);
-
-        if (detected_area > number_of_white_pixels)
-            canny_threshold++;
-        else if (detected_area < number_of_white_pixels)
-            canny_threshold--;
-
-        if (canny_threshold < canny_min)
-            canny_threshold = canny_min;
-        else if (canny_threshold > canny_max)
-            canny_threshold = canny_max;
-
-        std::cout << "canny threshold: " << canny_threshold << std::endl;
-
-        for (unsigned int i = 0; i < final_circles.size(); i++)
-        {
-            cv::Point center(cvRound(final_circles[i][0]), cvRound(final_circles[i][1]));
-            int radius = cvRound(final_circles[i][2]);
-            // circle center
-            cv::circle( temp_image, center, 2, cv::Scalar(0,255,0), -1, 8, 0 );
-             //circle outline
-            cv::circle( temp_image, center, radius, cv::Scalar(0,0,255), 1, 8, 0 );
-        }
-        cv::imshow( "Hough Circle Transform Demo", temp_image );*/
-
         std::vector<std::vector<cv::Point>> contours;
-        std::vector<cv::Vec4i> hierarchy;
+        std::vector<cv::Vec4i> hierachy;
 
-        cv::findContours(processed_image,contours,hierarchy,CV_RETR_TREE,CV_CHAIN_APPROX_NONE);
-
-        /*for (unsigned int contour = 0; contour < contours.size(); contour++)
-        {
-            cv::Scalar color(rand()&0xFF,rand()&0xFF,rand()&0xFF);
-            cv::drawContours(temp_image,contours,contour,color,CV_FILLED,8,hierarchy);
-        }*/
+        cv::findContours(processed_image,contours,hierachy,CV_RETR_TREE,CV_CHAIN_APPROX_NONE);
 
         std::vector<int> min_row;
         std::vector<int> max_row;
@@ -151,35 +100,31 @@ void c_vision::find_marbles()
         std::cout << "number of contours: " << contours.size() << std::endl;
 
         std::vector<cv::Vec3f> circles;
+
+        marble_position *new_marble;
+
         for (unsigned int i = 0; i < contours.size(); i++)
         {
-            circles.push_back({((max_col[i] - min_col[i])/2) + min_col[i],((max_row[i] - min_row[i])/2) + min_row[i],(max_row[i] - min_row[i])/2});
-
-            //cv::line(temp_image, cv::Point(min_col[i],min_row[i]),cv::Point(min_col[i],max_row[i]),cv::Scalar(255,255,255),1,8,0);
-            //cv::line(temp_image, cv::Point(min_col[i],max_row[i]),cv::Point(max_col[i],max_row[i]),cv::Scalar(255,255,255),1,8,0);
-            //cv::line(temp_image, cv::Point(max_col[i],max_row[i]),cv::Point(max_col[i],min_row[i]),cv::Scalar(255,255,255),1,8,0);
-            //cv::line(temp_image, cv::Point(max_col[i],min_row[i]),cv::Point(min_col[i],min_row[i]),cv::Scalar(255,255,255),1,8,0);
+            new_marble->center.x = ((max_col[i] - min_col[i])/2) + min_col[i];
+            new_marble->center.y = ((max_row[i] - min_row[i])/2) + min_row[i];
+            new_marble->radius = (max_row[i] - min_row[i])/2;
         }
+
+        marbles.push_back(new_marble);
 
         for (unsigned int i = 0; i < circles.size(); i++)
         {
-            cv::Point center(cvRound(circles[i][0]), cvRound(circles[i][1]));
-            int radius = cvRound(circles[i][2]);
             // circle center
-            cv::circle( temp_image, center, 2, cv::Scalar(0,255,0), -1, 8, 0 );
+            cv::circle( temp_image, new_marble->center, 2, cv::Scalar(0,255,0), -1, 8, 0 );
              //circle outline
-            cv::circle( temp_image, center, radius, cv::Scalar(0,0,255), 1, 8, 0 );
+            cv::circle( temp_image, new_marble->center, new_marble->radius, cv::Scalar(0,0,255), 1, 8, 0 );
         }
-        //std::vector<cv::Point> point = contours[0];
-        //point[0].x;
-        //std::cout << point[0].x << std::endl;
-        //std::cout << "Number of contours: " << contours.size() << std::endl;
-
         cv::imshow( "Contour demo", temp_image );
     }
-
-
 }
 
-
+std::vector<marble_position*> c_vision::getMarbles()
+{
+    return marbles;
+}
 

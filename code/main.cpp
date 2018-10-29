@@ -270,27 +270,6 @@ int main(int _argc, char **_argv)
             //dir *= 0.1;
         }
 
-        //camera.find_color();
-        /*clock_t start;
-        double diff;
-        start = clock();
-        //camera.find_color();
-        camera.find_marbles();
-        diff = ((clock() - start) / (double)CLOCKS_PER_SEC)*1000;
-        std::cout << "Execution time: " << diff << std::endl;*/
-
-        mutex.lock();
-        clock_t start;
-        double diff;
-        start = clock();
-        lidar.filter_data();
-        lidar.find_marbles();
-        lidar.visualize_lidar("lidar");
-        diff = ((clock() - start) / (double)CLOCKS_PER_SEC)*1000;
-        std::cout << "Execution time: " << diff << std::endl;
-        mutex.unlock();
-
-
         // Generate a pose
         ignition::math::Pose3d pose(double(speed), 0, 0, 0, 0, double(dir));
 
