@@ -1,0 +1,93 @@
+#File: fuzzybugcontroller.fll
+
+Engine: ObstacleAvoidance
+
+InputVariable: ObstacleDirection
+  enabled: true
+  range: -1.6 1.6
+  lock-range: false
+  term: right Ramp 0 -1.57
+  term: center Triangle -0.785 0.000 0.785
+  term: left Ramp 0 1.57
+
+InputVariable: ObstacleDistance
+  enabled: true
+  range: 0 10
+  lock-range: false
+  term: veryclose Ramp 1 0
+  term: close Triangle 0.8 1.40 2
+  term: far Ramp 1.8 2.5
+
+InputVariable: GoalDirection
+  enabled: true
+  range: -1.6 1.6
+  lock-range: false
+  term: right Ramp 0 -1.57
+  term: center Triangle -0.785 0.000 0.785
+  term: left Ramp 0 1.57
+
+InputVariable: GoalDistance
+  enabled: true
+  range: 0 10
+  lock-range: false
+  term: veryclose Ramp 3 0
+  term: close Triangle 2 4 5
+  term: far Ramp 5 10
+
+OutputVariable: SteerDirection
+  enabled: true
+  range: -1.57 1.57
+  lock-range: false
+  aggregation: Maximum
+  defuzzifier: Centroid 100
+  default: 0
+  lock-previous: false
+  term: sharpright Ramp -1 -1.57
+  term: right      Triangle -1.2 -0.600 0
+  term: straight   Triangle -0.2 0.000 0.2
+  term: left       Triangle 0 0.6 1.2
+  term: sharpleft  Ramp  1 1.57
+
+OutputVariable: Speed
+  enabled: true
+  range: -1 1
+  lock-range: false
+  aggregation: Maximum
+  defuzzifier: Centroid 100
+  default: 0
+  lock-previous: false
+  term: backward Ramp  0.1 -1
+  term: forward  Ramp  -0.1 1
+
+RuleBlock: mamdani
+  enabled: true
+  conjunction: Minimum
+  disjunction: Maximum
+  implication: Minimum
+  activation: General
+
+  rule: if ObstacleDistance is far then SteerDirection is straight
+  rule: if ObstacleDistance is close and ObstacleDirection is left then SteerDirection is left
+  rule: if ObstacleDistance is veryclose and ObstacleDirection is left then SteerDirection is sharpleft
+  rule: if ObstacleDistance is close and ObstacleDirection is right then SteerDirection is right
+  rule: if ObstacleDistance is veryclose and ObstacleDirection is right then SteerDirection is sharpright
+  rule: if ObstacleDistance is veryclose then Speed is backward
+  rule: if ObstacleDistance is close or ObstacleDistance is far then Speed is forward
+
+  #rule: if ObstacleDistance is far and GoalDistance is far then SteerDirection is straight
+  #rule: if ObstacleDistance is close and ObstacleDirection is left and GoalDistance is far then SteerDirection is right
+  #rule: if ObstacleDistance is veryclose and ObstacleDirection is left and GoalDistance is far then SteerDirection is sharpright
+  #rule: if ObstacleDistance is close and ObstacleDirection is right and GoalDistance is far then SteerDirection is left
+  #rule: if ObstacleDistance is veryclose and ObstacleDirection is right and GoalDistance is far then SteerDirection is sharpleft
+
+  #rule: if ObstacleDistance is close and GoalDistance is close and GoalDirection is left then SteerDirection is left
+  #rule: if ObstacleDistance is close and GoalDistance is close and GoalDirection is right then SteerDirection is right
+  #rule: if ObstacleDistance is veryclose and GoalDistance is veryclose and GoalDirection is left then SteerDirection is sharpleft
+  #rule: if ObstacleDistance is veryclose and GoalDistance is veryclose and GoalDirection is right then SteerDirection is sharpright
+
+  #rule: if ObstacleDistance is veryclose and GoalDistance is far then Speed is backward
+  #rule: if ObstacleDistance is veryclose and GoalDistance is close then Speed is backward
+  #rule: if ObstacleDistance is close or ObstacleDistance is far or GoalDistance is close or GoalDistance is far then Speed is forward
+
+
+
