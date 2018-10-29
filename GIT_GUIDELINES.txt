@@ -1,28 +1,26 @@
 This file contains guidelines to GIT
 
-MERGE BRANCH TO MASTER (BRANCH BOTH LOCAL AND REMOTE)
-
-    git checkout master
-    git pull origin master
-    git checkout yourBranchName
-    git merge origin/yourBranchName
-    git checkout master
-    git merge yourBranchName
-    git push origin master
-
-git checkout yourBranchName
-git rebase master
-(if merge conflicts occur do following)
-<solve merge conflicts>
-git add <conflicted files>
-git rebase --continue
-git checkout master
-git merge yourBranchName
-git push origin master
+COMMIT FILES
+    <make sure you are in the right branch>
+    git status #will tell which files are modified or not tracked
+    git add <modified or nontracked files>
+    git commit -m "comment" 
 
 CREATE BRANCH
     git branch yourBranchName
     git checkout yourBranchName
+
+MERGE BRANCH TO MASTER (MASTER IS AHEAD OF YOUR BRANCH)
+    git checkout yourBranchName
+    git rebase master
+    (if merge conflicts occur do following)
+        <solve merge conflicts>
+	    (often you can just delete conflicts from conflicted files)
+        git add <conflicted files>
+    git rebase --continue
+    git checkout master
+    git merge yourBranchName
+    git push origin master
 
 MERGE BRANCH TO MASTER (YOUR BRANCH IS AHEAD OF MASTER)
     git checkout master
@@ -32,4 +30,7 @@ MERGE BRANCH TO MASTER (YOUR BRANCH IS AHEAD OF MASTER)
 DELETE BRANCH
     git branch -d yourBranchName #deletes your local branch
     git push origin --delete yourBranchName #deletes remote branch (GITHub)
+
+USEFULL COMANDS
+    git merge --abort #aborts the merge (usefull if there are merge conflicts)
 
