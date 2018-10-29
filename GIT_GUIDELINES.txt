@@ -1,6 +1,6 @@
 This file contains guidelines to GIT
 
-COMMIT FILES
+COMMIT CHANGES
     <make sure you are in the right branch>
     git status #will tell which files are modified or not tracked
     ADDING FILES    
