@@ -1,6 +1,7 @@
 This file contains guidelines to GIT
 
 MERGE BRANCH TO MASTER (BRANCH BOTH LOCAL AND REMOTE)
+
     git checkout master
     git pull origin master
     git checkout yourBranchName
@@ -8,6 +9,16 @@ MERGE BRANCH TO MASTER (BRANCH BOTH LOCAL AND REMOTE)
     git checkout master
     git merge yourBranchName
     git push origin master
+
+git checkout yourBranchName
+git rebase master
+(if merge conflicts occur do following)
+<solve merge conflicts>
+git add <conflicted files>
+git rebase --continue
+git checkout master
+git merge yourBranchName
+git push origin master
 
 CREATE BRANCH
     git branch yourBranchName
