@@ -123,7 +123,7 @@ void c_vision::find_marbles()
     }
 }
 
-std::vector<marble_position*> c_vision::getMarbles()
+std::vector<c_vision::marble_position*> c_vision::getMarbles()
 {
     return marbles;
 }
