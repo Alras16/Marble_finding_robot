@@ -9,6 +9,10 @@ git checkout master
 git merge yourBranchName
 git push origin master
 
+CREATE BRANCH
+git branch yourBranchName
+git checkout yourBranchName
+
 DELETE BRANCH
 git branch -d yourBranchName #deletes your local branch
 git push origin --delete yourBranchName #deletes remote branch (GITHub)
