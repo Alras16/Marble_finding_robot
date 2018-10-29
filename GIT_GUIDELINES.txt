@@ -4,7 +4,11 @@ COMMIT FILES
     <make sure you are in the right branch>
     git status #will tell which files are modified or not tracked
     git add <modified or nontracked files>
-    git commit -m "comment" 
+    git commit -m "comment" <modified or nontracked files>
+    git push origin yourBranchName
+
+GET CHANGES FROM BRANCH
+    git pull origin yourBranchName
 
 CREATE BRANCH
     git branch yourBranchName
