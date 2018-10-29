@@ -16,6 +16,7 @@ public:
     void set_image(cv::Mat &image);
     void find_color();
     void find_marbles();
+    std::vector<marble_position*> getMarbles();
 
 private:
     cv::Mat ori_image;
