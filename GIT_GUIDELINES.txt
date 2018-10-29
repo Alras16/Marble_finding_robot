@@ -49,7 +49,7 @@ DELETE BRANCH
     git branch -d yourBranchName #deletes your local branch
     git push origin --delete yourBranchName #deletes remote branch (GITHub)
 
-USEFULL COMANDS
+USEFULL COMMANDS
     git merge --abort #aborts the merge 
 	- usefull if there are merge conflicts
 
