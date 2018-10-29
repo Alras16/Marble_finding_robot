@@ -2,14 +2,6 @@
 
 #include "fuzzybugcontroller.h"
 
-/*************************************************************/
-/*************************************************************/
-
-/*
-FuzzyBugController::FuzzyBugController(){
-
-}
-*/
 FuzzyBugController::FuzzyBugController(LaserScanner *pc_laser_scanner) : m_pcLaserScanner(pc_laser_scanner)
 {
 
