@@ -5,6 +5,8 @@
 #include <iostream>
 #include <fstream>
 #include <vector>
+#include <QCoreApplication>
+#include <QDir>
 
 class testData
 {

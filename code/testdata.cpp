@@ -11,7 +11,10 @@ void testData::write(std::string text)
     std::vector<std::string> buffer = read();
     buffer.push_back(text);
 
-    std::ofstream textFileOut(fileName);
+    QDir path = QDir::current();
+    path.cdUp();
+    std::string filePath = path.path().toStdString() + "/test_files/lidar_test_files/" + fileName;
+    std::ofstream textFileOut(filePath);
     if (textFileOut.is_open())
     {
         for (unsigned int i = 0; i < buffer.size(); i++)
@@ -27,7 +30,10 @@ std::vector<std::string> testData::read()
 {
     std::vector<std::string> buffer;
     std::string inputLine;
-    std::ifstream textFileIn(fileName);
+    QDir path = QDir::current();
+    path.cdUp();
+    std::string filePath = path.path().toStdString() + "/test_files/lidar_test_files/" + fileName;
+    std::ifstream textFileIn(filePath);
     if (textFileIn.is_open())
     {
         while (std::getline(textFileIn, inputLine))
@@ -53,7 +59,10 @@ std::vector<std::string> testData::read()
 void testData::erase()
 {
     std::ofstream textFile;
-    textFile.open(fileName);
+    QDir path = QDir::current();
+    path.cdUp();
+    std::string filePath = path.path().toStdString() + "/test_files/lidar_test_files/" + fileName;
+    textFile.open(filePath);
     textFile.close();
 }
 
