@@ -3,7 +3,10 @@ This file contains guidelines to GIT
 COMMIT FILES
     <make sure you are in the right branch>
     git status #will tell which files are modified or not tracked
-    git add <modified or nontracked files>
+    ADDING FILES    
+	git add <modified or nontracked files>
+    REMOVING FILES
+	git rm <files to be removed>    
     git commit -m "comment" <modified or nontracked files>
     git push origin yourBranchName
 
