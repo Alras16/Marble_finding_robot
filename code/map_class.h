@@ -28,6 +28,8 @@ public:
         std::vector<cv::Point> coordinates;
         BST_coordinates coordinatesTree;
         float probabilityOfMarbles;
+        int numbOfPixels;
+        cv::Point centerOfMass;
     };
     
     struct foundMarble
