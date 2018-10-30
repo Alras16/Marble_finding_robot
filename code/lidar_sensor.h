@@ -17,6 +17,12 @@ public:
         float range;
     };
 
+    struct lidarObstacle
+    {
+        float angle;
+        float range;
+    };
+
     void init_data(std::vector<lidarPoint> data);
     void visualize_lidar(std::string name);
     void filter_data();
@@ -32,18 +38,18 @@ private:
     std::vector<lidarPoint> ori_data;
     std::vector<lidarPoint> filtered_data;
 
-    float x_start = 0;
+    float x_start;
     float y_start;
-    float x_end = 22.5;
+    float x_end;
     float y_end;
 
     std::vector<lidarPoint> found_marbles_point;
     std::vector<float> found_marbles_radius;
 
+    std::vector<lidarPoint> temp_filtered_data;
     std::vector<lidarPoint> temp_list;
-    std::vector<float> distance_to_points;
-    std::vector<float> found_obstacle_angles;
-    std::vector<float> found_obstacle_ranges;
+    std::vector<std::vector<lidarPoint>> temp_list_obstacles;
+    std::vector<lidarObstacle> found_obstacles;
 
     int start_point = 0;
     int number_of_points = 1;
