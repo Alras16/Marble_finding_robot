@@ -1,5 +1,8 @@
 This file contains guidelines to GIT
 
+CHECK IF BRANCH IS UP TO DATE WITH MASTER
+    git remote -v update
+
 COMMIT CHANGES
     <make sure you are in the right branch>
     git status #will tell which files are modified or not tracked
