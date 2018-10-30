@@ -71,8 +71,8 @@ void lidar_sensor::visualize_lidar(std::string name)
     }
     cv::circle(im, cv::Point(center, center), 2, cv::Scalar(0, 0, 255));
 
-    cv::Point2f temp_startpt(0.0,center - y_start*20);
-    cv::Point2f temp_endpt(450.0,center - y_end*20);
+    cv::Point2f temp_startpt(center + x_start*20,center - y_start*20);
+    cv::Point2f temp_endpt(center + x_end*20,center - y_end*20);
     cv::line(im, temp_startpt * 16, temp_endpt * 16, cv::Scalar(255, 255, 255), 2, cv::LINE_AA, 4);
 
     for (unsigned int i = 0; i < found_marbles_point.size(); i++)
@@ -195,43 +195,107 @@ void lidar_sensor::find_marbles()
 void lidar_sensor::find_obstacles()
 {
     // Define parameters for least square fitting
-    float max_distance_to_point = 0.0;
-    float position_of_max_distance = 0.0;
-    float threshold = 0.8;
-    // Checks if the size of vector of the filtered data is not 0.
-    if(filtered_data.size() != 0)
+    float threshold_upper = 0.3;
+    float threshold_lower = -0.3;
+    float theta_start;
+    float theta_end;
+    float rho_start;
+    float rho_end;
+    float angle1 = 0.0;
+    float angle2 = 0.0;
+    float angle = 0.0;
+    int N = 1;
+
+    for (int i = 0; i < filtered_data.size(); i++)
     {
-        // Define a set N of a collection of 10 points.
-        int N = 10;
-        for(unsigned int i = 0; i < N; i++)
+        lidarPoint temp;
+        temp.range = filtered_data[i].range;
+        temp.angle = filtered_data[i].angle;
+        temp_filtered_data.push_back(temp);
+    }
+
+    while(temp_filtered_data.size() != 0)
+    {
+        if ((angle < threshold_upper) && (angle > threshold_lower))
         {
-            lidarPoint temp;
-            temp.range = filtered_data[i].range;
-            temp.angle = filtered_data[i].angle;
-            temp_list.push_back(temp);
+            angle1 = angleP2P(temp_filtered_data[0], temp_filtered_data[N]);
+            angle2 = angleP2P(temp_filtered_data[0], temp_filtered_data[N + 1]);
+            angle = angle1 - angle2;
+            //std::cout << angle1 << "  " << angle2 << "  " << angle << std::endl;
+            N++;
+        }
+        else
+        {
+            //if (N > 2)
+            //{
+            //    std::cout << "Filtered data size: " << temp_filtered_data.size() << std::endl;
+                for (int i = 0; i < N; i++)
+                {
+                    lidarPoint temp;
+                    temp.range = temp_filtered_data[i].range;
+                    temp.angle = temp_filtered_data[i].angle;
+                    temp_list.push_back(temp);
+                }
+                //std::cout << "For-loop ended" << std::endl;
+                temp_list_obstacles.push_back(temp_list);
+                temp_list.clear();
+            //}
+            temp_filtered_data.erase(temp_filtered_data.begin(), temp_filtered_data.begin() + N);
+            N = 1;
         }
     }
-    float alpha = calAlpha(temp_list);
-    float range = calRange(temp_list, alpha);
-    y_start = - (x_start*std::cos(alpha) - range)/std::sin(alpha);
-    y_end = - (x_end*std::cos(alpha) - range)/std::sin(alpha);
-    for (unsigned int j = 0; j < temp_list.size(); j++)
-    {
-        distance_to_points.push_back((temp_list[j].range * std::cos(temp_list[j].angle - alpha) - range));
-        max_distance_to_point = *max_element(distance_to_points.begin(),distance_to_points.end());
-        position_of_max_distance = distance(distance_to_points.begin(),distance_to_points.end());
+
+    for (int i = 0; i  < temp_list_obstacles.size(); i++){
+        for (int j = 0; j < temp_list_obstacles[i].size(); j++){
+            std::cout << temp_list_obstacles[i][j].angle << " , ";
+        }
+        std::cout << std::endl;
     }
-    std::cout << "The maximum distance is " << max_distance_to_point << std::endl;
-    std::cout << "The position in the vector is " << position_of_max_distance << std::endl;
-    std::cout << temp_list[20].range << "  " << temp_list[20].angle << std::endl;
-    if (max_distance_to_point > threshold)
+   // std::cout << temp_list_obstacles.size() << std::endl;
+
+    std::vector<float> closest_distance;
+    std::vector<float> distAngle;
+    float buffer_angle;
+    float buffer_range;
+
+    for (unsigned int j = 0; j < temp_list_obstacles.size(); j++)
     {
-        std::vector<lidarPoint> set1(temp_list.begin(), temp_list.begin() + (position_of_max_distance - 1));
-        std::vector<lidarPoint> set2(temp_list.begin() + position_of_max_distance, temp_list.end());
+        float alpha = calAlpha(temp_list_obstacles[j]);
+        float range = calRange(temp_list_obstacles[j], alpha);
+
+        closest_distance.push_back(range);
+        distAngle.push_back(alpha);
     }
-    std::cout << "range: " << range << "   alpha: " << alpha * (180/M_PI) << std::endl;
-    std::cout << "startpoint: " << x_start*20 << ", " << y_start*20 << std::endl;
-    std::cout << "startpoint: " << x_end*20 << ", " << y_end*20 << std::endl;
+
+    buffer_range = closest_distance[0];
+
+    for (unsigned int k = 0; k < closest_distance.size(); k++)
+    {
+        if (buffer_range < closest_distance[k])
+        {
+                buffer_range = closest_distance[k];
+                buffer_angle = distAngle[k];
+        }
+    }
+
+    lidarObstacle obstacle;
+    obstacle.range = buffer_range;
+    obstacle.angle = buffer_angle;
+    //std::cout<<obstacle.range << std::endl;
+
+    //theta_start = temp_list.front().angle;
+    //theta_end = temp_list.back().angle;
+    //rho_start = range/(std::cos(theta_start) * std::cos(alpha) + std::sin(theta_start) * std::sin(alpha));
+    //rho_end = range/(std::cos(theta_end) * std::cos(alpha) + std::sin(theta_end) * std::sin(alpha));
+
+    //x_start = rho_start * std::cos(theta_start);
+    //y_start = rho_start * std::sin(theta_start);
+    //x_end = rho_end * std::cos(theta_end);
+    //y_end = rho_end * std::sin(theta_end);
+
+    //std::cout << "range: " << range << "   alpha: " << alpha * (180/M_PI) << std::endl;
+    //std::cout << "startpoint: " << x_start*20 << ", " << y_start*20 << std::endl;
+    //std::cout << "startpoint: " << x_end*20 << ", " << y_end*20 << std::endl;
 }
 
 float lidar_sensor::distP2P(lidarPoint pointOne, lidarPoint pointTwo)
