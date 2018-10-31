@@ -190,20 +190,99 @@ void lidar_sensor::find_marbles()
     }
 }
 
-void lidar_sensor::find_obstacles()
+std::vector<lidar_sensor::detectedLine> lidar_sensor::find_lines()
 {
+    // Line conditions
+    float threshold = 0.3;   // angle
+    float point_dist = 0.625;      // distance between two lines
+
+    // Vectors
+    std::vector<detectedLine> found_lines;
+
     // Define parameters for least square fitting
-    float threshold_upper = 0.3;
-    float threshold_lower = -0.3;
-    float theta_start;
+    /*float theta_start;
     float theta_end;
     float rho_start;
     float rho_end;
-    float angle1 = 0.0;
-    float angle2 = 0.0;
     float angle = 0.0;
-    int N = 1;
+    float angle1 = 0.0;
+    float angle2 = 0.0;*/
+    float prev_alpha = 0.0;
+    float curr_alpha = 0.0;
+    float prev_range = 0.0;
+    float curr_range = 0.0;
+    int index_start = 0;
+    int index_end = 0;
+    int N = 2;
 
+    bool condition_satisfied = true;
+
+    //while (index_end < ori_data.size())
+    while (N != 0)
+    {
+        N--;
+        condition_satisfied = true;
+        index_end += 2;
+        std::vector<lidarPoint> line_points;
+        for (int i = index_start; i < index_end; i++)
+        {
+            line_points.push_back(filtered_data[i]);
+        }
+        prev_alpha = curr_alpha;
+        prev_range = curr_range;
+        curr_alpha = calAlpha(line_points);
+        curr_range = calRange(line_points, curr_alpha);
+
+        while (condition_satisfied)
+        {
+            index_end++;
+            line_points.push_back(filtered_data[index_end - 1]);
+            prev_alpha = curr_alpha;
+            prev_range = curr_range;
+            curr_alpha = calAlpha(line_points);
+            curr_range = calRange(line_points, curr_alpha);
+
+            float delta_angle = abs(curr_alpha - prev_alpha);
+            std::cout << "delta angle: " << delta_angle << std::endl;
+            if (line_points[line_points.size() - 1].range == 10)
+            {
+                std::cout << "prev angle: " << prev_alpha << " curr angle: " << curr_alpha << std::endl;
+                std::cout << "start point index: " << index_start << "  end point index: " << index_end - 1 << std::endl;
+                detectedLine temp_line;
+                temp_line.range = prev_range;
+                temp_line.alpha = prev_alpha;
+                temp_line.lengthOfLine = line_points.size() - 1;
+                // calculate start and end point
+                found_lines.push_back(temp_line);
+                index_end--;
+                index_start = index_end;
+                condition_satisfied = false;
+            }
+            else if ((delta_angle > threshold) && (line_points.size() < 3))
+            {
+                index_end--;
+                index_start = index_end;
+                condition_satisfied = false;
+            }
+            else if (delta_angle > threshold)
+            {
+                std::cout << "prev angle: " << prev_alpha << " curr angle: " << curr_alpha << std::endl;
+                std::cout << "start point index: " << index_start << "  end point index: " << index_end - 1 << std::endl;
+                detectedLine temp_line;
+                temp_line.range = prev_range;
+                temp_line.alpha = prev_alpha;
+                temp_line.lengthOfLine = line_points.size() - 1;
+                // calculate start and end point
+                found_lines.push_back(temp_line);
+                index_end--;
+                index_start = index_end;
+                condition_satisfied = false;
+            }
+        }
+    }
+    return found_lines;
+
+    /*
     for (int i = 0; i < filtered_data.size(); i++)
     {
         lidarPoint temp;
@@ -294,6 +373,7 @@ void lidar_sensor::find_obstacles()
     //std::cout << "range: " << range << "   alpha: " << alpha * (180/M_PI) << std::endl;
     //std::cout << "startpoint: " << x_start*20 << ", " << y_start*20 << std::endl;
     //std::cout << "startpoint: " << x_end*20 << ", " << y_end*20 << std::endl;
+    */
 }
 
 float lidar_sensor::distP2P(lidarPoint pointOne, lidarPoint pointTwo)

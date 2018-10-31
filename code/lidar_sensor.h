@@ -5,6 +5,8 @@
 #include <vector>
 #include <iostream>
 #include "testdata.h"
+#define USE_MATH_DEFINES
+#include "math.h"
 
 class lidar_sensor
 {
@@ -17,17 +19,20 @@ public:
         float range;
     };
 
-    struct lidarObstacle
+    struct detectedLine
     {
-        float angle;
+        float alpha;
         float range;
+        lidarPoint start;
+        lidarPoint end;
+        unsigned int lengthOfLine;
     };
 
     void init_data(std::vector<lidarPoint> data);
     void visualize_lidar(std::string name);
     void filter_data();
     void find_marbles();
-    void find_obstacles();
+    std::vector<detectedLine> find_lines();
 
 private:
     float distP2P(lidarPoint pointOne, lidarPoint pointTwo);
@@ -45,11 +50,6 @@ private:
 
     std::vector<lidarPoint> found_marbles_point;
     std::vector<float> found_marbles_radius;
-
-    std::vector<lidarPoint> temp_filtered_data;
-    std::vector<lidarPoint> temp_list;
-    std::vector<std::vector<lidarPoint>> temp_list_obstacles;
-    std::vector<lidarObstacle> found_obstacles;
 
     int start_point = 0;
     int number_of_points = 1;
