@@ -31,7 +31,7 @@ void lidar_sensor::visualize_lidar(std::string name)
 
     unsigned int nranges = ori_data.size();
 
-    for (unsigned int i = 0; i < nranges; i++)
+    for (unsigned int i = 0; i < 80; i++)
     {
         float angle = ori_data[i].angle;
         float range = ori_data[i].range;
@@ -83,8 +83,6 @@ void lidar_sensor::visualize_lidar(std::string name)
 
         cv::circle(im, cv::Point(xMarble, yMarble), rMarble, cv::Scalar(0, 255, 0));
     }
-    //found_marbles_point.clear();
-    //found_marbles_radius.clear();
 
     cv::imshow(name, im);
 }
