@@ -11,7 +11,6 @@ SOURCES += main.cpp \
     lidar_sensor.cpp \
     dataloggin.cpp \
     motion_planning.cpp \
-    robot_control.pro
 
 CONFIG += link_pkgconfig
 PKGCONFIG += gazebo
@@ -30,7 +29,6 @@ HEADERS += \
     lidar_sensor.h \
     dataloggin.h \
     motion_planning.h \
-    robot_control.pro
 
 DISTFILES += \
     fuzzybugcontroller.fll
