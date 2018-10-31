@@ -10,7 +10,7 @@ SOURCES += test_main.cpp \
     testdata.cpp \
     lidar_sensor.cpp \
     dataloggin.cpp \
-    ct.cpp
+    ct.cpp \
     motion_planning.cpp \
 
 CONFIG += link_pkgconfig
@@ -29,8 +29,8 @@ HEADERS += \
     testdata.h \
     lidar_sensor.h \
     dataloggin.h \
+    ct.h \
     motion_planning.h \
-    ct.h
 
 DISTFILES += \
     fuzzybugcontroller.fll
