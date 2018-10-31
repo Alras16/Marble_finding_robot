@@ -2,7 +2,7 @@ TEMPLATE = app
 CONFIG += console c++11
 CONFIG -= app_bundle
 
-SOURCES += test_main.cpp \
+SOURCES += main.cpp \
     fuzzybugcontroller.cpp \
     bst_coordinates.cpp \
     map_class.cpp \
