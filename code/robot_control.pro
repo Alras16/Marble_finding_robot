@@ -2,14 +2,16 @@ TEMPLATE = app
 CONFIG += console c++11
 CONFIG -= app_bundle
 
-SOURCES += main.cpp \
+SOURCES += test_main.cpp \
     fuzzybugcontroller.cpp \
     bst_coordinates.cpp \
     map_class.cpp \
     c_vision.cpp \
     testdata.cpp \
     lidar_sensor.cpp \
-    dataloggin.cpp
+    dataloggin.cpp \
+    motion_planning.cpp \
+    robot_control.pro
 
 CONFIG += link_pkgconfig
 PKGCONFIG += gazebo
@@ -26,7 +28,9 @@ HEADERS += \
     c_vision.h \
     testdata.h \
     lidar_sensor.h \
-    dataloggin.h
+    dataloggin.h \
+    motion_planning.h \
+    robot_control.pro
 
 DISTFILES += \
     fuzzybugcontroller.fll
