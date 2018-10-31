@@ -24,7 +24,7 @@ GET CHANGES FROM MASTER
         <solve merge conflicts>
 	    (often you can just delete conflicts from conflicted files)
         git add <conflicted files>
-    git rebase --continue
+    	git rebase --continue
 
 CREATE BRANCH
     git branch yourBranchName
@@ -38,7 +38,7 @@ MERGE BRANCH TO MASTER (MASTER IS AHEAD OF YOUR BRANCH)
         <solve merge conflicts>
 	    (often you can just delete conflicts from conflicted files)
         git add <conflicted files>
-    git rebase --continue
+    	git rebase --continue
     git checkout master
     git merge yourBranchName
     git push origin master
