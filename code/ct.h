@@ -1,11 +1,65 @@
-#ifndef COMMONTYPES_H
-#define COMMONTYPES_H
+#ifndef CT_H
+#define CT_H
 
+#include <iostream>
+#include <vector>
+#include <opencv2/opencv.hpp>
 
-class commontypes
+#include "bst_coordinates.h"
+
+class ct
 {
 public:
-    commontypes();
+
+    struct polarPoint
+    {
+        float theta;
+        float rho;
+    };
+
+    struct line
+    {
+        float alpha;
+        float range;
+    };
+
+    struct detectedLine
+    {
+        line dLine;
+        polarPoint start;
+        polarPoint end;
+    };
+
+    struct point
+    {
+        float x;
+        float y;
+    };
+
+    struct room
+    {
+        int roomNumber;
+        std::vector<cv::Point> coordinates;
+        BST_coordinates coordinatesTree;
+        float probabilityOfMarbles;
+        int numbOfPixels;
+        cv::Point centerOfMass;
+    };
+
+    struct marble
+    {
+        cv::Point center;
+        polarPoint centerPolar;
+        float radius;
+    };
+
+    struct foundMarble
+    {
+        marble fMarble;
+        room *foundInRoom;
+    };
+
+    ct();
 };
 
-#endif // COMMONTYPES_H
+#endif // CT_H
