@@ -49,7 +49,7 @@ dataloggin::dataloggin(std::string aBaseName, int testNumb, int runNumb, char ty
 }
 
 /*************** Public methods ***************/
-void dataloggin::writeMarble(map_class::foundMarble marble, int numb)
+void dataloggin::writeMarble(ct::foundMarble marble, int numb)
 {
     std::string tempOne;
     std::string tempTwo;
@@ -58,21 +58,21 @@ void dataloggin::writeMarble(map_class::foundMarble marble, int numb)
     if (tempTwo.length() != 2)
         tempTwo.erase(tempTwo.begin());
     tempOne += tempTwo + "; Center: (";
-    tempOne += std::to_string(marble.center.x) + ",";
-    tempOne += std::to_string(marble.center.y) + "); Room: ";
+    tempOne += std::to_string(marble.fMarble.center.x) + ",";
+    tempOne += std::to_string(marble.fMarble.center.y) + "); Room: ";
     tempOne += std::to_string(marble.foundInRoom->roomNumber);
     write(tempOne);
 }
 
-std::vector<map_class::foundMarble> dataloggin::readMarbles()
+std::vector<ct::foundMarble> dataloggin::readMarbles()
 {
-    std::vector<map_class::foundMarble> marbles;
+    std::vector<ct::foundMarble> marbles;
     std::vector<std::string> input = read();
     input.erase(input.begin(),input.begin() + 3);
     for (unsigned int i = 0; i < input.size(); i++)
     {
-        map_class::foundMarble tempMarble;
-        map_class::room *tempRoom = new map_class::room;
+        ct::foundMarble tempMarble;
+        ct::room *tempRoom = new ct::room;
         tempMarble.foundInRoom = tempRoom;
         std::string tempOne = input[i];
         std::string tempTwo;
@@ -85,7 +85,7 @@ std::vector<map_class::foundMarble> dataloggin::readMarbles()
             else
                 break;
         }
-        tempMarble.center.x = std::stoi(tempTwo);
+        tempMarble.fMarble.center.x = std::stoi(tempTwo);
         tempTwo.clear();
         j++;
         for (; j < tempOne.length(); j++)
@@ -95,7 +95,7 @@ std::vector<map_class::foundMarble> dataloggin::readMarbles()
             else
                 break;
         }
-        tempMarble.center.y = std::stoi(tempTwo);
+        tempMarble.fMarble.center.y = std::stoi(tempTwo);
         j += 9;
         tempOne.erase(tempOne.begin(),tempOne.begin() + j);
         tempMarble.foundInRoom->roomNumber = std::stoi(tempOne);
@@ -149,14 +149,14 @@ void dataloggin::writeRoom(int roomNumb, cv::Point massCenter, int numbOfPixels)
     write(tempOne);
 }
 
-std::vector<map_class::room> dataloggin::readRooms()
+std::vector<ct::room> dataloggin::readRooms()
 {
-    std::vector<map_class::room> rooms;
+    std::vector<ct::room> rooms;
     std::vector<std::string> input = read();
     input.erase(input.begin(),input.begin() + 3);
     for (unsigned int i = 0; i < input.size(); i++)
     {
-        map_class::room tempRoom;
+        ct::room tempRoom;
 
         std::string tempOne = input[i];
         std::string tempTwo;
