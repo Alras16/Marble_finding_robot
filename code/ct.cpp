@@ -1,6 +1,6 @@
-#include "commontypes.h"
+#include "ct.h"
 
-commontypes::commontypes()
+ct::ct()
 {
 
 }
