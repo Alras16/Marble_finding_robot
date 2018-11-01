@@ -7,7 +7,7 @@
 #include <vector>
 #include <QCoreApplication>
 #include <QDir>
-#include "map_class.h"
+#include "ct.h"
 
 #define FILEPATH_ROOM "/test_files/loggin/rooms/"
 #define FILEPATH_STATS "/test_files/loggin/statistics/"
@@ -20,18 +20,11 @@
 class dataloggin
 {
 public:
-    struct room
-    {
-        int roomNumber;
-        int numbOfPixels;
-        float probabilityOfMarbles;
-    };
-
     dataloggin(std::string aBaseName,int testNumb, int runNumb, char type);
 
     // ONLY USE WHEN type == 'm'
-    void writeMarble(map_class::foundMarble marble, int numb);
-    std::vector<map_class::foundMarble> readMarbles();
+    void writeMarble(ct::foundMarble marble, int numb);
+    std::vector<ct::foundMarble> readMarbles();
 
     // ONLY USE WHEN type == 's'
     void writeStats(int roomNumb ,float probability);
@@ -39,7 +32,7 @@ public:
 
     // ONLY USE WHEN type == 'r'
     void writeRoom(int roomNumb, cv::Point massCenter, int numbOfPixels);
-    std::vector<map_class::room> readRooms();
+    std::vector<ct::room> readRooms();
 
 private:
     void write(std::string text);
