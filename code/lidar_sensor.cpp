@@ -11,7 +11,7 @@ lidar_sensor::lidar_sensor()
     lidar_data_updated = false;
 }
 
-void lidar_sensor::init_data(std::vector<lidarPoint> data)
+void lidar_sensor::init_data(std::vector<ct::polarPoint> data)
 {
     ori_data.clear();
     ori_data = data;
@@ -31,10 +31,10 @@ void lidar_sensor::visualize_lidar(std::string name)
 
     unsigned int nranges = ori_data.size();
 
-    for (unsigned int i = 0; i < 80; i++)
+    for (unsigned int i = 0; i < nranges; i++)
     {
-        float angle = ori_data[i].angle;
-        float range = ori_data[i].range;
+        float angle = ori_data[i].theta;
+        float range = ori_data[i].rho;
 
         cv::Point2f startpt(center,center);
 
@@ -59,8 +59,8 @@ void lidar_sensor::visualize_lidar(std::string name)
 
         if ((signed(i) == start_point) || (signed(i) == start_point + number_of_points - 1))
         {
-            float angle = filtered_data[i].angle;
-            float range = filtered_data[i].range;
+            float angle = filtered_data[i].theta;
+            float range = filtered_data[i].rho;
 
             cv::Point2f startpt(center,center);
             cv::Point2f endpt(center + range * px_per_m * std::cos(angle),center - range * px_per_m * std::sin(angle));
@@ -77,8 +77,8 @@ void lidar_sensor::visualize_lidar(std::string name)
 
     for (unsigned int i = 0; i < found_marbles_point.size(); i++)
     {
-        float xMarble = center + found_marbles_point[i].range*px_per_m*std::cos(found_marbles_point[i].angle);
-        float yMarble = center - found_marbles_point[i].range*px_per_m*std::sin(found_marbles_point[i].angle);
+        float xMarble = center + found_marbles_point[i].rho*px_per_m*std::cos(found_marbles_point[i].theta);
+        float yMarble = center - found_marbles_point[i].rho*px_per_m*std::sin(found_marbles_point[i].theta);
         float rMarble = px_per_m*found_marbles_radius[i];
 
         cv::circle(im, cv::Point(xMarble, yMarble), rMarble, cv::Scalar(0, 255, 0));
@@ -94,11 +94,11 @@ void lidar_sensor::filter_data()
     {
         for (unsigned int i = 0; i < ori_data.size(); i++)
         {
-            if (ori_data[i].range != 10.0)
+            if (ori_data[i].rho != 10.0)
             {
-                lidarPoint temp;
-                temp.angle = ori_data[i].angle;
-                temp.range = ori_data[i].range;
+                ct::polarPoint temp;
+                temp.theta = ori_data[i].theta;
+                temp.rho = ori_data[i].rho;
                 filtered_data.push_back(temp);
             }
         }
@@ -123,12 +123,12 @@ void lidar_sensor::find_marbles()
                 start_point++;
                 for (unsigned int i = start_point; i < filtered_data.size(); i++)
                 {
-                    if (abs(filtered_data[i - 1].range - filtered_data[i].range) > threshold)
+                    if (abs(filtered_data[i - 1].rho - filtered_data[i].rho) > threshold)
                     {
                         start_point = i;
                         break;
                     }
-                    else if (filtered_data[i].range < maxRange - threshold)
+                    else if (filtered_data[i].rho < maxRange - threshold)
                     {
                         start_point = i;
                         break;
@@ -137,7 +137,7 @@ void lidar_sensor::find_marbles()
 
                 //std::cout << "starting point: " << start_point << std::endl;
 
-                while (abs(filtered_data[start_point].range - filtered_data[start_point + number_of_points - 1].range) < threshold)
+                while (abs(filtered_data[start_point].rho - filtered_data[start_point + number_of_points - 1].rho) < threshold)
                     number_of_points += 2;
 
                 number_of_points -= 2;
@@ -147,19 +147,19 @@ void lidar_sensor::find_marbles()
             float circleChord = distP2P(filtered_data[start_point],filtered_data[start_point + number_of_points - 1]);
             //float chordAngle = angleP2P(filtered_data[start_point],filtered_data[start_point + number_of_points - 1]);
 
-            float alpha = filtered_data[start_point + ((number_of_points - 1) / 2)].angle;
+            float alpha = filtered_data[start_point + ((number_of_points - 1) / 2)].theta;
 
-            float objectiveOne = filtered_data[start_point].range*std::cos(filtered_data[start_point].angle - alpha);
-            float objectiveTwo = filtered_data[start_point + number_of_points - 1].range*std::cos(filtered_data[start_point + number_of_points - 1].angle - alpha);
+            float objectiveOne = filtered_data[start_point].rho*std::cos(filtered_data[start_point].theta - alpha);
+            float objectiveTwo = filtered_data[start_point + number_of_points - 1].rho*std::cos(filtered_data[start_point + number_of_points - 1].theta - alpha);
 
             float rangeLine = (objectiveOne + objectiveTwo) / 2;
-            float circleCamber = rangeLine - filtered_data[start_point + ((number_of_points - 1) / 2)].range;
+            float circleCamber = rangeLine - filtered_data[start_point + ((number_of_points - 1) / 2)].rho;
 
             float circleRadius = (pow(circleChord, 2.0) + 4*pow(circleCamber, 2.0)) / (8*circleCamber);
 
-            lidarPoint temp;
-            temp.angle = alpha;
-            temp.range = circleRadius + filtered_data[start_point + ((number_of_points - 1) / 2)].range;
+            ct::polarPoint temp;
+            temp.theta = alpha;
+            temp.rho = circleRadius + filtered_data[start_point + ((number_of_points - 1) / 2)].rho;
 
             float dist_circles = 0.01;
             float prev_radius = 0.0;
@@ -190,14 +190,14 @@ void lidar_sensor::find_marbles()
     }
 }
 
-std::vector<lidar_sensor::detectedLine> lidar_sensor::find_lines()
+std::vector<ct::detectedLine> lidar_sensor::find_lines()
 {
     // Line conditions
-    float threshold = 0.3;   // angle
-    float point_dist = 0.625;      // distance between two lines
+    float threshold = 0.05;   // angle
+    //float point_dist = 0.625;      // distance between two lines
 
     // Vectors
-    std::vector<detectedLine> found_lines;
+    std::vector<ct::detectedLine> found_lines;
 
     // Define parameters for least square fitting
     /*float theta_start;
@@ -211,29 +211,31 @@ std::vector<lidar_sensor::detectedLine> lidar_sensor::find_lines()
     float curr_alpha = 0.0;
     float prev_range = 0.0;
     float curr_range = 0.0;
-    int index_start = 0;
-    int index_end = 0;
-    int N = 2;
+    unsigned int index_start = 0;
+    unsigned int index_end = 0;
 
     bool condition_satisfied = true;
 
-    //while (index_end < ori_data.size())
-    while (N != 0)
+    std::cout << "total number of points: " << filtered_data.size() << std::endl;
+    while ((index_start < filtered_data.size()) || (index_end < filtered_data.size()))
     {
-        N--;
         condition_satisfied = true;
         index_end += 2;
-        std::vector<lidarPoint> line_points;
-        for (int i = index_start; i < index_end; i++)
-        {
+        std::vector<ct::polarPoint> line_points;
+        for (unsigned int i = index_start; i < index_end; i++)
             line_points.push_back(filtered_data[i]);
-        }
+
         prev_alpha = curr_alpha;
         prev_range = curr_range;
         curr_alpha = calAlpha(line_points);
         curr_range = calRange(line_points, curr_alpha);
+        if (curr_range < 0.0)
+        {
+            curr_alpha += M_PI;
+            curr_range *= -1.0;
+        }
 
-        while (condition_satisfied)
+        while (condition_satisfied && (index_end < (filtered_data.size() + 1)))
         {
             index_end++;
             line_points.push_back(filtered_data[index_end - 1]);
@@ -241,37 +243,35 @@ std::vector<lidar_sensor::detectedLine> lidar_sensor::find_lines()
             prev_range = curr_range;
             curr_alpha = calAlpha(line_points);
             curr_range = calRange(line_points, curr_alpha);
+            if (curr_range < 0.0)
+            {
+                curr_alpha += M_PI;
+                curr_range *= -1.0;
+            }
 
             float delta_angle = abs(curr_alpha - prev_alpha);
-            std::cout << "delta angle: " << delta_angle << std::endl;
-            if (line_points[line_points.size() - 1].range == 10)
+
+            //std::cout << "alpha: " << prev_alpha << " range: " << prev_range << std::endl;
+            //std::cout << "prev angle: " << prev_alpha << " curr angle: " << curr_alpha << std::endl;
+            //std::cout << "close to 90: " << closeTo90 << std::endl;
+            //std::cout << "current end: " << index_end << std::endl;
+            if ((delta_angle > threshold) && (line_points.size() < 4))
             {
-                std::cout << "prev angle: " << prev_alpha << " curr angle: " << curr_alpha << std::endl;
-                std::cout << "start point index: " << index_start << "  end point index: " << index_end - 1 << std::endl;
-                detectedLine temp_line;
-                temp_line.range = prev_range;
-                temp_line.alpha = prev_alpha;
-                temp_line.lengthOfLine = line_points.size() - 1;
-                // calculate start and end point
-                found_lines.push_back(temp_line);
+                //std::cout << "hej" << std::endl;
                 index_end--;
                 index_start = index_end;
                 condition_satisfied = false;
             }
-            else if ((delta_angle > threshold) && (line_points.size() < 3))
-            {
-                index_end--;
-                index_start = index_end;
-                condition_satisfied = false;
-            }
-            else if (delta_angle > threshold)
+            else if ((delta_angle > threshold) || (index_end > filtered_data.size()))
             {
                 std::cout << "prev angle: " << prev_alpha << " curr angle: " << curr_alpha << std::endl;
-                std::cout << "start point index: " << index_start << "  end point index: " << index_end - 1 << std::endl;
-                detectedLine temp_line;
-                temp_line.range = prev_range;
-                temp_line.alpha = prev_alpha;
-                temp_line.lengthOfLine = line_points.size() - 1;
+                std::cout << "start point index: " << index_start << "  end point index: " << index_end - 2 << std::endl;
+                std::cout << "delta angle: " << delta_angle << std::endl;
+                std::cout << "orthogornal angle: " << std::atan(-1/prev_alpha) << std::endl;
+                std::cout << std::endl;
+                ct::detectedLine temp_line;
+                temp_line.dLine.range = prev_range;
+                temp_line.dLine.alpha = prev_alpha;
                 // calculate start and end point
                 found_lines.push_back(temp_line);
                 index_end--;
@@ -280,108 +280,16 @@ std::vector<lidar_sensor::detectedLine> lidar_sensor::find_lines()
             }
         }
     }
+    std::cout << "run ended" << std::endl;
     return found_lines;
-
-    /*
-    for (int i = 0; i < filtered_data.size(); i++)
-    {
-        lidarPoint temp;
-        temp.range = filtered_data[i].range;
-        temp.angle = filtered_data[i].angle;
-        temp_filtered_data.push_back(temp);
-    }
-
-    while(temp_filtered_data.size() != 0)
-    {
-        if ((angle < threshold_upper) && (angle > threshold_lower))
-        {
-            angle1 = angleP2P(temp_filtered_data[0], temp_filtered_data[N]);
-            angle2 = angleP2P(temp_filtered_data[0], temp_filtered_data[N + 1]);
-            angle = angle1 - angle2;
-            //std::cout << angle1 << "  " << angle2 << "  " << angle << std::endl;
-            N++;
-        }
-        else
-        {
-            //if (N > 2)
-            //{
-            //    std::cout << "Filtered data size: " << temp_filtered_data.size() << std::endl;
-                for (int i = 0; i < N; i++)
-                {
-                    lidarPoint temp;
-                    temp.range = temp_filtered_data[i].range;
-                    temp.angle = temp_filtered_data[i].angle;
-                    temp_list.push_back(temp);
-                }
-                //std::cout << "For-loop ended" << std::endl;
-                temp_list_obstacles.push_back(temp_list);
-                temp_list.clear();
-            //}
-            temp_filtered_data.erase(temp_filtered_data.begin(), temp_filtered_data.begin() + N);
-            N = 1;
-        }
-    }
-
-    for (int i = 0; i  < temp_list_obstacles.size(); i++){
-        for (int j = 0; j < temp_list_obstacles[i].size(); j++){
-            std::cout << temp_list_obstacles[i][j].angle << " , ";
-        }
-        std::cout << std::endl;
-    }
-   // std::cout << temp_list_obstacles.size() << std::endl;
-
-    std::vector<float> closest_distance;
-    std::vector<float> distAngle;
-    float buffer_angle;
-    float buffer_range;
-
-    for (unsigned int j = 0; j < temp_list_obstacles.size(); j++)
-    {
-        float alpha = calAlpha(temp_list_obstacles[j]);
-        float range = calRange(temp_list_obstacles[j], alpha);
-
-        closest_distance.push_back(range);
-        distAngle.push_back(alpha);
-    }
-
-    buffer_range = closest_distance[0];
-
-    for (unsigned int k = 0; k < closest_distance.size(); k++)
-    {
-        if (buffer_range < closest_distance[k])
-        {
-                buffer_range = closest_distance[k];
-                buffer_angle = distAngle[k];
-        }
-    }
-
-    lidarObstacle obstacle;
-    obstacle.range = buffer_range;
-    obstacle.angle = buffer_angle;
-    //std::cout<<obstacle.range << std::endl;
-
-    //theta_start = temp_list.front().angle;
-    //theta_end = temp_list.back().angle;
-    //rho_start = range/(std::cos(theta_start) * std::cos(alpha) + std::sin(theta_start) * std::sin(alpha));
-    //rho_end = range/(std::cos(theta_end) * std::cos(alpha) + std::sin(theta_end) * std::sin(alpha));
-
-    //x_start = rho_start * std::cos(theta_start);
-    //y_start = rho_start * std::sin(theta_start);
-    //x_end = rho_end * std::cos(theta_end);
-    //y_end = rho_end * std::sin(theta_end);
-
-    //std::cout << "range: " << range << "   alpha: " << alpha * (180/M_PI) << std::endl;
-    //std::cout << "startpoint: " << x_start*20 << ", " << y_start*20 << std::endl;
-    //std::cout << "startpoint: " << x_end*20 << ", " << y_end*20 << std::endl;
-    */
 }
 
-float lidar_sensor::distP2P(lidarPoint pointOne, lidarPoint pointTwo)
+float lidar_sensor::distP2P(ct::polarPoint pointOne, ct::polarPoint pointTwo)
 {
-    float xOne = pointOne.range*std::cos(pointOne.angle);
-    float yOne = pointOne.range*std::sin(pointOne.angle);
-    float xTwo = pointTwo.range*std::cos(pointTwo.angle);
-    float yTwo = pointTwo.range*std::sin(pointTwo.angle);
+    float xOne = pointOne.rho*std::cos(pointOne.theta);
+    float yOne = pointOne.rho*std::sin(pointOne.theta);
+    float xTwo = pointTwo.rho*std::cos(pointTwo.theta);
+    float yTwo = pointTwo.rho*std::sin(pointTwo.theta);
 
     float dist_x = abs(xTwo - xOne);
     float dist_y = abs(yTwo - yOne);
@@ -389,12 +297,12 @@ float lidar_sensor::distP2P(lidarPoint pointOne, lidarPoint pointTwo)
     return sqrt(pow(dist_x, 2.0) + pow(dist_y, 2.0));
 }
 
-float lidar_sensor::angleP2P(lidarPoint pointOne, lidarPoint pointTwo)
+float lidar_sensor::angleP2P(ct::polarPoint pointOne, ct::polarPoint pointTwo)
 {
-    float xOne = pointOne.range*std::cos(pointOne.angle);
-    float yOne = pointOne.range*std::sin(pointOne.angle);
-    float xTwo = pointTwo.range*std::cos(pointTwo.angle);
-    float yTwo = pointTwo.range*std::sin(pointTwo.angle);
+    float xOne = pointOne.rho*std::cos(pointOne.theta);
+    float yOne = pointOne.rho*std::sin(pointOne.theta);
+    float xTwo = pointTwo.rho*std::cos(pointTwo.theta);
+    float yTwo = pointTwo.rho*std::sin(pointTwo.theta);
 
     float dist_x = abs(xTwo - xOne);
     float dist_y = abs(yTwo - yOne);
@@ -402,7 +310,7 @@ float lidar_sensor::angleP2P(lidarPoint pointOne, lidarPoint pointTwo)
     return atan(dist_y / dist_x);
 }
 
-float lidar_sensor::calRange(std::vector<lidarPoint> points, float alpha)
+float lidar_sensor::calRange(std::vector<ct::polarPoint> points, float alpha)
 {
     float range = 0.0;
     float weight = 1.0;
@@ -411,28 +319,64 @@ float lidar_sensor::calRange(std::vector<lidarPoint> points, float alpha)
 
     for(unsigned int i = 0; i < points.size(); i++)
     {
-        num += weight * points[i].range * std::cos(points[i].angle - alpha);
+        num += weight * points[i].rho * std::cos(points[i].theta - alpha);
         den += weight;
     }
     return range = num/den;
 }
 
-float lidar_sensor::calAlpha(std::vector<lidarPoint> points)
+float lidar_sensor::calAlpha(std::vector<ct::polarPoint> points)
 {
-    float alpha = 0.0;
-    float weight = 1.0;
-    float num = 0;
-    float den = 0;
-    for(unsigned int i = 0; i < points.size() - 1; i++)
+    //float weight = 1.0;
+    float num = 0.0;
+    float den = 0.0;
+    float centroidX = 0.0;
+    float centroidY = 0.0;
+
+    for (unsigned int i = 0; i < points.size(); i++)
+    {
+        centroidX += points[i].rho*std::cos(points[i].theta);
+        centroidY += points[i].rho*std::sin(points[i].theta);
+    }
+
+    centroidX /= points.size();
+    centroidY /= points.size();
+
+    for (unsigned int i = 0; i < points.size(); i++)
+    {
+        num += (points[i].rho * std::cos(points[i].theta) - centroidX) * (points[i].rho * std::sin(points[i].theta) - centroidY);
+        den += std::pow((points[i].rho * std::sin(points[i].theta) - centroidY),2.0) - std::pow((points[i].rho * std::cos(points[i].theta) - centroidX),2.0);
+    }
+    num *= -2.0;
+
+
+    /*float sum11 = 0;
+    float sum21 = 0;
+    float sum12 = 0;
+    float sum22 = 0;
+    for (unsigned int i = 0; i < points.size(); i++)
+    {
+        sum11 += std::pow(points[i].range, 2.0) * std::sin(2*points[i].angle);
+        sum21 += std::pow(points[i].range, 2.0) * std::cos(2*points[i].angle);
+        for (unsigned int j = 0; j < points.size(); j++)
+        {
+            sum12 += 2 * points[i].range * points[j].range * std::cos(points[i].angle) * std::sin(points[j].angle);
+            sum22 += 2 * points[i].range * points[j].range * std::cos(points[i].angle + points[j].angle);
+        }
+    }
+    sum12 *= 2/points.size();
+    sum22 *= 1/points.size();
+
+    num = sum11 - sum12;
+    den = sum21 - sum22;*/
+    /*for(unsigned int i = 0; i < points.size() - 1; i++)
     {
         for(unsigned int j = 1; j < points.size(); j++)
         {
             num = weight * std::pow(points[i].range, 2.0) * std::sin(2*points[i].angle) - ((2 / weight) * weight * weight* points[i].range * points[j].range * std::cos(points[i].angle) * std::sin(points[j].angle));
             den = weight * std::pow(points[i].range, 2.0) * std::cos(2*points[i].angle) - ((1 / weight) * weight * weight * points[i].range * points[j].range * std::cos(points[i].angle + points[j].angle));
         }
-    }
-    return alpha = 0.5 * std::atan2(num, den);
-    /*float temp_angle = angleP2P(points[0],points[points.size()-1]);
-    alpha = -std::atan(-1/std::tan(temp_angle));
-    return alpha;*/
+    }*/
+    //std::cout << "num: " << num << "  den: " << den << std::endl;
+    return 0.5 * std::atan2(num, den);
 }
