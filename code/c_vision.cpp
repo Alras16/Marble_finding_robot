@@ -101,7 +101,7 @@ void c_vision::find_marbles()
 
         std::vector<cv::Vec3f> circles;
 
-        marble_position *new_marble;
+        ct::marble *new_marble;
 
         for (unsigned int i = 0; i < contours.size(); i++)
         {
@@ -123,7 +123,7 @@ void c_vision::find_marbles()
     }
 }
 
-std::vector<c_vision::marble_position*> c_vision::getMarbles()
+std::vector<ct::marble*> c_vision::getMarbles()
 {
     return marbles;
 }
