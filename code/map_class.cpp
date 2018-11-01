@@ -14,7 +14,7 @@ map_class::map_class(std::string fileName, int numb_of_rooms, bool setAsTree)
         paintRoom(listOfRooms[i],color);
 }
 
-std::vector<map_class::room*> map_class::getRooms()
+std::vector<ct::room*> map_class::getRooms()
 {
     return listOfRooms;
 }
@@ -26,16 +26,16 @@ void map_class::showMap(std::string title)
     cv::imshow(title,temp);
 }
 
-cv::Point map_class::convertToPixel(point aPoint)
+cv::Point map_class::convertToPixel(ct::point aPoint)
 {
     int pixelX = round((aPoint.x*image_w)/WORLD_WIDTH) + (image_w / 2);
     int pixelY = round((aPoint.y*image_h)/WORLD_HEIGHT) + (image_h / 2);
     return cv::Point(pixelX,pixelY);
 }
 
-map_class::point map_class::convertToCoordinate(cv::Point pixel)
+ct::point map_class::convertToCoordinate(cv::Point pixel)
 {
-    point temp;
+    ct::point temp;
     temp.x = ((pixel.x*WORLD_WIDTH)/image_w) - (WORLD_WIDTH / 2);
     temp.y = ((pixel.y*WORLD_HEIGHT)/image_h) - (WORLD_HEIGHT / 2);
     return temp;
@@ -81,7 +81,7 @@ void map_class::init_rooms(int numb_of_rooms)
     {
         for (int i = 0; i < numb_of_rooms; i++)
         {
-            room * tempRoom = new room;
+            ct::room * tempRoom = new ct::room;
             tempRoom->roomNumber = roomNumb++;
             tempRoom->probabilityOfMarbles = 0.0;
             std::vector<cv::Point> temp = find_color(color);
@@ -94,7 +94,7 @@ void map_class::init_rooms(int numb_of_rooms)
     {
         for (int i = 0; i < numb_of_rooms; i++)
         {
-            room * tempRoom = new room;
+            ct::room * tempRoom = new ct::room;
             tempRoom->roomNumber = roomNumb++;
             tempRoom->probabilityOfMarbles = 0.0;
             tempRoom->coordinates = find_color(color);
@@ -104,7 +104,7 @@ void map_class::init_rooms(int numb_of_rooms)
     }
 }
 
-void map_class::paintRoom(room* theRoom, cv::Vec3i color)
+void map_class::paintRoom(ct::room* theRoom, cv::Vec3i color)
 {
     std::vector<cv::Point> temp;
     if (asTree)
@@ -120,7 +120,7 @@ void map_class::paintRoom(room* theRoom, cv::Vec3i color)
     }
 }
 
-void map_class::paintMarble(foundMarble marble)
+void map_class::paintMarble(ct::foundMarble marble)
 {
-    cv::circle(ori_map,marble.center,5,cv::Scalar({255,0,0}),-1);
+    cv::circle(ori_map,marble.fMarble.center,5,cv::Scalar({255,0,0}),-1);
 }
