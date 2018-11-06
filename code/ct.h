@@ -23,17 +23,17 @@ public:
         float range;
     };
 
-    struct detectedLine
-    {
-        line dLine;
-        polarPoint start;
-        polarPoint end;
-    };
-
     struct point
     {
         float x;
         float y;
+    };
+
+    struct detectedLine
+    {
+        line dLine;
+        point start;
+        point end;
     };
 
     struct room
