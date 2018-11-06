@@ -29,15 +29,14 @@ void lidar_sensor::visualize_lidar(std::string name)
     cv::Mat im(height, width, CV_8UC3);
     im.setTo(0);
 
+    // Visualise original data
     unsigned int nranges = ori_data.size();
-
     for (unsigned int i = 0; i < nranges; i++)
     {
         float angle = ori_data[i].theta;
         float range = ori_data[i].rho;
 
         cv::Point2f startpt(center,center);
-
         cv::Point2f endpt(center + range * px_per_m * std::cos(angle),center - range * px_per_m * std::sin(angle));
         int green;
         int red;
@@ -54,36 +53,40 @@ void lidar_sensor::visualize_lidar(std::string name)
         cv::line(im, startpt * 16, endpt * 16, cv::Scalar(255, green, red), 1, cv::LINE_AA, 4);
     }
 
-    for (unsigned int i = 0; i < filtered_data.size(); i++)
-    {
-
-        if ((signed(i) == start_point) || (signed(i) == start_point + number_of_points - 1))
-        {
-            float angle = filtered_data[i].theta;
-            float range = filtered_data[i].rho;
-
-            cv::Point2f startpt(center,center);
-            cv::Point2f endpt(center + range * px_per_m * std::cos(angle),center - range * px_per_m * std::sin(angle));
-
-            cv::line(im, startpt * 16, endpt * 16, cv::Scalar(255, 0, 255), 1, cv::LINE_AA, 4);
-
-        }
-    }
     cv::circle(im, cv::Point(center, center), 2, cv::Scalar(0, 0, 255));
 
-    cv::Point2f temp_startpt(center + x_start*20,center - y_start*20);
-    cv::Point2f temp_endpt(center + x_end*20,center - y_end*20);
-    cv::line(im, temp_startpt * 16, temp_endpt * 16, cv::Scalar(255, 255, 255), 2, cv::LINE_AA, 4);
-
-    for (unsigned int i = 0; i < found_marbles_point.size(); i++)
+    // Visualise marbles
+    for (unsigned int i = 0; i < foundMarbles.size(); i++)
     {
-        float xMarble = center + found_marbles_point[i].rho*px_per_m*std::cos(found_marbles_point[i].theta);
-        float yMarble = center - found_marbles_point[i].rho*px_per_m*std::sin(found_marbles_point[i].theta);
-        float rMarble = px_per_m*found_marbles_radius[i];
+        float xMarble = center + foundMarbles[i].centerPolar.rho*px_per_m*std::cos(foundMarbles[i].centerPolar.theta);
+        float yMarble = center - foundMarbles[i].centerPolar.rho*px_per_m*std::sin(foundMarbles[i].centerPolar.theta);
+        float rMarble = px_per_m * foundMarbles[i].radius;
 
         cv::circle(im, cv::Point(xMarble, yMarble), rMarble, cv::Scalar(0, 255, 0));
     }
 
+    // Visualise lines
+    for (unsigned int i = 0; i < foundLines.size(); i++)
+    {
+        cv::Point2f tsp(center + foundLines[i]->start.x*px_per_m,center - foundLines[i]->start.y*px_per_m);
+        cv::Point2f tep(center + foundLines[i]->end.x*px_per_m,center - foundLines[i]->end.y*px_per_m);
+        cv::line(im, tsp * 16, tep * 16, cv::Scalar(0, 0, 255), 2, cv::LINE_AA, 4);
+    }
+
+    // Visualise lines for marble cutouts
+    /*for (unsigned int i = 0; i < foundMarbles.size(); i++)
+    {
+        std::vector<float> marbleCutout = marbleCoverage(foundMarbles[i]);
+        for (unsigned int j = 0; j < marbleCutout.size(); j++)
+        {
+            cv::Point2f temp_start(center,center);
+            cv::Point2f temp_end(center + 10.0 * px_per_m * std::cos(marbleCutout[j]),center - 10.0 * px_per_m * std::sin(marbleCutout[j]));
+            cv::line(im, temp_start * 16, temp_end * 16, cv::Scalar(255, 0, 255), 1, cv::LINE_AA, 4);
+        }
+    }*/
+
+
+    // Show the finished image
     cv::imshow(name, im);
 }
 
@@ -109,8 +112,7 @@ void lidar_sensor::find_marbles()
 {
     if (filtered_data.size() != 0)
     {
-        found_marbles_point.clear();
-        found_marbles_radius.clear();
+        foundMarbles.clear();
         float threshold = 0.2;
         float maxRange = 10;
         start_point = 0;
@@ -157,16 +159,17 @@ void lidar_sensor::find_marbles()
 
             float circleRadius = (pow(circleChord, 2.0) + 4*pow(circleCamber, 2.0)) / (8*circleCamber);
 
+            ct::marble tempMarble;
             ct::polarPoint temp;
             temp.theta = alpha;
             temp.rho = circleRadius + filtered_data[start_point + ((number_of_points - 1) / 2)].rho;
 
             float dist_circles = 0.01;
             float prev_radius = 0.0;
-            if (found_marbles_point.size() != 0)
+            if (foundMarbles.size() != 0)
             {
-                dist_circles = distP2P(temp,found_marbles_point[found_marbles_point.size() - 1]);
-                prev_radius = found_marbles_radius[found_marbles_radius.size() - 1] / 2;
+                dist_circles = distP2P(temp,foundMarbles[foundMarbles.size() - 1].centerPolar);
+                prev_radius = foundMarbles[foundMarbles.size() - 1].radius / 2;
             }
             if ((circleCamber > 0.05) && (circleChord > 0.05) && (dist_circles > prev_radius))
             {
@@ -179,8 +182,11 @@ void lidar_sensor::find_marbles()
                     std::cout << "  circle camber: " << circleCamber << std::endl;
                     std::cout << "  circle radius: " << circleRadius << std::endl << std::endl;*/
 
-                    found_marbles_point.push_back(temp);
-                    found_marbles_radius.push_back(circleRadius);
+                    tempMarble.centerPolar = temp;
+                    tempMarble.radius = circleRadius;
+                    foundMarbles.push_back(tempMarble);
+                    //found_marbles_point.push_back(temp);
+                    //found_marbles_radius.push_back(circleRadius);
                 }
             }
             else
@@ -190,23 +196,13 @@ void lidar_sensor::find_marbles()
     }
 }
 
-std::vector<ct::detectedLine> lidar_sensor::find_lines()
-{
+void lidar_sensor::find_lines()
+{   
     // Line conditions
-    float threshold = 0.05;   // angle
-    //float point_dist = 0.625;      // distance between two lines
-
-    // Vectors
-    std::vector<ct::detectedLine> found_lines;
+    float threshold = 0.0025; // angle
+    float angleIncrement = abs(ori_data[0].theta - ori_data[1].theta) * 1.25;
 
     // Define parameters for least square fitting
-    /*float theta_start;
-    float theta_end;
-    float rho_start;
-    float rho_end;
-    float angle = 0.0;
-    float angle1 = 0.0;
-    float angle2 = 0.0;*/
     float prev_alpha = 0.0;
     float curr_alpha = 0.0;
     float prev_range = 0.0;
@@ -216,7 +212,8 @@ std::vector<ct::detectedLine> lidar_sensor::find_lines()
 
     bool condition_satisfied = true;
 
-    std::cout << "total number of points: " << filtered_data.size() << std::endl;
+    foundLines.clear();
+
     while ((index_start < filtered_data.size()) || (index_end < filtered_data.size()))
     {
         condition_satisfied = true;
@@ -250,30 +247,55 @@ std::vector<ct::detectedLine> lidar_sensor::find_lines()
             }
 
             float delta_angle = abs(curr_alpha - prev_alpha);
-
+            //std::cout << "delta theta: " << delta_theta << std::endl;
             //std::cout << "alpha: " << prev_alpha << " range: " << prev_range << std::endl;
             //std::cout << "prev angle: " << prev_alpha << " curr angle: " << curr_alpha << std::endl;
             //std::cout << "close to 90: " << closeTo90 << std::endl;
             //std::cout << "current end: " << index_end << std::endl;
+
             if ((delta_angle > threshold) && (line_points.size() < 4))
             {
-                //std::cout << "hej" << std::endl;
                 index_end--;
                 index_start = index_end;
                 condition_satisfied = false;
             }
             else if ((delta_angle > threshold) || (index_end > filtered_data.size()))
             {
-                std::cout << "prev angle: " << prev_alpha << " curr angle: " << curr_alpha << std::endl;
-                std::cout << "start point index: " << index_start << "  end point index: " << index_end - 2 << std::endl;
-                std::cout << "delta angle: " << delta_angle << std::endl;
-                std::cout << "orthogornal angle: " << std::atan(-1/prev_alpha) << std::endl;
-                std::cout << std::endl;
-                ct::detectedLine temp_line;
-                temp_line.dLine.range = prev_range;
-                temp_line.dLine.alpha = prev_alpha;
-                // calculate start and end point
-                found_lines.push_back(temp_line);
+                // check for breaks inside the line
+                bool angle_to_large = false;;
+                for (unsigned int i = 0; i < line_points.size() - 2; i++)
+                {
+                    float delta_theta = abs(line_points[i].theta - line_points[i + 1].theta);
+                    if (delta_theta > angleIncrement)
+                    {
+                        angle_to_large = true;
+                        break;
+                    }
+                }
+
+                if (!angle_to_large) // if no breaks
+                {
+                    std::cout << "prev angle: " << prev_alpha << " curr angle: " << curr_alpha << std::endl;
+                    std::cout << "start point index: " << index_start << "  end point index: " << index_end - 2 << std::endl;
+                    std::cout << "delta angle: " << delta_angle << std::endl;
+                    ct::detectedLine* temp_line = new ct::detectedLine;
+                    temp_line->dLine.range = prev_range;
+                    temp_line->dLine.alpha = prev_alpha;
+                    // calculate start and end point
+                    ct::line startLine = calOrthoLine(temp_line->dLine,line_points[0]);
+                    ct::line endLine = calOrthoLine(temp_line->dLine,line_points[line_points.size() - 2]);
+                    ct::point startP = calStartEndPoint(temp_line->dLine,startLine);
+                    ct::point endP = calStartEndPoint(temp_line->dLine,endLine);
+                    temp_line->start = startP;
+                    temp_line->end = endP;
+                    std::cout << "start point: (" << startP.x << "," << startP.y << ")" << std::endl;
+                    std::cout << "end point:   (" << endP.x << "," << endP.y << ")" << std::endl;
+
+                    std::cout << std::endl;
+
+                    foundLines.push_back(temp_line);
+                }
+
                 index_end--;
                 index_start = index_end;
                 condition_satisfied = false;
@@ -281,7 +303,62 @@ std::vector<ct::detectedLine> lidar_sensor::find_lines()
         }
     }
     std::cout << "run ended" << std::endl;
-    return found_lines;
+}
+
+void lidar_sensor::merge_lines()
+{
+    float threshold = 0.1;
+    float thresholdAlpha = 0.1;
+    std::vector<ct::detectedLine*> tempLines;
+    std::vector<std::vector<float>> tempAngles;
+    for (unsigned int i = 0; i < foundMarbles.size(); i++)
+    {
+        std::vector<float> temp = marbleCoverage(foundMarbles[i]);
+        tempAngles.push_back(temp);
+    }
+
+    bool merge = false;
+    for (unsigned int i = 0; i < foundLines.size() - 1; i++)
+    {
+        merge = false;
+        float endTheta = std::atan2(foundLines[i]->end.y,foundLines[i]->end.x); // end off first line
+        float startTheta = std::atan2(foundLines[i + 1]->start.y,foundLines[i + 1]->start.x); // start of next line
+
+        for (unsigned int j = 0; j < tempAngles.size(); j++)
+        {
+            float deltaAngleOne = abs(endTheta - tempAngles[j][0]);
+            float deltaAngleTwo = abs(startTheta - tempAngles[j][1]);
+            float deltaAngleThree = abs(foundLines[i]->dLine.alpha - foundLines[i + 1]->dLine.alpha);
+            if ((deltaAngleOne < threshold) && (deltaAngleTwo < threshold) && (deltaAngleThree < thresholdAlpha))
+            {
+                merge = true;
+                break;
+            }
+        }
+
+        if (merge)
+        {
+            //merge lines
+            ct::detectedLine *tempLine = new ct::detectedLine;
+            tempLine->start = foundLines[i]->start;
+            tempLine->end = foundLines[i + 1]->end;
+            tempLine->dLine.alpha = (foundLines[i]->dLine.alpha + foundLines[i + 1]->dLine.alpha) / 2;
+            tempLine->dLine.range = (foundLines[i]->dLine.range + foundLines[i + 1]->dLine.range) / 2;
+            tempLines.push_back(tempLine);
+        }
+        else if ((i == foundLines.size() - 2))
+        {
+            // dublicate line
+            tempLines.push_back(foundLines[i]);
+            tempLines.push_back(foundLines[i + 1]);
+        }
+        else
+        {
+            //dublicate line
+            tempLines.push_back(foundLines[i]);
+        }
+    }
+    foundLines = tempLines;
 }
 
 float lidar_sensor::distP2P(ct::polarPoint pointOne, ct::polarPoint pointTwo)
@@ -327,7 +404,6 @@ float lidar_sensor::calRange(std::vector<ct::polarPoint> points, float alpha)
 
 float lidar_sensor::calAlpha(std::vector<ct::polarPoint> points)
 {
-    //float weight = 1.0;
     float num = 0.0;
     float den = 0.0;
     float centroidX = 0.0;
@@ -349,34 +425,49 @@ float lidar_sensor::calAlpha(std::vector<ct::polarPoint> points)
     }
     num *= -2.0;
 
-
-    /*float sum11 = 0;
-    float sum21 = 0;
-    float sum12 = 0;
-    float sum22 = 0;
-    for (unsigned int i = 0; i < points.size(); i++)
-    {
-        sum11 += std::pow(points[i].range, 2.0) * std::sin(2*points[i].angle);
-        sum21 += std::pow(points[i].range, 2.0) * std::cos(2*points[i].angle);
-        for (unsigned int j = 0; j < points.size(); j++)
-        {
-            sum12 += 2 * points[i].range * points[j].range * std::cos(points[i].angle) * std::sin(points[j].angle);
-            sum22 += 2 * points[i].range * points[j].range * std::cos(points[i].angle + points[j].angle);
-        }
-    }
-    sum12 *= 2/points.size();
-    sum22 *= 1/points.size();
-
-    num = sum11 - sum12;
-    den = sum21 - sum22;*/
-    /*for(unsigned int i = 0; i < points.size() - 1; i++)
-    {
-        for(unsigned int j = 1; j < points.size(); j++)
-        {
-            num = weight * std::pow(points[i].range, 2.0) * std::sin(2*points[i].angle) - ((2 / weight) * weight * weight* points[i].range * points[j].range * std::cos(points[i].angle) * std::sin(points[j].angle));
-            den = weight * std::pow(points[i].range, 2.0) * std::cos(2*points[i].angle) - ((1 / weight) * weight * weight * points[i].range * points[j].range * std::cos(points[i].angle + points[j].angle));
-        }
-    }*/
-    //std::cout << "num: " << num << "  den: " << den << std::endl;
     return 0.5 * std::atan2(num, den);
+}
+
+ct::line lidar_sensor::calOrthoLine(ct::line aLine, ct::polarPoint point)
+{
+    ct::line tempLine;
+    float orthoAlpha = std::atan(-1/aLine.alpha);
+    float range = point.rho * std::cos(point.theta - orthoAlpha);
+
+    if (range < 0.0)
+    {
+        range *= -1.0;
+        orthoAlpha += M_PI;
+    }
+
+    tempLine.alpha = orthoAlpha;
+    tempLine.range = range;
+
+    return tempLine;
+}
+
+ct::point lidar_sensor::calStartEndPoint(ct::line foundLine, ct::line orthoLine)
+{
+    float x = orthoLine.range * std::sin(foundLine.alpha) - foundLine.range * std::sin(orthoLine.alpha);
+    float y = orthoLine.range * std::cos(foundLine.alpha) - foundLine.range * std::cos(orthoLine.alpha);
+    float den = std::cos(foundLine.alpha) * std::sin(orthoLine.alpha) - std::sin(foundLine.alpha) * std::cos(orthoLine.alpha);
+
+    x /= den;
+    x *= -1.0;
+    y /= den;
+
+    ct::point tempPoint;
+    tempPoint.x = x;
+    tempPoint.y = y;
+
+    return tempPoint;
+}
+
+std::vector<float> lidar_sensor::marbleCoverage(ct::marble marble)
+{
+    std::vector<float> tempVec;
+    float deltaTheta = std::asin(marble.radius / marble.centerPolar.rho) * MARBLE_PERCENTAGE;
+    tempVec.push_back(marble.centerPolar.theta - deltaTheta);
+    tempVec.push_back(marble.centerPolar.theta + deltaTheta);
+    return tempVec;
 }
