@@ -6,17 +6,15 @@ motion_planning::motion_planning()
 }
 
 
-goal_position motion_planning::tangent_bug_algoritm(vector<vector<cv::Point>> list_of_points, vector<int> rooms){
+goal_position motion_planning::tangent_bug_algoritm(){
 
-    ofstream target_locations;
 
-    vector<int>coordinates_x;
-    vector<int>coordinates_y;
+    // Load the data from the text file into the vector containing info of the center of mass
+    // of the rooms
 
-    bool x_coordinate_found = false;
-    bool y_coordinate_found = false;
 
-    int center_of_mass_x = 0, center_of_mass_y = 0;
+    // Find the center of mass of the rooms and save it in a vector to be used throughtout the
+    // rest of the simulation
 
     if (target_locations.size() == 0){
 
@@ -43,11 +41,17 @@ goal_position motion_planning::tangent_bug_algoritm(vector<vector<cv::Point>> li
             }
             center_of_mass_y = center_of_mass_y/coordinates_y.size();
 
-            target_locations.open("target_locations");
-            target_locations << center_of_mass_x << "," << center_of_mass_y << ""
+            target_locations[i].push_back(center_of_mass_x);
+            target_locations[i].push_back(center_of_mass_y);
         }
 
     }
+
+
+    // Start tangent bug algoritm and continue to all rooms is serached
+
+    if ()
+
 
 
 }

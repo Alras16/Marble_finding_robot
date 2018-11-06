@@ -21,14 +21,28 @@ struct goal_position
     float goal_angle;
 };
 
+struct current_position
+{
+    float current_position_x;
+    float current_position_y;
+};
+
 class motion_planning
 {
 public:
     motion_planning();
-    virtual goal_position tangent_bug_algoritm(vector<int>);
+    virtual goal_position tangent_bug_algoritm();
 
-private:
+protected:
 
+    bool target_location_reached = false;
+    bool all_rooms_searched = false;
+
+    vector<vector<float>> target_locations;
+    vector<int>coordinates_x;
+    vector<int>coordinates_y;
+
+    int center_of_mass_x = 0, center_of_mass_y = 0;
 
 };
 
