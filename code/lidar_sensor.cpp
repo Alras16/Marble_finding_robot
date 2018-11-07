@@ -18,6 +18,53 @@ void lidar_sensor::init_data(std::vector<ct::polarPoint> data)
     lidar_data_updated = true;
 }
 
+ct::marble lidar_sensor::get_closest_marble()
+{
+
+    ct::marble closest_marble;
+
+    if (foundMarbles.size() != 0)
+    {
+        closest_marble = foundMarbles[0];
+        for (unsigned i = 0; i < foundMarbles.size(); i++)
+        {
+            if (closest_marble.radius < foundMarbles[i].radius)
+            {
+                closest_marble = foundMarbles[i];
+            }
+        }
+    }
+    else
+    {
+        closest_marble.radius = 0;
+    }
+
+    return closest_marble;
+}
+
+ct::line lidar_sensor::get_closest_line()
+{
+    ct::line closest_line;
+
+    if (foundLines.size() != 0)
+    {
+        closest_line = foundLines[0]->dLine;
+        for(unsigned i = 0; i < foundLines.size(); i++)
+        {
+            if (closest_line.range > foundLines[i]->dLine.range)
+            {
+                closest_line = foundLines[i]->dLine;
+            }
+        }
+    }
+    else
+    {
+        closest_line.range = 10;
+    }
+
+    return closest_line;
+}
+
 void lidar_sensor::visualize_lidar(std::string name)
 {
     int width = 450;
@@ -214,7 +261,7 @@ void lidar_sensor::find_lines()
 
     foundLines.clear();
 
-    while ((index_start < filtered_data.size()) || (index_end < filtered_data.size()))
+    while ((index_start < filtered_data.size()) && (index_end < filtered_data.size()))
     {
         condition_satisfied = true;
         index_end += 2;
