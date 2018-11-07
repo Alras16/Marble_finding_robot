@@ -66,12 +66,5 @@ USEFULL COMMANDS
 	- aborts the command 
 	- for example git merge --abort (aborts the merge)
 
-   avoid to type username and password every time
-	- git remote -v
-	    - will give you 
-		origin  https://github.com/Alras16/Marble_finding_robot.git (fetch)
-		origin  https://github.com/Alras16/Marble_finding_robot.git (push)
-	- 
-
 
 
