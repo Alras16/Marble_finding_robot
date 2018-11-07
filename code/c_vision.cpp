@@ -107,6 +107,7 @@ void c_vision::find_marbles()
         {
             new_marble->center.x = ((max_col[i] - min_col[i])/2) + min_col[i];
             new_marble->center.y = ((max_row[i] - min_row[i])/2) + min_row[i];
+            new_marble->distance_to_center = ((max_col[i] - min_col[i])/2) + min_col[i] - ori_image.cols / 2;
             new_marble->radius = (max_row[i] - min_row[i])/2;
         }
 
@@ -119,7 +120,7 @@ void c_vision::find_marbles()
              //circle outline
             cv::circle( temp_image, new_marble->center, new_marble->radius, cv::Scalar(0,0,255), 1, 8, 0 );
         }
-        cv::imshow( "Contour demo", temp_image );
+      //  cv::imshow( "Contour demo", temp_image ); // Must have the same mutex lock
     }
 }
 
