@@ -124,3 +124,27 @@ void map_class::paintMarble(ct::foundMarble marble)
 {
     cv::circle(ori_map,marble.fMarble.center,5,cv::Scalar({255,0,0}),-1);
 }
+
+void map_class::find_center_of_mass(){
+
+    int center_of_mass_x = 0, center_of_mass_y = 0;
+
+     for (unsigned int i = 0; i < listOfRooms.size(); i++)
+     {
+
+         for(unsigned int j = 0; j < listOfRooms[i]->coordinates.size() ; j++)
+         {
+
+           center_of_mass_x += listOfRooms[i]->coordinates[j].x;
+           center_of_mass_y += listOfRooms[i]->coordinates[j].y;
+
+         }
+           center_of_mass_x = center_of_mass_x/listOfRooms[i]->coordinates.size();
+           center_of_mass_y = center_of_mass_y/listOfRooms[i]->coordinates.size();
+
+           listOfRooms[i]->centerOfMass.x = center_of_mass_x;
+           listOfRooms[i]->centerOfMass.y = center_of_mass_y;
+     }
+
+
+}
