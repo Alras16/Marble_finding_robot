@@ -51,6 +51,7 @@ public:
         cv::Point center;
         polarPoint centerPolar;
         float radius;
+        float distance_to_center;
     };
 
     struct foundMarble
