@@ -12,6 +12,7 @@ SOURCES += test_main.cpp \
     dataloggin.cpp \
     ct.cpp \
     motion_planning.cpp \
+    setup.cpp
 
 CONFIG += link_pkgconfig
 PKGCONFIG += gazebo
@@ -31,6 +32,7 @@ HEADERS += \
     dataloggin.h \
     ct.h \
     motion_planning.h \
+    setup.h
 
 DISTFILES += \
     fuzzybugcontroller.fll
