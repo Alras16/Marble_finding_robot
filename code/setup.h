@@ -5,14 +5,15 @@
 #include <gazebo/msgs/msgs.hh>
 #include <gazebo/transport/transport.hh>
 #include <opencv2/opencv.hpp>
-
 #include <vector>
 #include <string>
 #include <ctime>
 #include <iostream>
+
 #include "c_vision.h"
 #include "fuzzybugcontroller.h"
-#include "laserscanner.h"
+#include "lidar_sensor.h"
+#include "ct.h"
 
 
 class setup
@@ -27,8 +28,8 @@ public:
      void lidarCallback(ConstLaserScanStampedPtr &msg);
      void initGazebo();
 
-     LaserScanner laser_scanner;
      c_vision camera;
+     lidar_sensor lidar_object;
      FuzzyBugController controller;
 
      gazebo::transport::NodePtr node;
