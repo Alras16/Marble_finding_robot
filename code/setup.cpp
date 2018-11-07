@@ -2,7 +2,7 @@
 
 boost::mutex setup::mutex1;
 
-setup::setup() : controller( &laser_scanner)
+setup::setup()
 {
 
 }
@@ -21,82 +21,35 @@ void setup::cameraCallback(ConstImageStampedPtr &msg){
     camera.set_image(im);
 
     mutex1.lock();
-    cv::imshow("camera", im);
+   // cv::imshow("camera", im);
     cv::waitKey(1);
     mutex1.unlock();
 
 }
 
-void setup::lidarCallback(ConstLaserScanStampedPtr &msg){
-
-
-    bool lidarCalledOne = true;
-
-    laser_scanner.parseLaserScannerMessage(msg);
-
-    //  std::cout << ">> " << msg->DebugString() << std::endl;
+void setup::lidarCallback(ConstLaserScanStampedPtr &msg)
+{
     float angle_min = float(msg->scan().angle_min());
-    //  double angle_max = msg->scan().angle_max();
     float angle_increment = float(msg->scan().angle_step());
 
-    float range_min = float(msg->scan().range_min());
     float range_max = float(msg->scan().range_max());
-
-    int sec = msg->time().sec();
-    int nsec = msg->time().nsec();
 
     int nranges = msg->scan().ranges_size();
     int nintensities = msg->scan().intensities_size();
 
     assert(nranges == nintensities);
 
-    int width = 400;
-    int height = 400;
-    float px_per_m = 200 / range_max;
+    std::vector<ct::polarPoint> data;
 
-    cv::Mat im(height, width, CV_8UC3);
-    im.setTo(0);
-
-    //testData lidar("lidarTestFive");
-    //testData::lidarData data = lidar.getLidarData();
-
-    for (int i = 0; i < nranges; i++) {
-      float angle = angle_min + i * angle_increment;
-      float range = std::min(float(msg->scan().ranges(i)), range_max);
-      //float angle = data.angle[i];
-      //float range = data.range[i];
-
-
-      if (!lidarCalledOne)
-      {
-          std::string temp_string = std::to_string(angle)  + " " + std::to_string(range);
-         // lidar.write(temp_string);
-      }
-
-      //    double intensity = msg->scan().intensities(i);
-      cv::Point2f startpt(200.5f + range_min * px_per_m * std::cos(angle),
-                          200.5f - range_min * px_per_m * std::sin(angle));
-      cv::Point2f endpt(200.5f + range * px_per_m * std::cos(angle),
-                        200.5f - range * px_per_m * std::sin(angle));
-      cv::line(im, startpt * 16, endpt * 16, cv::Scalar(255, 255, 255, 255), 1,
-               cv::LINE_AA, 4);
-
-      //    std::cout << angle << " " << range << std::endl; // << " " << intensity << std::endl;
+    for (int i = 0; i < nranges; i++)
+    {
+        ct::polarPoint tempPoint;
+        tempPoint.theta = angle_min + i * angle_increment;
+        tempPoint.rho = std::min(float(msg->scan().ranges(i)), range_max);
+        data.push_back(tempPoint);
     }
-      if (!lidarCalledOne)
-          std::cout << "new data generated!" << std::endl;
-    lidarCalledOne = true;
 
-
-    cv::circle(im, cv::Point(200, 200), 2, cv::Scalar(0, 0, 255));
-    cv::putText(im, std::to_string(sec) + ":" + std::to_string(nsec),
-                cv::Point(10, 20), cv::FONT_HERSHEY_PLAIN, 1.0,
-                cv::Scalar(255, 0, 0));
-
-    mutex1.lock();
-    cv::imshow("lidar", im);
-    cv::waitKey(1);
-    mutex1.unlock();
+    lidar_object.init_data(data);
 
 }
 
