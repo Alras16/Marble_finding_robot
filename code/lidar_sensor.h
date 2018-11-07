@@ -22,6 +22,8 @@ public:
     void find_marbles();
     void find_lines();
     void merge_lines();
+    ct::line get_closest_line();
+    ct::marble get_closest_marble();
 
 private:
     float distP2P(ct::polarPoint pointOne, ct::polarPoint pointTwo);
