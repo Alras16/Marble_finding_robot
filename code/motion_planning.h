@@ -12,8 +12,8 @@
 #include <vector>
 #include <iostream>
 #include <fstream>
-
-
+#include "ct.h"
+#include "map_class.h"
 
 struct goal_position
 {
@@ -37,12 +37,6 @@ protected:
 
     bool target_location_reached = false;
     bool all_rooms_searched = false;
-
-    vector<vector<float>> target_locations;
-    vector<int>coordinates_x;
-    vector<int>coordinates_y;
-
-    int center_of_mass_x = 0, center_of_mass_y = 0;
 
 };
 
