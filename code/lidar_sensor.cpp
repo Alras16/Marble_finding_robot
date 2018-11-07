@@ -244,45 +244,33 @@ void lidar_sensor::find_marbles()
 }
 
 void lidar_sensor::find_lines()
-{   
-    // Line conditions
-    float threshold = 0.0025; // angle
-    float angleIncrement = abs(ori_data[0].theta - ori_data[1].theta) * 1.25;
-
-    // Define parameters for least square fitting
-    float prev_alpha = 0.0;
-    float curr_alpha = 0.0;
-    float prev_range = 0.0;
-    float curr_range = 0.0;
-    unsigned int index_start = 0;
-    unsigned int index_end = 0;
-
-    bool condition_satisfied = true;
-
-    foundLines.clear();
-
-    while ((index_start < filtered_data.size()) && (index_end < filtered_data.size()))
+{
+    if (filtered_data.size() != 0)
     {
-        condition_satisfied = true;
-        index_end += 2;
-        std::vector<ct::polarPoint> line_points;
-        for (unsigned int i = index_start; i < index_end; i++)
-            line_points.push_back(filtered_data[i]);
+        // Line conditions
+        float threshold = 0.0025; // angle
+        float angleIncrement = abs(ori_data[0].theta - ori_data[1].theta) * 1.25;
 
-        prev_alpha = curr_alpha;
-        prev_range = curr_range;
-        curr_alpha = calAlpha(line_points);
-        curr_range = calRange(line_points, curr_alpha);
-        if (curr_range < 0.0)
-        {
-            curr_alpha += M_PI;
-            curr_range *= -1.0;
-        }
+        // Define parameters for least square fitting
+        float prev_alpha = 0.0;
+        float curr_alpha = 0.0;
+        float prev_range = 0.0;
+        float curr_range = 0.0;
+        unsigned int index_start = 0;
+        unsigned int index_end = 0;
 
-        while (condition_satisfied && (index_end < (filtered_data.size() + 1)))
+        bool condition_satisfied = true;
+
+        foundLines.clear();
+
+        while ((index_start < filtered_data.size()) && (index_end < filtered_data.size()))
         {
-            index_end++;
-            line_points.push_back(filtered_data[index_end - 1]);
+            condition_satisfied = true;
+            index_end += 2;
+            std::vector<ct::polarPoint> line_points;
+            for (unsigned int i = index_start; i < index_end; i++)
+                line_points.push_back(filtered_data[i]);
+
             prev_alpha = curr_alpha;
             prev_range = curr_range;
             curr_alpha = calAlpha(line_points);
@@ -293,63 +281,65 @@ void lidar_sensor::find_lines()
                 curr_range *= -1.0;
             }
 
-            float delta_angle = abs(curr_alpha - prev_alpha);
-            //std::cout << "delta theta: " << delta_theta << std::endl;
-            //std::cout << "alpha: " << prev_alpha << " range: " << prev_range << std::endl;
-            //std::cout << "prev angle: " << prev_alpha << " curr angle: " << curr_alpha << std::endl;
-            //std::cout << "close to 90: " << closeTo90 << std::endl;
-            //std::cout << "current end: " << index_end << std::endl;
-
-            if ((delta_angle > threshold) && (line_points.size() < 4))
+            while (condition_satisfied && (index_end < (filtered_data.size() + 1)))
             {
-                index_end--;
-                index_start = index_end;
-                condition_satisfied = false;
-            }
-            else if ((delta_angle > threshold) || (index_end > filtered_data.size()))
-            {
-                // check for breaks inside the line
-                bool angle_to_large = false;;
-                for (unsigned int i = 0; i < line_points.size() - 2; i++)
+                index_end++;
+                line_points.push_back(filtered_data[index_end - 1]);
+                prev_alpha = curr_alpha;
+                prev_range = curr_range;
+                curr_alpha = calAlpha(line_points);
+                curr_range = calRange(line_points, curr_alpha);
+                if (curr_range < 0.0)
                 {
-                    float delta_theta = abs(line_points[i].theta - line_points[i + 1].theta);
-                    if (delta_theta > angleIncrement)
+                    curr_alpha += M_PI;
+                    curr_range *= -1.0;
+                }
+
+                float delta_angle = abs(curr_alpha - prev_alpha);
+
+                if ((delta_angle > threshold) && (line_points.size() < 4))
+                {
+                    index_end--;
+                    index_start = index_end;
+                    condition_satisfied = false;
+                }
+                else if ((delta_angle > threshold) || (index_end > filtered_data.size()))
+                {
+                    // check for breaks inside the line
+                    bool angle_to_large = false;;
+                    for (unsigned int i = 0; i < line_points.size() - 2; i++)
                     {
-                        angle_to_large = true;
-                        break;
+                        float delta_theta = abs(line_points[i].theta - line_points[i + 1].theta);
+                        if (delta_theta > angleIncrement)
+                        {
+                            angle_to_large = true;
+                            break;
+                        }
                     }
+
+                    if (!angle_to_large) // if no breaks
+                    {
+                        ct::detectedLine* temp_line = new ct::detectedLine;
+                        temp_line->dLine.range = prev_range;
+                        temp_line->dLine.alpha = prev_alpha;
+                        // calculate start and end point
+                        ct::line startLine = calOrthoLine(temp_line->dLine,line_points[0]);
+                        ct::line endLine = calOrthoLine(temp_line->dLine,line_points[line_points.size() - 2]);
+                        ct::point startP = calStartEndPoint(temp_line->dLine,startLine);
+                        ct::point endP = calStartEndPoint(temp_line->dLine,endLine);
+                        temp_line->start = startP;
+                        temp_line->end = endP;
+
+                        foundLines.push_back(temp_line);
+                    }
+
+                    index_end--;
+                    index_start = index_end;
+                    condition_satisfied = false;
                 }
-
-                if (!angle_to_large) // if no breaks
-                {
-                    std::cout << "prev angle: " << prev_alpha << " curr angle: " << curr_alpha << std::endl;
-                    std::cout << "start point index: " << index_start << "  end point index: " << index_end - 2 << std::endl;
-                    std::cout << "delta angle: " << delta_angle << std::endl;
-                    ct::detectedLine* temp_line = new ct::detectedLine;
-                    temp_line->dLine.range = prev_range;
-                    temp_line->dLine.alpha = prev_alpha;
-                    // calculate start and end point
-                    ct::line startLine = calOrthoLine(temp_line->dLine,line_points[0]);
-                    ct::line endLine = calOrthoLine(temp_line->dLine,line_points[line_points.size() - 2]);
-                    ct::point startP = calStartEndPoint(temp_line->dLine,startLine);
-                    ct::point endP = calStartEndPoint(temp_line->dLine,endLine);
-                    temp_line->start = startP;
-                    temp_line->end = endP;
-                    std::cout << "start point: (" << startP.x << "," << startP.y << ")" << std::endl;
-                    std::cout << "end point:   (" << endP.x << "," << endP.y << ")" << std::endl;
-
-                    std::cout << std::endl;
-
-                    foundLines.push_back(temp_line);
-                }
-
-                index_end--;
-                index_start = index_end;
-                condition_satisfied = false;
             }
         }
     }
-    std::cout << "run ended" << std::endl;
 }
 
 void lidar_sensor::merge_lines()
