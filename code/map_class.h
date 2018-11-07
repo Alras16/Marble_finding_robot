@@ -24,6 +24,7 @@ public:
     ct::point convertToCoordinate(cv::Point pixel);
     void setCurrentLocation(cv::Point coordinate);
     cv::Point getCurrentLocation();
+    void find_center_of_mass();
 
 private:
 
@@ -32,6 +33,7 @@ private:
     void init_rooms(int numb_of_rooms);
     void paintRoom(ct::room* theRoom, cv::Vec3i color);
     void paintMarble(ct::foundMarble marble);
+
 
     std::vector<ct::room*> listOfRooms;
     std::vector<ct::foundMarble*> foundMarbles;
