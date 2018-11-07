@@ -4,9 +4,8 @@
 /*************************************************************/
 /*************************************************************/
 
-#include "laserscanner.h"
 #include <fl/Headers.h>
-
+#include "ct.h"
 struct ControlOutput
 {
     float direction;
@@ -19,15 +18,13 @@ struct ControlOutput
 class FuzzyBugController
 {
 public:
-  //  FuzzyBugController();
-    FuzzyBugController(LaserScanner* pc_laser_scanner);
+    FuzzyBugController();
     virtual ~FuzzyBugController() = default;
 
     virtual void buildController();
-    virtual ControlOutput getControlOutput();
+     ControlOutput getControlOutput(ct::line, ct::marble);
 
 protected:
-    LaserScanner*        m_pcLaserScanner;
 
     fl::Engine*          m_pcFLEngine;
     fl::InputVariable*   m_pflObstacleDirection;
