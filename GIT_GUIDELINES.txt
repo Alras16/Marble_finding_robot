@@ -62,3 +62,7 @@ USEFULL COMMANDS
 	- deletes old history and replaces with new one
 	- normally not recomended 
 
+   git <command> --abort
+	- aborts the command 
+	- for example git merge --abort (aborts the merge)
+
