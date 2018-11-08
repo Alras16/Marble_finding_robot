@@ -1,0 +1,15 @@
+Description: Contains information abount center of mass of rooms
+Test number: 1
+Run number: 1
+ROOM:: Number: 03; Center of mass: (2,4); Number of pixels in room: 5606;
+ROOM:: Number: 03; Center of mass: (2,4); Number of pixels in room: 5606;
+ROOM:: Number: 03; Center of mass: (2,4); Number of pixels in room: 5606;
+ROOM:: Number: 03; Center of mass: (2,4); Number of pixels in room: 5606;
+ROOM:: Number: 03; Center of mass: (2,4); Number of pixels in room: 5606;
+ROOM:: Number: 03; Center of mass: (2,4); Number of pixels in room: 5606;
+ROOM:: Number: 03; Center of mass: (2,4); Number of pixels in room: 5606;
+ROOM:: Number: 03; Center of mass: (2,4); Number of pixels in room: 5606;
+ROOM:: Number: 03; Center of mass: (2,4); Number of pixels in room: 5606;
+ROOM:: Number: 03; Center of mass: (2,4); Number of pixels in room: 5606;
+ROOM:: Number: 03; Center of mass: (2,4); Number of pixels in room: 5606;
+ROOM:: Number: 03; Center of mass: (2,4); Number of pixels in room: 5606;
