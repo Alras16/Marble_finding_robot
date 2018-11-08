@@ -398,6 +398,19 @@ void lidar_sensor::merge_lines()
     foundLines = tempLines;
 }
 
+void lidar_sensor::filter_marbles()
+{
+    float marbleSize = 0.48;
+    std::vector<ct::marble> tempMarbles;
+    for (unsigned int i = 0; i < foundMarbles.size(); i++)
+    {
+        if ((foundMarbles[i].radius > (marbleSize - 0.05)) && (foundMarbles[i].radius < (marbleSize + 0.05)))
+            tempMarbles.push_back(foundMarbles[i]);
+    }
+    foundMarbles = tempMarbles;
+}
+
+
 float lidar_sensor::distP2P(ct::polarPoint pointOne, ct::polarPoint pointTwo)
 {
     float xOne = pointOne.rho*std::cos(pointOne.theta);
