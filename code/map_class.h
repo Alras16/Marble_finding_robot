@@ -1,8 +1,8 @@
 #ifndef MAP_CLASS_H
 #define MAP_CLASS_H
 
-#define WORLD_WIDTH 8.47
-#define WORLD_HEIGHT 5.64
+#define WORLD_WIDTH 84.7
+#define WORLD_HEIGHT 56.4
 
 #include <QCoreApplication>
 #include <QDir>
