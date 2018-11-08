@@ -8,7 +8,10 @@ dataloggin::dataloggin(std::string aBaseName, int testNumb, int runNumb, char ty
     std::string temp;
     switch (type) {
     case MARBLES: // marbles
-        filePath = path.path().toStdString() + FILEPATH_MARBLES + aBaseName;
+        if (aBaseName != "MarblesRunRaw")
+            filePath = path.path().toStdString() + FILEPATH_MARBLES + std::to_string(testNumb) + "/" + aBaseName;
+        else
+            filePath = path.path().toStdString() + FILEPATH_MARBLES + std::to_string(testNumb) + "/" + "raw/" + aBaseName;
         filePath += std::to_string(testNumb) + "." + std::to_string(runNumb) + ".txt";
         if (read().size() == 0)
         {

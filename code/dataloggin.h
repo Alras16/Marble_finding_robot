@@ -11,7 +11,7 @@
 
 #define FILEPATH_ROOM "/test_files/loggin/rooms/"
 #define FILEPATH_STATS "/test_files/loggin/statistics/"
-#define FILEPATH_MARBLES "/test_files/loggin/marbles/"
+#define FILEPATH_MARBLES "/test_files/loggin/marbles/test"
 
 #define MARBLES 'm'
 #define STATS 's'
