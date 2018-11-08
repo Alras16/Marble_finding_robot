@@ -25,6 +25,7 @@ public:
     // ONLY USE WHEN type == 'm'
     void writeMarble(ct::foundMarble marble, int numb);
     std::vector<ct::foundMarble> readMarbles();
+    std::vector<ct::point> readMarblesRaw();
 
     // ONLY USE WHEN type == 's'
     void writeStats(int roomNumb ,float probability);

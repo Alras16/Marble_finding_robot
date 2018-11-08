@@ -104,6 +104,48 @@ std::vector<ct::foundMarble> dataloggin::readMarbles()
     return marbles;
 }
 
+std::vector<ct::point> dataloggin::readMarblesRaw()
+{
+    std::vector<ct::point> marbles;
+    std::vector<std::string> input = read();
+    input.erase(input.begin(),input.begin() + 3);
+    for (unsigned int i = 0; i < input.size(); i++)
+    {
+        ct::point tempMarble;
+
+        std::string tempOne = input[i];
+        unsigned int j = 0;
+        for (; j < tempOne.length(); j++)
+        {
+            if (tempOne[j] == '(')
+                break;
+        }
+
+        j++;
+        std::string tempTwo;
+        for (; j < tempOne.length(); j++)
+        {
+            if (tempOne[j] != ';')
+                tempTwo += tempOne[j];
+            else
+                break;
+        }
+        tempMarble.x = std::stof(tempTwo);
+        tempTwo.clear();
+
+        j++;
+        for (; j < tempOne.length(); j++)
+        {
+            if (tempOne[j] != ')')
+                tempTwo += tempOne[j];
+            else
+                break;
+        }
+        tempMarble.y = std::stoi(tempTwo);
+        marbles.push_back(tempMarble);
+    }
+    return marbles;
+}
 
 void dataloggin::writeStats(int roomNumb ,float probability)
 {
