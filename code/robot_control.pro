@@ -2,7 +2,7 @@ TEMPLATE = app
 CONFIG += console c++11
 CONFIG -= app_bundle
 
-SOURCES += test_main_gen_image_data.cpp \
+SOURCES += test_main_convert_marbles.cpp \
     #fuzzybugcontroller.cpp \
     bst_coordinates.cpp \
     map_class.cpp \
