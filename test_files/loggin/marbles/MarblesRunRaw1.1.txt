@@ -1,0 +1,11 @@
+Description: Contains information abount location of found marbles
+Test number: 1
+Run number: 1
+MARBLE FOUND:: Count: 00; Center: (-4.26351;-20.6245)
+MARBLE FOUND:: Count: 01; Center: (9.589350;-11.7177)
+MARBLE FOUND:: Count: 02; Center: (23.9128;0.504607)
+MARBLE FOUND:: Count: 03; Center: (2.71034;-18.552)
+MARBLE FOUND:: Count: 04; Center: (-6.5854;-6.32948)
+MARBLE FOUND:: Count: 05; Center: (-13.7304;0.496741)
+MARBLE FOUND:: Count: 06; Center: (32.1952;-20.0636)
+MARBLE FOUND:: Count: 07; Center: (-15.5962;-20.9258)
