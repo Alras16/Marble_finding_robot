@@ -1,0 +1,23 @@
+Description: Contains information abount location of found marbles
+Test number: 1
+Run number: 10
+MARBLE FOUND:: Count: 00; Center: (-22.1312;22.4283)
+MARBLE FOUND:: Count: 01; Center: (-29.8643;-14.1031)
+MARBLE FOUND:: Count: 02; Center: (6.64572;1.42946)
+MARBLE FOUND:: Count: 03; Center: (-27.6618;10.0106)
+MARBLE FOUND:: Count: 04; Center: (17.6653;3.4759)
+MARBLE FOUND:: Count: 05; Center: (28.5504;18.7194)
+MARBLE FOUND:: Count: 06; Center: (-28.5413;10.4471)
+MARBLE FOUND:: Count: 07; Center: (29.9346;-8.09355)
+MARBLE FOUND:: Count: 08; Center: (20.5656;-9.07294)
+MARBLE FOUND:: Count: 09; Center: (-23.9138;21.9682)
+MARBLE FOUND:: Count: 10; Center: (25.1205;-5.49756)
+MARBLE FOUND:: Count: 11; Center: (-15.7532;-18.1769)
+MARBLE FOUND:: Count: 12; Center: (-25.0109;-5.11399)
+MARBLE FOUND:: Count: 13; Center: (14.9449;18.2211)
+MARBLE FOUND:: Count: 14; Center: (-18.1745;19.4393)
+MARBLE FOUND:: Count: 15; Center: (-0.415761;-11.1041)
+MARBLE FOUND:: Count: 16; Center: (-3.80169;-14.594)
+MARBLE FOUND:: Count: 17; Center: (-9.4797;2.168830)
+MARBLE FOUND:: Count: 18; Center: (-21.0734;-15.2822)
+MARBLE FOUND:: Count: 19; Center: (-2.86886;9.8428)
