@@ -65,3 +65,5 @@ USEFULL COMMANDS
    git <command> --abort
 	- aborts the command 
 	- for example git merge --abort (aborts the merge)
+
+blableågle
