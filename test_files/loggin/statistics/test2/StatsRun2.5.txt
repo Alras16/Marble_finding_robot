@@ -1,0 +1,17 @@
+Description: Contains information abount the statistics of the location of found marbles
+Test number: 2
+Run number: 5
+ROOM:: Number: 01; Probability of marble: 0.000000
+ROOM:: Number: 02; Probability of marble: 0.000000
+ROOM:: Number: 03; Probability of marble: 0.087075
+ROOM:: Number: 04; Probability of marble: 0.040083
+ROOM:: Number: 05; Probability of marble: 0.053541
+ROOM:: Number: 06; Probability of marble: 0.150835
+ROOM:: Number: 07; Probability of marble: 0.000000
+ROOM:: Number: 08; Probability of marble: 0.111975
+ROOM:: Number: 09; Probability of marble: 0.080023
+ROOM:: Number: 10; Probability of marble: 0.000000
+ROOM:: Number: 11; Probability of marble: 0.080023
+ROOM:: Number: 12; Probability of marble: 0.344991
+ROOM:: Number: 13; Probability of marble: 0.028210
+ROOM:: Number: 14; Probability of marble: 0.023244
