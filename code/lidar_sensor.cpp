@@ -184,29 +184,22 @@ void lidar_sensor::find_marbles()
                     }
                 }
 
-                //std::cout << "starting point: " << start_point << std::endl;
-
                 while (abs(filtered_data[start_point].rho - filtered_data[start_point + number_of_points - 1].rho) < threshold)
                     number_of_points += 2;
 
                 number_of_points -= 2;
             }
-            //std::cout << "number of points: " << number_of_points << std::endl;
 
+            // calculate marble parameters
             float circleChord = distP2P(filtered_data[start_point],filtered_data[start_point + number_of_points - 1]);
-            //float chordAngle = angleP2P(filtered_data[start_point],filtered_data[start_point + number_of_points - 1]);
-
             float alpha = filtered_data[start_point + ((number_of_points - 1) / 2)].theta;
-
             float objectiveOne = filtered_data[start_point].rho*std::cos(filtered_data[start_point].theta - alpha);
             float objectiveTwo = filtered_data[start_point + number_of_points - 1].rho*std::cos(filtered_data[start_point + number_of_points - 1].theta - alpha);
-
             float rangeLine = (objectiveOne + objectiveTwo) / 2;
             float circleCamber = rangeLine - filtered_data[start_point + ((number_of_points - 1) / 2)].rho;
-
             float circleRadius = (pow(circleChord, 2.0) + 4*pow(circleCamber, 2.0)) / (8*circleCamber);
 
-            ct::marble tempMarble;
+            // make polar coordinates for center of marble
             ct::polarPoint temp;
             temp.theta = alpha;
             temp.rho = circleRadius + filtered_data[start_point + ((number_of_points - 1) / 2)].rho;
@@ -218,28 +211,18 @@ void lidar_sensor::find_marbles()
                 dist_circles = distP2P(temp,foundMarbles[foundMarbles.size() - 1].centerPolar);
                 prev_radius = foundMarbles[foundMarbles.size() - 1].radius / 2;
             }
-            if ((circleCamber > 0.05) && (circleChord > 0.05) && (dist_circles > prev_radius))
-            {
-                {
-                    /*std::cout<< "calculating new marble" << std::endl;
-                    std::cout << "  circle chord: " << circleChord << std::endl;
-                    std::cout << "  chord angle:  " << chordAngle << std::endl;
-                    std::cout << "  alpha: " << alpha << std::endl;
-                    std::cout << "  range to line: " << rangeLine << std::endl;
-                    std::cout << "  circle camber: " << circleCamber << std::endl;
-                    std::cout << "  circle radius: " << circleRadius << std::endl << std::endl;*/
 
-                    tempMarble.centerPolar = temp;
-                    tempMarble.radius = circleRadius;
-                    foundMarbles.push_back(tempMarble);
-                    //found_marbles_point.push_back(temp);
-                    //found_marbles_radius.push_back(circleRadius);
-                }
+            if ((circleCamber > 0.025) && (circleChord > 0.025) && (dist_circles > prev_radius * 1.25))
+            {
+                // add marble to vector
+                ct::marble tempMarble;
+                tempMarble.centerPolar = temp;
+                tempMarble.radius = circleRadius;
+                foundMarbles.push_back(tempMarble);
             }
             else
                 start_point = start_point + number_of_points - 1;
         }
-        //std::cout << "number of circles: " << found_marbles_point.size() << std::endl;
     }
 }
 

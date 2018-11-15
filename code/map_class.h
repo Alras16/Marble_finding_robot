@@ -26,13 +26,15 @@ public:
     cv::Point getCurrentLocation();
     void find_center_of_mass();
 
+    void paintRoom(ct::room* theRoom, cv::Vec3i color);
+    void paintMarble(ct::foundMarble marble);
+
 private:
 
     void set_image(std::string fileName);
     std::vector<cv::Point> find_color(int color);
     void init_rooms(int numb_of_rooms);
-    void paintRoom(ct::room* theRoom, cv::Vec3i color);
-    void paintMarble(ct::foundMarble marble);
+
 
 
     std::vector<ct::room*> listOfRooms;

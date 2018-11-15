@@ -117,13 +117,10 @@ int main(int _argc, char **_argv)
         //double diff;
         //start = clock();
         lidar.filter_data();
-        //std::cout << "filtering finished" << std::endl;
         lidar.find_marbles();
-        lidar.filter_marbles();
-        //std::cout << "marbles found" << std::endl;
-        lidar.find_lines();
-        //std::cout << "lines found" << std::endl;
-        lidar.merge_lines();
+        //lidar.filter_marbles();
+        //lidar.find_lines();
+        //lidar.merge_lines();
 
         //std::cout << "lines merged" << std::endl;
         //diff = ((clock() - start) / (double)CLOCKS_PER_SEC)*1000;

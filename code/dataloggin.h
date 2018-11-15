@@ -10,7 +10,7 @@
 #include "ct.h"
 
 #define FILEPATH_ROOM "/test_files/loggin/rooms/"
-#define FILEPATH_STATS "/test_files/loggin/statistics/"
+#define FILEPATH_STATS "/test_files/loggin/statistics/test"
 #define FILEPATH_MARBLES "/test_files/loggin/marbles/test"
 
 #define MARBLES 'm'

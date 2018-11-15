@@ -23,7 +23,7 @@ dataloggin::dataloggin(std::string aBaseName, int testNumb, int runNumb, char ty
         }
         break;
     case STATS: // statistics
-        filePath = path.path().toStdString() + FILEPATH_STATS + aBaseName;
+        filePath = path.path().toStdString() + FILEPATH_STATS  + std::to_string(testNumb) + "/" + aBaseName;
         filePath += std::to_string(testNumb) + "." + std::to_string(runNumb) + ".txt";
         if (read().size() == 0)
         {
