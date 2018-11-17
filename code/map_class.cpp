@@ -87,6 +87,7 @@ void map_class::init_rooms(int numb_of_rooms)
             std::vector<cv::Point> temp = find_color(color);
             tempRoom->numbOfPixels = temp.size();
             tempRoom->coordinatesTree.generateCompleteTree(temp);
+            tempRoom->coordinates = temp;
             listOfRooms.push_back(tempRoom);
             color -= 10;
         }
@@ -138,10 +139,31 @@ void map_class::find_center_of_mass()
             center_of_mass_x += listOfRooms[i]->coordinates[j].x;
             center_of_mass_y += listOfRooms[i]->coordinates[j].y;
         }
-        center_of_mass_x = center_of_mass_x/listOfRooms[i]->coordinates.size();
-        center_of_mass_y = center_of_mass_y/listOfRooms[i]->coordinates.size();
+        center_of_mass_x /= listOfRooms[i]->coordinates.size();
+        center_of_mass_y /= listOfRooms[i]->coordinates.size();
 
-        listOfRooms[i]->centerOfMass.x = center_of_mass_x;
-        listOfRooms[i]->centerOfMass.y = center_of_mass_y;
+        cv::Point point;
+        point.x = center_of_mass_x;
+        point.y = center_of_mass_y;
+        listOfRooms[i]->centerOfMass = point;
     }
+}
+
+std::vector<std::vector<float>> map_class::genStateMap(float freeSpaceVal, float wallVal)
+{
+    std::vector<std::vector<float>> stateMatrix;
+    for (int i = 0; i < image_h; i++)
+    {
+        std::vector<float> temp;
+        for (int j = 0; j < image_w; j++)
+        {
+            cv::Vec3b cur_pixel = *ori_map.ptr<cv::Vec3b>(i,j);
+            if ((int(cur_pixel[0]) == 0) && (int(cur_pixel[1]) == 0) && (int(cur_pixel[2]) == 0))
+                temp.push_back(wallVal);
+            else
+                temp.push_back(freeSpaceVal);
+        }
+        stateMatrix.push_back(temp);
+    }
+    return stateMatrix;
 }

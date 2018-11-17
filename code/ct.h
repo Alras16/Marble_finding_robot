@@ -60,6 +60,15 @@ public:
         room *foundInRoom;
     };
 
+    struct state
+    {
+        int x;
+        int y;
+        bool isOutsideEnvironment;
+    };
+
+    enum action { UP, DOWN, LEFT, RIGHT };
+
     ct();
 };
 

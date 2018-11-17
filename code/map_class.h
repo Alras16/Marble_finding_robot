@@ -10,8 +10,6 @@
 #include <string>
 #include <iostream>
 #include "ct.h"
-//#include <opencv2/opencv.hpp>
-//#include "bst_coordinates.h"
 
 class map_class
 {
@@ -28,6 +26,8 @@ public:
 
     void paintRoom(ct::room* theRoom, cv::Vec3i color);
     void paintMarble(ct::foundMarble marble);
+
+    std::vector<std::vector<float>> genStateMap(float freeSpaceVal, float wallVal);
 
 private:
 
