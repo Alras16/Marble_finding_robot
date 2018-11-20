@@ -24,10 +24,11 @@ public:
     float getReward(ct::state s, ct::action a);
     ct::action getNextAction(ct::state s);
     void resetReward(ct::state s);
+    void deleteMaxReward();
 
     float performFullSweep();
     float doEstimation(float theta);
-
+    std::vector<ct::state> getPath(ct::state startState);
 
 
     void paintValueEstimates();
@@ -53,6 +54,7 @@ private:
     float discountRate = 0.9;
 
     std::vector<ct::room*> centerOfMassRooms;
+    std::vector<float> averageProbability;
 };
 
 #endif // Q_LEARNING_H

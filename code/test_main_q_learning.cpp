@@ -11,13 +11,45 @@ int main(int _argc, char **_argv)
     map.find_center_of_mass();
     q_learning qLearn(map);
     qLearn.setReward(2,10);
-    int sweeps = qLearn.doEstimation(0.01);
-    std::cout << "Number of sweeps: " << sweeps << std::endl;
+
+    qLearn.resetReward(ct::state({43, 39, false}));
+    qLearn.resetReward(ct::state({41, 15, false}));
+    qLearn.resetReward(ct::state({68, 9, false}));
+    qLearn.resetReward(ct::state({68, 25, false}));
+    qLearn.resetReward(ct::state({17, 20, false}));
+    qLearn.resetReward(ct::state({31, 62, false}));
+    qLearn.resetReward(ct::state({9, 62, false}));
+    qLearn.resetReward(ct::state({9, 7, false}));
+    qLearn.resetReward(ct::state({92, 21, false}));
+    qLearn.resetReward(ct::state({110, 15, false}));
+    qLearn.resetReward(ct::state({106, 55, false}));
+    qLearn.resetReward(ct::state({70, 53, false}));
+    qLearn.resetReward(ct::state({78, 70, false}));
+
+    int sweeps = qLearn.doEstimation(0.0);
+    std::cout << "number of sweeps: " << sweeps << std::endl;
     qLearn.paintValueEstimates();
     qLearn.paintPolicy();
-    qLearn.showValueEstimates("Value Estimates");
+
+    std::vector<ct::state> path = qLearn.getPath(ct::state({78, 70, false}));
+    std::cout << path[path.size() - 1].x  << "," << path[path.size() - 1].y << std::endl;
+    //qLearn.resetReward(path[path.size() - 1]);
+
+    qLearn.scaleImage(5);
     qLearn.showPolicy("Policy");
-    qLearn.saveImage(1,1,sweeps);
+    qLearn.showValueEstimates("Value Estimates");
+
+    qLearn.saveImage(1,14,sweeps);
+
+
+
+
+
+
+
+
+
+
     cv::waitKey(0);
 
 

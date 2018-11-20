@@ -34,7 +34,6 @@ void q_learning::setReward(int numberOfTests, int numberOfRuns)
     }
 
     // Calculate average probability
-    std::vector<float> averageProbability;
     for (unsigned int i = 0; i < probabilityMatrix[0].size(); i++) // rooms
     {
         float sum = 0.0;
@@ -119,7 +118,59 @@ ct::action q_learning::getNextAction(ct::state s)
 
 void q_learning::resetReward(ct::state s)
 {
-    stateMatrix[s.y][s.x] = FREE_SPACE;
+    // Reset the reward
+    for (unsigned int room = 0; room < averageProbability.size(); room++)
+    {
+        cv::Point point = centerOfMassRooms[room]->centerOfMass;
+        if ((point.x == s.x) && (point.y == s.y))
+            averageProbability[room] = 0.0;
+    }
+
+    // Find the new max value
+    float max = 0.0;
+    for (unsigned int room = 0; room < averageProbability.size(); room++)
+        if (averageProbability[room] > max)
+            max = averageProbability[room];
+
+    // Normalise
+    for (unsigned int room = 0; room < averageProbability.size(); room++)
+    {
+        cv::Point point = centerOfMassRooms[room]->centerOfMass;
+        if (averageProbability[room] != 0.0)
+            stateMatrix[point.y][point.x] = averageProbability[room] / max;
+        else
+            stateMatrix[point.y][point.x] = FREE_SPACE;
+    }
+}
+
+void q_learning::deleteMaxReward()
+{
+    // Find the max value
+    float max = 0.0;
+    for (unsigned int room = 0; room < averageProbability.size(); room++)
+        if (averageProbability[room] > max)
+            max = averageProbability[room];
+
+    // Reset the max value
+    for (unsigned int room = 0; room < averageProbability.size(); room++)
+        if (averageProbability[room] == max)
+            averageProbability[room] = 0.0;
+
+    // Find the new max value
+    max = 0.0;
+    for (unsigned int room = 0; room < averageProbability.size(); room++)
+        if (averageProbability[room] > max)
+            max = averageProbability[room];
+
+    // Normalise
+    for (unsigned int room = 0; room < averageProbability.size(); room++)
+    {
+        cv::Point point = centerOfMassRooms[room]->centerOfMass;
+        if (averageProbability[room] != 0.0)
+            stateMatrix[point.y][point.x] = averageProbability[room] / max;
+        else
+            stateMatrix[point.y][point.x] = FREE_SPACE;
+    }
 }
 
 float q_learning::performFullSweep()
@@ -155,7 +206,25 @@ float q_learning::doEstimation(float theta)
         delta = performFullSweep();
         sweep++;
     } while (delta > theta);
+    std::cout << "last delta: "<< delta << std::endl;
     return sweep;
+}
+
+std::vector<ct::state> q_learning::getPath(ct::state startState)
+{
+    std::vector<ct::state> path;
+    ct::state curr = startState;
+    path.push_back(startState);
+    while(!curr.isOutsideEnvironment)
+    {
+        ct::action a = getNextAction(curr);
+        ct::state next = getNextState(curr,a);
+        if (!next.isOutsideEnvironment)
+            path.push_back(next);
+
+        curr = next;
+    }
+    return path;
 }
 
 void q_learning::paintValueEstimates()
@@ -238,7 +307,6 @@ void q_learning::paintPolicy()
 
 void q_learning::showValueEstimates(std::string name)
 {
-    scaleImage(5);
     cv::imshow(name,imageValues);
 }
 
@@ -298,9 +366,12 @@ void q_learning::paintCenterOfMass()
 {
     for (unsigned int room = 0; room < centerOfMassRooms.size(); room++)
     {
-        cv::Point point = centerOfMassRooms[room]->centerOfMass;
-        *imageValues.ptr<cv::Vec3b>(point.y,point.x) = {255, 0, 0};
-        *imagePolicy.ptr<cv::Vec3b>(point.y,point.x) = {255, 0, 0};
+        if (averageProbability[room] != 0.0)
+        {
+            cv::Point point = centerOfMassRooms[room]->centerOfMass;
+            *imageValues.ptr<cv::Vec3b>(point.y,point.x) = {255, 0, 0};
+            *imagePolicy.ptr<cv::Vec3b>(point.y,point.x) = {255, 0, 0};
+        }
     }
 }
 

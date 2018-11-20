@@ -2,8 +2,8 @@ TEMPLATE = app
 CONFIG += console c++11
 CONFIG -= app_bundle
 
-SOURCES += test_main_statistics.cpp \
-    #fuzzybugcontroller.cpp \
+SOURCES += main.cpp \
+    fuzzybugcontroller.cpp \
     bst_coordinates.cpp \
     map_class.cpp \
     c_vision.cpp \
@@ -11,20 +11,20 @@ SOURCES += test_main_statistics.cpp \
     lidar_sensor.cpp \
     dataloggin.cpp \
     ct.cpp \
-    #motion_planning.cpp \
-    #setup.cpp
+    motion_planning.cpp \
+    setup.cpp
     q_learning.cpp
 
 CONFIG += link_pkgconfig
 PKGCONFIG += gazebo
 PKGCONFIG += opencv
 
-#INCLUDEPATH += /media/kenni/usb1/linuxUbuntu/fuzzylite-6.0-linux64/fuzzylite-6.0/fuzzylite
-#LIBS += -L/media/kenni/usb1/linuxUbuntu/fuzzylite-6.0-linux64/fuzzylite-6.0/release/bin -lfuzzylite-static
-#DEPENDPATH += /media/kenni/usb1/linuxUbuntu/fuzzylite-6.0-linux64/fuzzylite-6.0
+INCLUDEPATH += /media/kenni/usb1/linuxUbuntu/fuzzylite-6.0-linux64/fuzzylite-6.0/fuzzylite
+LIBS += -L/media/kenni/usb1/linuxUbuntu/fuzzylite-6.0-linux64/fuzzylite-6.0/release/bin -lfuzzylite-static
+DEPENDPATH += /media/kenni/usb1/linuxUbuntu/fuzzylite-6.0-linux64/fuzzylite-6.0
 
 HEADERS += \
-    #fuzzybugcontroller.h \
+    fuzzybugcontroller.h \
     bst_coordinates.h \
     map_class.h \
     c_vision.h \
@@ -32,9 +32,9 @@ HEADERS += \
     lidar_sensor.h \
     dataloggin.h \
     ct.h \
-    #motion_planning.h \
-    #setup.h
+    motion_planning.h \
+    setup.h
     q_learning.h
 
 DISTFILES += \
-    #fuzzybugcontroller.fll
+    fuzzybugcontroller.fll
