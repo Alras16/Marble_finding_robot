@@ -5,6 +5,7 @@ Discription of filename:
 
 Test number: 1
     The tests purpose is to find out how many sweeps are nessesary to reach final state (delta = 0)
+    This test is based on the first 2 tests of dataloggin
 
 Run 1:
     Delta: 0
