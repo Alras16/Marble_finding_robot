@@ -1,0 +1,92 @@
+Discription of filename:
+    - The 1. number describes the test number
+    - The 2. number describes the run number
+    - The 3. number describes the number of sweeps
+
+Test number: 2
+    The tests purpose is to find out how many sweeps are nessesary to reach final state (delta = 0)
+    This test is based on 5 tests of dataloggin
+
+Run 1:
+    Delta: 0
+    Number of sweeps: 32
+    Start state: (60,40)
+    End state (43,39)
+
+Run 2:
+    Delta: 0
+    Number of sweeps: 32
+    Start state: (43,39)
+    End state (41,15)
+
+Run 3:
+    Delta: 0
+    Number of sweeps: 45
+    Start state: (41,15)
+    End state (68,25)
+
+Run 4:
+    Delta: 0
+    Number of sweeps: 45
+    Start state: (68,25)
+    End state (68,9)
+
+Run 5:
+    Delta: 0
+    Number of sweeps: 40
+    Start state: (68,9)
+    End state (17,20)
+
+Run 6:
+    Delta: 0
+    Number of sweeps: 67
+    Start state: (17,20)
+    End state (9,7)
+
+Run 7:
+    Delta: 0
+    Number of sweeps: 92
+    Start state: (9,7)
+    End state (31,62)
+
+Run 8:
+    Delta: 0
+    Number of sweeps: 90
+    Start state: (31,62)
+    End state (9,62)
+
+Run 9:
+    Delta: 0
+    Number of sweeps: 124
+    Start state: (9,62)
+    End state (92,21)
+
+Run 10:
+    Delta: 0
+    Number of sweeps: 160
+    Start state: (92,21)
+    End state (110,15)
+
+Run 11:
+    Delta: 0
+    Number of sweeps: 160
+    Start state: (110,15)
+    End state (106,55)
+
+Run 12:
+    Delta: 0
+    Number of sweeps: 150
+    Start state: (106,55)
+    End state (70,53)
+
+Run 13:
+    Delta: 0
+    Number of sweeps: 168
+    Start state: (70,53)
+    End state (78,70)
+
+Run 14:
+    Delta: 0
+    Number of sweeps: 172
+    Start state: (78,70)
+    End state (54,70)
