@@ -39,7 +39,7 @@ int main(int _argc, char **_argv)
     qLearn.showPolicy("Policy");
     qLearn.showValueEstimates("Value Estimates");
 
-    qLearn.saveImage(1,14,sweeps);
+    //qLearn.saveImage(1,14,sweeps);
 
 
 
