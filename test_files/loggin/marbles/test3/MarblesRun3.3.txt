@@ -1,0 +1,23 @@
+Description: Contains information abount location of found marbles
+Test number: 3
+Run number: 3
+MARBLE FOUND:: Count: 00; Center: (105,41); Room: 11
+MARBLE FOUND:: Count: 01; Center: (53,66); Room: 14
+MARBLE FOUND:: Count: 02; Center: (103,30); Room: 10
+MARBLE FOUND:: Count: 03; Center: (53,68); Room: 14
+MARBLE FOUND:: Count: 04; Center: (18,29); Room: 2
+MARBLE FOUND:: Count: 05; Center: (62,20); Room: 5
+MARBLE FOUND:: Count: 06; Center: (103,19); Room: 10
+MARBLE FOUND:: Count: 07; Center: (52,57); Room: 12
+MARBLE FOUND:: Count: 08; Center: (103,16); Room: 10
+MARBLE FOUND:: Count: 09; Center: (98,47); Room: 11
+MARBLE FOUND:: Count: 10; Center: (81,40); Room: 6
+MARBLE FOUND:: Count: 11; Center: (101,70); Room: 11
+MARBLE FOUND:: Count: 12; Center: (33,24); Room: 3
+MARBLE FOUND:: Count: 13; Center: (95,40); Room: 9
+MARBLE FOUND:: Count: 14; Center: (22,70); Room: 8
+MARBLE FOUND:: Count: 15; Center: (61,19); Room: 8
+MARBLE FOUND:: Count: 16; Center: (23,40); Room: 6
+MARBLE FOUND:: Count: 17; Center: (102,16); Room: 10
+MARBLE FOUND:: Count: 18; Center: (81,46); Room: 10
+MARBLE FOUND:: Count: 19; Center: (45,29); Room: 3
