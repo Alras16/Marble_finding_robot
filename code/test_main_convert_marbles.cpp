@@ -5,12 +5,13 @@
 int main(int _argc, char **_argv)
 {
     std::cout << "Hello World" << std::endl;
+    int testNumber = 5;
 
     map_class map("map_small.png",14,true);
     for (int i = 1; i < 11; i++)
     {
-        dataloggin raw("MarblesRunRaw",2,i,'m');
-        dataloggin marbles("MarblesRun",2,i,'m');
+        dataloggin raw("MarblesRunRaw",testNumber,i,'m');
+        dataloggin marbles("MarblesRun",testNumber,i,'m');
         std::vector<ct::point> centerRaw = raw.readMarblesRaw();
         for (unsigned int j = 0; j < centerRaw.size(); j++)
         {

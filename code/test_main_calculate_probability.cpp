@@ -6,7 +6,7 @@ int main(int _argc, char **_argv)
 {
     /* This document calculates the probability of a marble being placed in a specific room */
 
-    int testNumber = 2;
+    int testNumber = 5;
     int numberOfRuns = 10;
 
     map_class map("map_small.png",14,true);
