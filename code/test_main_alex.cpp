@@ -96,82 +96,40 @@ void hls_histogram(cv::Mat &image)
 void statCallback(ConstWorldStatisticsPtr &_msg) {
   (void)_msg;
   // Dump the message contents to stdout.
-    std::cout << _msg->DebugString();
-    std::cout << std::flush;
+  //  std::cout << _msg->DebugString();
+  //  std::cout << std::flush;
 }
 
 void poseCallback(ConstPosesStampedPtr &_msg) {
   // Dump the message contents to stdout.
-    std::cout << _msg->DebugString();
+  //  std::cout << _msg->DebugString();
 
   for (int i = 0; i < _msg->pose_size(); i++) {
     if (_msg->pose(i).name() == "pioneer2dx") {
 
-      std::cout << std::setprecision(2) << std::fixed << std::setw(6)
-                << _msg->pose(i).position().x() << std::setw(6)
-                << _msg->pose(i).position().y() << std::setw(6)
-                << _msg->pose(i).position().z() << std::setw(6)
-                << _msg->pose(i).orientation().w() << std::setw(6)
-                << _msg->pose(i).orientation().x() << std::setw(6)
-                << _msg->pose(i).orientation().y() << std::setw(6)
-                << _msg->pose(i).orientation().z() << std::endl;
+      //std::cout << std::setprecision(2) << std::fixed << std::setw(6)
+        //        << _msg->pose(i).position().x() << std::setw(6)
+        //        << _msg->pose(i).position().y() << std::setw(6)
+        //        << _msg->pose(i).position().z() << std::setw(6)
+        //        << _msg->pose(i).orientation().w() << std::setw(6)
+        //        << _msg->pose(i).orientation().x() << std::setw(6)
+        //        << _msg->pose(i).orientation().y() << std::setw(6)
+        //        << _msg->pose(i).orientation().z() << std::endl;
     }
   }
 }
-
-void marbleCallback(ConstPosesStampedPtr &_msg) {
-  // Dump the message contents to stdout.
-    std::cout << _msg->DebugString();
-
-  for (int i = 0; i < _msg->pose_size(); i++) {
-    if (_msg->pose(i).name() == "marble_clone_0") {
-
-      std::cout << std::setprecision(2) << std::fixed << std::setw(6)
-                << _msg->pose(i).position().x() << std::setw(6)
-                << _msg->pose(i).position().y() << std::setw(6)
-                << _msg->pose(i).position().z() << std::setw(6)
-                << _msg->pose(i).orientation().w() << std::setw(6)
-                << _msg->pose(i).orientation().x() << std::setw(6)
-                << _msg->pose(i).orientation().y() << std::setw(6)
-                << _msg->pose(i).orientation().z() << std::endl;
-    }
-  }
-}
-
-clock_t camera_start;
-bool camera_call_once = false;
-bool camera_first = false;
-int camera_called_ten = 0;
 
 void cameraCallback(ConstImageStampedPtr &msg) {
 
-    if (!camera_first)
-    {
-        camera_start = clock();
-        camera_first = true;
-    }
-    else
-    {
-        if (!camera_call_once)
-            camera_called_ten++;
-        if (camera_called_ten == 100)
-        {
-            double diff;
-            diff = ((clock() - camera_start) / (double)CLOCKS_PER_SEC)*1000;
-            std::cout << "camera callback" << std::endl;
-            std::cout << "  Execution time:" << std::setw(8) << diff/100 << " ms" << std::endl << std::endl;
-            camera_call_once = true;
-            camera_called_ten = 0;
-        }
-    }
-
-    std::size_t width = msg->image().width();
+  std::size_t width = msg->image().width();
   std::size_t height = msg->image().height();
   const char *data = msg->image().data().c_str();
   cv::Mat im(int(height), int(width), CV_8UC3, const_cast<char *>(data));
 
   im = im.clone();
   cv::cvtColor(im, im, CV_BGR2RGB);
+
+
 
   mutex.lock();
   cv::imshow("camera", im);
@@ -192,26 +150,27 @@ void lidarCallback(ConstLaserScanStampedPtr &msg)
 
     assert(nranges == nintensities);
 
-    std::vector<ct::polarPoint> temp_data;
+    std::vector<lidar_sensor::lidarPoint> temp_data;
 
     for (int i = 0; i < nranges; i++)
     {
         float angle = angle_min + i * angle_increment;
         float range = std::min(float(msg->scan().ranges(i)), range_max);
 
-        ct::polarPoint temp_point;
-        temp_point.theta = angle;
-        temp_point.rho = range;
+        lidar_sensor::lidarPoint temp_point;
+        temp_point.angle = angle;
+        temp_point.range = range;
 
         temp_data.push_back(temp_point);
     }
 
     mutex.lock();
     lidar.init_data(temp_data);
+    //cv::imshow("lidar", im);
     mutex.unlock();
 }
 
-int main(int _argc, char **_argv)
+void gazebo_init(int _argc, char **_argv)
 {
     // Load gazebo
     gazebo::client::setup(_argc, _argv);
@@ -228,9 +187,6 @@ int main(int _argc, char **_argv)
 
     gazebo::transport::SubscriberPtr poseSubscriber =
         node->Subscribe("~/pose/info", poseCallback);
-
-    gazebo::transport::SubscriberPtr marbleSubscriber =
-        node->Subscribe("~/pose/info", marbleCallback);
 
     gazebo::transport::SubscriberPtr cameraSubscriber =
         node->Subscribe("~/pioneer2dx/camera/link/camera/image", cameraCallback);
@@ -249,54 +205,94 @@ int main(int _argc, char **_argv)
     controlMessage.mutable_reset()->set_all(true);
     worldPublisher->WaitForConnection();
     worldPublisher->Publish(controlMessage);
+}
 
-    const int key_left = 81;
-    const int key_up = 82;
-    const int key_down = 84;
-    const int key_right = 83;
-    const int key_esc = 27;
+int main(int _argc, char **_argv) {
 
-    float speed = 0.0;
-    float dir = 0.0;
+    //gazebo_init(_argc, _argv);
 
-    // Loop
-    while (true)
-    {
-        gazebo::common::Time::MSleep(10);
+  /*const int key_left = 81;
+  const int key_up = 82;
+  const int key_down = 84;
+  const int key_right = 83;
+  const int key_esc = 27;
 
-        mutex.lock();
-        int key = cv::waitKey(1);
-        mutex.unlock();
+  float speed = 0.0;
+  float dir = 0.0;
 
-        if (key == key_esc)
-            break;
+  // Loop
+  while (true) {
+    gazebo::common::Time::MSleep(10);
 
-        if ((key == key_up) && (speed <= 1.2f))
-            speed += 0.5;
+    mutex.lock();
+    int key = cv::waitKey(1);
+    mutex.unlock();
+
+    if (key == key_esc)
+      break;
+
+    if ((key == key_up) && (speed <= 1.2f))
+      speed += 0.5;
         //speed += 0.05;
-        else if ((key == key_down) && (speed >= -1.2f))
-            speed -= 0.5;
+    else if ((key == key_down) && (speed >= -1.2f))
+      speed -= 0.5;
         //speed -= 0.05;
-        else if ((key == key_right) && (dir <= 0.4f))
-            dir += 0.05;
-        else if ((key == key_left) && (dir >= -0.4f))
-            dir -= 0.05;
-        else
-        {
-            // slow down
+    else if ((key == key_right) && (dir <= 0.4f))
+      dir += 0.05;
+    else if ((key == key_left) && (dir >= -0.4f))
+      dir -= 0.05;
+    else {
+      // slow down
             //speed = 0;
-            //dir *= 0.1;
-        }
-
-        // Generate a pose
-        ignition::math::Pose3d pose(double(speed), 0, 0, 0, 0, double(dir));
-
-        // Convert to a pose message
-        gazebo::msgs::Pose msg;
-        gazebo::msgs::Set(&msg, pose);
-        movementPublisher->Publish(msg);
+      //      dir *= 0.1;
     }
 
-    // Make sure to shut everything down.
-    gazebo::client::shutdown();
+    //camera.find_color();
+    clock_t start;
+    double diff;
+    start = clock();
+    //camera.find_color();
+    camera.find_marbles();
+    diff = ((clock() - start) / (double)CLOCKS_PER_SEC)*1000;
+    std::cout << "Execution time: " << diff << std::endl;
+
+    mutex.lock();
+    lidar.filter_data();
+    lidar.find_marbles();
+    lidar.visualize_lidar("lidar");
+    mutex.unlock();
+
+
+    // Generate a pose
+    ignition::math::Pose3d pose(double(speed), 0, 0, 0, 0, double(dir));
+
+    // Convert to a pose message
+    gazebo::msgs::Pose msg;
+    gazebo::msgs::Set(&msg, pose);
+    movementPublisher->Publish(msg);
+
+
+  }*/
+
+    testData lidarD("lidarTestOne");
+    testData::lidarData data = lidarD.getLidarData();
+    std::vector<lidar_sensor::lidarPoint> temp_vec;
+    for (unsigned int i = 0; i < data.angle.size(); i++)
+    {
+        lidar_sensor::lidarPoint temp_point;
+        temp_point.angle = data.angle[i];
+        temp_point.range = data.range[i];
+        temp_vec.push_back(temp_point);
+    }
+    lidar.init_data(temp_vec);
+    lidar.filter_data();
+    lidar.find_marbles();
+    std::vector<lidar_sensor::detectedLine> lines = lidar.find_lines();
+    for (unsigned int i = 0; i < lines.size(); i++)
+        std::cout << "Size: " << lines[i].lengthOfLine << " Alpha: " << lines[i].alpha << "  Range: " << lines[i].range << std::endl;
+    lidar.visualize_lidar("lidar test");
+
+    cv::waitKey(0);
+  // Make sure to shut everything down.
+  //gazebo::client::shutdown();
 }
