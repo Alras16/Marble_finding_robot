@@ -2,16 +2,16 @@ Description: Contains information abount the statistics of the location of found
 Test number: 1
 Run number: 6
 ROOM:: Number: 01; Probability of marble: 0.000000
-ROOM:: Number: 02; Probability of marble: 0.046274
-ROOM:: Number: 03; Probability of marble: 0.121194
-ROOM:: Number: 04; Probability of marble: 0.037193
-ROOM:: Number: 05; Probability of marble: 0.024840
-ROOM:: Number: 06; Probability of marble: 0.279915
+ROOM:: Number: 02; Probability of marble: 0.049148
+ROOM:: Number: 03; Probability of marble: 0.168892
+ROOM:: Number: 04; Probability of marble: 0.061149
+ROOM:: Number: 05; Probability of marble: 0.091559
+ROOM:: Number: 06; Probability of marble: 0.129999
 ROOM:: Number: 07; Probability of marble: 0.000000
-ROOM:: Number: 08; Probability of marble: 0.155849
-ROOM:: Number: 09; Probability of marble: 0.074252
+ROOM:: Number: 08; Probability of marble: 0.131336
+ROOM:: Number: 09; Probability of marble: 0.122517
 ROOM:: Number: 10; Probability of marble: 0.000000
-ROOM:: Number: 11; Probability of marble: 0.074252
-ROOM:: Number: 12; Probability of marble: 0.160056
-ROOM:: Number: 13; Probability of marble: 0.026175
+ROOM:: Number: 11; Probability of marble: 0.030629
+ROOM:: Number: 12; Probability of marble: 0.127884
+ROOM:: Number: 13; Probability of marble: 0.086887
 ROOM:: Number: 14; Probability of marble: 0.000000
