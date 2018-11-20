@@ -7,19 +7,20 @@ int main(int _argc, char **_argv)
 {
     /* This document calculates the average probability of a marble being placed in a specific room */
 
+    std::cout << "hmm" << std::endl;
     map_class map("map_small.png",14,true);
     map.find_center_of_mass();
     q_learning qLearn(map);
-    qLearn.setReward(2,10);
+    qLearn.setReward(5,10);
 
     qLearn.resetReward(ct::state({43, 39, false}));
     qLearn.resetReward(ct::state({41, 15, false}));
-    qLearn.resetReward(ct::state({68, 9, false}));
     qLearn.resetReward(ct::state({68, 25, false}));
+    qLearn.resetReward(ct::state({68, 9, false}));
     qLearn.resetReward(ct::state({17, 20, false}));
+    qLearn.resetReward(ct::state({9, 7, false}));
     qLearn.resetReward(ct::state({31, 62, false}));
     qLearn.resetReward(ct::state({9, 62, false}));
-    qLearn.resetReward(ct::state({9, 7, false}));
     qLearn.resetReward(ct::state({92, 21, false}));
     qLearn.resetReward(ct::state({110, 15, false}));
     qLearn.resetReward(ct::state({106, 55, false}));
@@ -39,7 +40,7 @@ int main(int _argc, char **_argv)
     qLearn.showPolicy("Policy");
     qLearn.showValueEstimates("Value Estimates");
 
-    //qLearn.saveImage(1,14,sweeps);
+    qLearn.saveImage(2,14,sweeps);
 
 
 

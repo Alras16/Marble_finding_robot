@@ -32,7 +32,7 @@ int main(int _argc, char **_argv)
             for (unsigned int marble = 0; marble < foundMarbles.size(); marble++)
                 if (foundMarbles[marble].foundInRoom->roomNumber == rooms[room]->roomNumber)
                     marblesInRoom++;
-            marblesInRooms.push_back((marblesInRoom / 20.0) * (rooms[room]->numbOfPixels / totalNumberOfPixels));
+            marblesInRooms.push_back((marblesInRoom / 20.0) / (rooms[room]->numbOfPixels / totalNumberOfPixels));
         }
         marbleMatrix.push_back(marblesInRooms);
     }
