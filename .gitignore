@@ -1,2 +1,12 @@
 *.user
 **/build-robot_control-Desktop-Debug
+*.aux
+*.log
+*.out
+*.xml
+*.gz
+*.toc
+*.bib
+!Bibliography.bib
+*.pdf
+!Main.pdf
