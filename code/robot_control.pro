@@ -14,7 +14,11 @@ SOURCES += main.cpp \
     value_iteration.cpp \
     q_learning.cpp \
     motion_planning.cpp \
-    setup.cpp
+    setup.cpp \
+    motion_planning.cpp \
+    setup.cpp \
+    q_learning.cpp \
+    brushfire.cpp \
 
 CONFIG += link_pkgconfig
 PKGCONFIG += gazebo
@@ -36,7 +40,11 @@ HEADERS += \
     value_iteration.h \
     q_learning.h \
     motion_planning.h \
+    setup.h \
+    motion_planning.h \
     setup.h
+    q_learning.h \
+    brushfire.h \
 
 DISTFILES += \
     fuzzybugcontroller.fll
