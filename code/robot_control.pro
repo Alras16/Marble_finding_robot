@@ -11,9 +11,10 @@ SOURCES += main.cpp \
     lidar_sensor.cpp \
     dataloggin.cpp \
     ct.cpp \
+    value_iteration.cpp \
+    q_learning.cpp \
     motion_planning.cpp \
     setup.cpp
-    q_learning.cpp
 
 CONFIG += link_pkgconfig
 PKGCONFIG += gazebo
@@ -32,9 +33,10 @@ HEADERS += \
     lidar_sensor.h \
     dataloggin.h \
     ct.h \
+    value_iteration.h \
+    q_learning.h \
     motion_planning.h \
     setup.h
-    q_learning.h
 
 DISTFILES += \
-    fuzzybugcontroller.fll
+    #fuzzybugcontroller.fll

@@ -69,6 +69,13 @@ public:
 
     enum action { UP, DOWN, LEFT, RIGHT };
 
+    struct newState
+    {
+        int RoomNumber; // if zero = start state
+        bool isTerminal; // is the state a terminal state or not
+        std::vector<bool> roomsVisited; // vector containing info on other rooms status
+    };
+
     ct();
 };
 

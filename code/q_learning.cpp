@@ -1,429 +1,320 @@
 #include "q_learning.h"
 
-q_learning::q_learning(map_class map)
+q_learning::q_learning(int numberOfRooms)
 {
-    stateMatrix = map.genStateMap(FREE_SPACE,WALL);
-    centerOfMassRooms = map.getRooms();
-
-    stateValueEstimates = stateMatrix;
-    for (unsigned int row = 0; row < stateValueEstimates.size(); row++)
-        for (unsigned int col = 0; col < stateValueEstimates[row].size(); col++)
-            stateValueEstimates[row][col] = 0.0;
-
-    width = stateMatrix[0].size();
-    height = stateMatrix.size();
-
-    imageValues = cv::Mat(height, width, CV_8UC3);
-    imageValues.setTo(0);
-
-    imagePolicy = cv::Mat(height, width, CV_8UC3);
-    imagePolicy.setTo(0);
-}
-
-void q_learning::setReward(int numberOfTests, int numberOfRuns)
-{
-    // Make matrix of the probabilities
-    std::vector<std::vector<float>> probabilityMatrix;
-    for (int test = 1; test < 1 + numberOfTests; test++)
+    std::vector<std::vector<float>> tempMatrix;
+    for (int i = 0; i < numberOfRooms + 1; i++)
     {
-        for (int run = 1; run < 1 + numberOfRuns; run++)
+        std::vector<float> tempVector;
+        for (int j = 0; j < numberOfRooms + 1; j++)
+            tempVector.push_back(0.0);
+
+        tempMatrix.push_back(tempVector);
+    }
+    baseStateMatrix = tempMatrix;
+
+    for (unsigned int state = 0; state < baseStateMatrix.size(); state++)
+    {
+        for (unsigned int action = 0; action < baseStateMatrix[state].size(); action++)
         {
-            dataloggin statsLog("StatsRun",test,run,'s');
-            probabilityMatrix.push_back(statsLog.readStats());
+            if (state != action)
+                baseStateMatrix[state][action] = ACTION_NOT_ABLE;
+            else
+                baseStateMatrix[state][action] = NO_ACTION;
         }
     }
 
-    // Calculate average probability
-    for (unsigned int i = 0; i < probabilityMatrix[0].size(); i++) // rooms
-    {
-        float sum = 0.0;
-        for (unsigned int j = 0; j < probabilityMatrix.size(); j++) // runs
-            sum += probabilityMatrix[j][i];
+    qValues.push_back(tempMatrix);
 
-        sum /= probabilityMatrix.size();
-        averageProbability.push_back(sum);
-        std::cout << "Room" << std::setw(3) << i + 1 << ": " << std::setw(10) << sum << std::endl;
+    for (int i = 0; i < numberOfRooms; i++)
+    {
+        visitedRooms.push_back(false);
+        rewards.push_back(0.0);
     }
 
-    // Find max value
-    float max = 0.0;
-    for (unsigned int room = 0; room < averageProbability.size(); room++)
-        if (averageProbability[room] > max)
-            max = averageProbability[room];
+    std::vector<bool> temp;
+    for (int i = 0; i < numberOfRooms; i++)
+        temp.push_back(false);
+    matrixOrder.push_back(temp);
 
-    for (unsigned int room = 0; room < averageProbability.size(); room++)
-    {
-        cv::Point point = centerOfMassRooms[room]->centerOfMass;
-        stateMatrix[point.y][point.x] = averageProbability[room] / max;
-    }
+    uint64_t timeSeed = std::chrono::high_resolution_clock::now().time_since_epoch().count();
+    std::seed_seq ss{uint32_t(timeSeed & 0xffffffff), uint32_t(timeSeed >> 32)};
+    rng.seed(ss);
 }
 
-ct::state q_learning::getNextState(ct::state s, ct::action a)
+// Public methods
+void q_learning::setDistancePunishment(ct::newState stateOne, ct::newState stateTwo, float punishment)
 {
-    const ct::state TERMINAL_STATE = { -1, -1, true };
-    if (stateMatrix[s.y][s.x] != FREE_SPACE)
-        return TERMINAL_STATE;
-
-    switch (a)
-    {
-    case ct::UP:     s.y -= 1; break;
-    case ct::DOWN:   s.y += 1; break;
-    case ct::LEFT:   s.x -= 1; break;
-    case ct::RIGHT:  s.x += 1; break;
-    }
-
-    if (s.x < 0 || s.y < 0 || s.x >= width || s.y >= height)
-        return TERMINAL_STATE;
-
-    s.isOutsideEnvironment = false;
-    return s;
+    // Set the distance punishment for a given state transition
+    baseStateMatrix[stateOne.RoomNumber][stateTwo.RoomNumber] = punishment;
+    baseStateMatrix[stateTwo.RoomNumber][stateOne.RoomNumber] = punishment;
 }
 
-float q_learning::getReward(ct::state s, ct::action a)
+void q_learning::makeNewStateMatrix()
 {
-    ct::state next = getNextState(s, a);
-    if (next.isOutsideEnvironment)
-        return 0.0;
-    else
+    std::vector<std::vector<float>> tempMatrix = baseStateMatrix;
+    for (unsigned int action = 1; action < visitedRooms.size() + 1; action++)
     {
-        if ((stateMatrix[next.y][next.x] != FREE_SPACE) && (stateMatrix[next.y][next.x] != WALL))
-            return stateMatrix[next.y][next.x];
-
-        return 0.0;
-    }
-}
-
-ct::action q_learning::getNextAction(ct::state s)
-{
-    std::vector<ct::action> possibleActions = { ct::UP, ct::DOWN, ct::LEFT, ct::RIGHT };
-    float currentMaxValue = std::numeric_limits<float>::min();
-    ct::action bestAction = possibleActions[0]; // Make sure to have a default action
-
-    for (const auto a : possibleActions)
-    {
-        ct::state next = getNextState(s, a);
-        float reward = getReward(s, a);
-        if (!next.isOutsideEnvironment)
+        if (!visitedRooms[action - 1]) // room not visited
         {
-            if (stateValueEstimates[next.y][next.x] + reward > currentMaxValue)
+            for (unsigned int state = 0; state < visitedRooms.size() + 1; state++)
             {
-                bestAction = a;
-                currentMaxValue = stateValueEstimates[next.y][next.x] + reward;
-            }
-        }
-    }
-    return bestAction;
-
-}
-
-void q_learning::resetReward(ct::state s)
-{
-    // Reset the reward
-    for (unsigned int room = 0; room < averageProbability.size(); room++)
-    {
-        cv::Point point = centerOfMassRooms[room]->centerOfMass;
-        if ((point.x == s.x) && (point.y == s.y))
-            averageProbability[room] = 0.0;
-    }
-
-    // Find the new max value
-    float max = 0.0;
-    for (unsigned int room = 0; room < averageProbability.size(); room++)
-        if (averageProbability[room] > max)
-            max = averageProbability[room];
-
-    // Normalise
-    for (unsigned int room = 0; room < averageProbability.size(); room++)
-    {
-        cv::Point point = centerOfMassRooms[room]->centerOfMass;
-        if (averageProbability[room] != 0.0)
-            stateMatrix[point.y][point.x] = averageProbability[room] / max;
-        else
-            stateMatrix[point.y][point.x] = FREE_SPACE;
-    }
-}
-
-void q_learning::deleteMaxReward()
-{
-    // Find the max value
-    float max = 0.0;
-    for (unsigned int room = 0; room < averageProbability.size(); room++)
-        if (averageProbability[room] > max)
-            max = averageProbability[room];
-
-    // Reset the max value
-    for (unsigned int room = 0; room < averageProbability.size(); room++)
-        if (averageProbability[room] == max)
-            averageProbability[room] = 0.0;
-
-    // Find the new max value
-    max = 0.0;
-    for (unsigned int room = 0; room < averageProbability.size(); room++)
-        if (averageProbability[room] > max)
-            max = averageProbability[room];
-
-    // Normalise
-    for (unsigned int room = 0; room < averageProbability.size(); room++)
-    {
-        cv::Point point = centerOfMassRooms[room]->centerOfMass;
-        if (averageProbability[room] != 0.0)
-            stateMatrix[point.y][point.x] = averageProbability[room] / max;
-        else
-            stateMatrix[point.y][point.x] = FREE_SPACE;
-    }
-}
-
-float q_learning::performFullSweep()
-{
-    float delta = 0;
-    for (int y = 0; y < height; y++)
-    {
-        for (int x = 0; x < width; x++)
-        {
-            ct::state s = { x, y, false };
-            if (stateMatrix[y][x] == FREE_SPACE)
-            {
-                float value = stateValueEstimates[y][x];
-                ct::action a = getNextAction(s);
-                float reward = getReward(s, a);
-                ct::state next = getNextState(s, a);
-                if (!next.isOutsideEnvironment)
-                    stateValueEstimates[y][x] = reward + discountRate * stateValueEstimates[next.y][next.x];
-
-                delta = std::max(delta, (float)fabs(value - stateValueEstimates[y][x]));
-            }
-        }
-    }
-    return delta;
-}
-
-float q_learning::doEstimation(float theta)
-{
-    int sweep = 0;
-    float delta = 0;
-    do
-    {
-        delta = performFullSweep();
-        sweep++;
-    } while (delta > theta);
-    std::cout << "last delta: "<< delta << std::endl;
-    return sweep;
-}
-
-std::vector<ct::state> q_learning::getPath(ct::state startState)
-{
-    std::vector<ct::state> path;
-    ct::state curr = startState;
-    path.push_back(startState);
-    while(!curr.isOutsideEnvironment)
-    {
-        ct::action a = getNextAction(curr);
-        ct::state next = getNextState(curr,a);
-        if (!next.isOutsideEnvironment)
-            path.push_back(next);
-
-        curr = next;
-    }
-    return path;
-}
-
-void q_learning::paintValueEstimates()
-{
-    // Paint the state value estimates
-    for (unsigned int row = 0; row < stateValueEstimates.size(); row++)
-    {
-        for (unsigned int col = 0; col < stateValueEstimates[row].size(); col++)
-        {
-            if (stateValueEstimates[row][col] < 0.5) // red to yellow
-            {
-                int green = stateValueEstimates[row][col] * (255 / 0.5);
-                *imageValues.ptr<cv::Vec3b>(row,col) = {0, green, 255};
-            }
-            else // yellow to green
-            {
-                int red = (1 - stateValueEstimates[row][col]) * (255 / 0.5);
-                *imageValues.ptr<cv::Vec3b>(row,col) = {0, 255, red};
-            }
-        }
-    }
-
-    // Paint the walls
-    paintWalls();
-
-    // Paint center of mass
-    paintCenterOfMass();
-
-    // Paint the outside the environment
-    paintOutsideEnvironment();
-}
-
-void q_learning::paintPolicy()
-{
-    // Colours for painting the states
-    cv::Vec3b up({ 0, 0, 255 }); // red
-    cv::Vec3b down({ 0, 255, 0 }); // green
-    cv::Vec3b right({ 255, 255, 0 }); // cyan
-    cv::Vec3b left({ 255, 0, 255 }); // magenta
-
-    // Paint the policy
-    for (unsigned int row = 0; row < stateMatrix.size(); row++)
-    {
-        for (unsigned int col = 0; col < stateMatrix[row].size(); col++)
-        {
-            if (stateMatrix[row][col] == FREE_SPACE)
-            {
-                ct::action a = getNextAction(ct::state({col, row, false}));
-
-                switch (a) {
-                case ct::UP:
-                    *imagePolicy.ptr<cv::Vec3b>(row,col) = up;
-                    break;
-                case ct::DOWN:
-                    *imagePolicy.ptr<cv::Vec3b>(row,col) = down;
-                    break;
-                case ct::LEFT:
-                    *imagePolicy.ptr<cv::Vec3b>(row,col) = left;
-                    break;
-                case ct::RIGHT:
-                    *imagePolicy.ptr<cv::Vec3b>(row,col) = right;
-                    break;
-                default:
-                    *imagePolicy.ptr<cv::Vec3b>(row,col) = {255, 255, 255};
-                    break;
-                }
-            }
-        }
-    }
-
-    // Paint the walls
-    paintWalls();
-
-    // Paint center of mass
-    paintCenterOfMass();
-
-    // Paint the outside the environment
-    paintOutsideEnvironment();
-}
-
-void q_learning::showValueEstimates(std::string name)
-{
-    cv::imshow(name,imageValues);
-}
-
-void q_learning::showPolicy(std::string name)
-{
-    cv::imshow(name,imagePolicy);
-}
-
-void q_learning::scaleImage(int factor)
-{
-    int newWidth = width * factor;
-    int newHeight = height * factor;
-
-    cv::Mat tempImageOne = cv::Mat(newHeight, newWidth, CV_8UC3);
-    tempImageOne.setTo(0);
-
-    cv::Mat tempImageTwo = cv::Mat(newHeight, newWidth, CV_8UC3);
-    tempImageTwo.setTo(0);
-
-    for (int row = 0; row < height; row++)
-    {
-        for (int col = 0; col < width; col++)
-        {
-            cv::Vec3b colorOne = *imageValues.ptr<cv::Vec3b>(row,col);
-            cv::Vec3b colorTwo = *imagePolicy.ptr<cv::Vec3b>(row,col);
-            for (int newRow = row * factor; newRow < row * factor + factor; newRow++)
-            {
-                for (int newCol = col * factor; newCol < col * factor + factor; newCol++)
+                if ((tempMatrix[state][action] != ACTION_NOT_ABLE) && (tempMatrix[state][action] != NO_ACTION))
                 {
-                    *tempImageOne.ptr<cv::Vec3b>(newRow,newCol) = colorOne;
-                    *tempImageTwo.ptr<cv::Vec3b>(newRow,newCol) = colorTwo;
+                    // reward will be placed
+                    float punishment = tempMatrix[state][action];
+                    tempMatrix[state][action] = rewards[action - 1] - punishment;
                 }
             }
         }
     }
-    imageValues = tempImageOne.clone();
-    imagePolicy = tempImageTwo.clone();
+    stateMatrix.push_back(tempMatrix);
 }
 
-void q_learning::paintWalls()
+void q_learning::makeNewQMatrix()
 {
-    // Paint the walls
-    for (unsigned int row = 0; row < stateMatrix.size(); row++)
+    std::vector<std::vector<float>> tempMatrix = baseStateMatrix;
+    for (unsigned int state = 0; state < baseStateMatrix.size(); state++)
+        for (unsigned int action = 0; action < baseStateMatrix[state].size(); action++)
+            tempMatrix[state][action] = 0.0;
+
+    qValues.push_back(tempMatrix);
+}
+
+void q_learning::setReward(int roomNumber, float reward)
+{
+    rewards[roomNumber - 1] = reward;
+}
+
+void q_learning::printStateMatrix()
+{
+    for (unsigned int i = 0; i < stateMatrix.size(); i++)
     {
-        for (unsigned int col = 0; col < stateMatrix[row].size(); col++)
+        for (unsigned int state = 0; state < stateMatrix[i].size(); state++)
         {
-            if (stateMatrix[row][col] == WALL)
+            for (unsigned int action = 0; action < stateMatrix[i][state].size(); action++)
             {
-                *imageValues.ptr<cv::Vec3b>(row,col) = {0, 0, 0};
-                *imagePolicy.ptr<cv::Vec3b>(row,col) = {0, 0, 0};
+                printf(" %5.2f ",stateMatrix[i][state][action]);
+            }
+            printf("\n");
+        }
+        std::cout << std::endl;
+    }
+}
+
+void q_learning::printQMatrix()
+{
+    for (unsigned int i = 0; i < qValues.size(); i++)
+    {
+        for (unsigned int state = 0; state < qValues[i].size(); state++)
+        {
+            for (unsigned int action = 0; action < qValues[i][state].size(); action++)
+            {
+                printf(" %5.2f ",qValues[i][state][action]);
+            }
+            printf("\n");
+        }
+        std::cout << std::endl;
+    }
+}
+
+ct::newState q_learning::visitRoom(ct::newState s)
+{
+    if (s.RoomNumber == 0)
+        return s;
+
+    // get the new state
+    ct::newState temp = s;
+    temp.roomsVisited[s.RoomNumber - 1] = true;
+    bool isTerminal = true;
+    for (unsigned int room = 0; room < temp.roomsVisited.size(); room++)
+        if (temp.roomsVisited[room] == false)
+            isTerminal = false;
+
+    temp.isTerminal = isTerminal;
+
+    // check if the room have already been visited
+    bool visited = false;
+
+    if (visitedRooms[s.RoomNumber - 1])
+        visited = true;
+
+    //for (unsigned int room = 0; room < roomsOrder.size(); room++)
+        //if (s.RoomNumber == roomsOrder[room])
+            //visited = true;
+
+    // if the room have not been visited previously
+    if (!visited)
+    {
+        visitedRooms[s.RoomNumber - 1] = true;
+        if (!isTerminal)
+        {
+            matrixOrder.push_back(temp.roomsVisited);
+            makeNewStateMatrix();
+            makeNewQMatrix();
+        }
+    }
+
+    return temp;
+}
+
+ct::newState q_learning::getNextState(ct::newState s, int a)
+{
+    float reward = getReward(s,a);
+    if (reward == ACTION_NOT_ABLE)
+        return s;
+
+    ct::newState next = s;
+    next.RoomNumber = a;
+    return next;
+}
+
+float q_learning::getReward(ct::newState s, int a)
+{
+    return stateMatrix[findMatrixIndex(s)][s.RoomNumber][a];
+}
+
+int q_learning::getNextAction(ct::newState s)
+{
+    std::vector<int> possibleActions;
+    for (unsigned int action = 0; action < baseStateMatrix.size(); action++)
+        possibleActions.push_back(action);
+
+    float currentMaxValue = -std::numeric_limits<float>::min();
+    std::vector<float> maxValues;
+    std::vector<int> actions;
+
+    int bestAction;
+    int matrixIndex = findMatrixIndex(s);
+    std::cout << "get next action matrix index: " << matrixIndex << std::endl;
+    for (unsigned int action = 0; action < possibleActions.size(); action++)
+    {
+        if (qValues[matrixIndex][s.RoomNumber][action] > currentMaxValue && s.RoomNumber != action)
+        {
+            maxValues.clear();
+            actions.clear();
+            maxValues.push_back(qValues[matrixIndex][s.RoomNumber][action]);
+            actions.push_back(possibleActions[action]);
+            currentMaxValue = qValues[matrixIndex][s.RoomNumber][action];
+            bestAction = possibleActions[action];
+        }
+        else if (maxValues.size() != 0 && s.RoomNumber != action)
+        {
+            if (qValues[matrixIndex][s.RoomNumber][action] == maxValues[maxValues.size() - 1])
+            {
+                maxValues.push_back(qValues[matrixIndex][s.RoomNumber][action]);
+                actions.push_back(possibleActions[action]);
             }
         }
     }
+
+    if (maxValues.size() > 0) // More than one action with the same value
+    {
+        int index = getRandomIndex(actions.size());
+        bestAction = actions[index];
+    }
+
+    std::cout << "action get next action: " << bestAction << std::endl;
+    return bestAction;
 }
 
-void q_learning::paintCenterOfMass()
+int q_learning::eGreedyPolicy(ct::newState s, float epsilon)
 {
-    for (unsigned int room = 0; room < centerOfMassRooms.size(); room++)
+    std::vector<int> possibleActions;
+    for (unsigned int action = 0; action < baseStateMatrix.size(); action++)
     {
-        if (averageProbability[room] != 0.0)
+        //if (s.RoomNumber != signed(action))
+            possibleActions.push_back(action);
+    }
+
+    if (getRandom(0, 1) < epsilon)
+    {
+        std::cout << "random action" << std::endl;
+        return possibleActions[getRandomIndex(possibleActions.size())];
+    }
+    else
+        return getNextAction(s);
+}
+
+float q_learning::maxQValue(ct::newState s)
+{
+    float currentMaxValue = -std::numeric_limits<float>::min();
+    int matrixIndex = findMatrixIndex(s);
+
+    for (unsigned int action = 0; action < baseStateMatrix.size(); action++)
+    {
+        if (qValues[matrixIndex][s.RoomNumber][action] > currentMaxValue)
+            currentMaxValue = qValues[matrixIndex][s.RoomNumber][action];
+    }
+
+    return currentMaxValue;
+}
+
+ct::newState q_learning::qUpdate(ct::newState s, float alpha, float gamma, float epsilon)
+{
+    int a = eGreedyPolicy(s, epsilon);
+    //std::cout << "action: " << a << std::endl;
+    float reward = getReward(s, a);
+    ct::newState next = getNextState(s, a);
+    std::cout << "next state: " << next.RoomNumber << "   " << next.roomsVisited[0] << ", " << next.roomsVisited[1] << std::endl;
+    int matrixIndex = findMatrixIndex(s);
+    //std::cout << "matrix index qUpdate: " << matrixIndex << std::endl;
+    qValues[matrixIndex][s.RoomNumber][a] += alpha * (reward + gamma * maxQValue(next) - qValues[matrixIndex][s.RoomNumber][a]);
+
+    if (next.roomsVisited[next.RoomNumber] == false)
+        next = visitRoom(next);
+
+    std::cout << "next state: " << next.RoomNumber << "   " << next.roomsVisited[0] << ", " << next.roomsVisited[1] << std::endl;
+    return next;
+}
+
+void q_learning::doEpisode(ct::newState start, float alpha, float gamma, float epsilon)
+{
+    int index = 0;
+    bool isTerminal = false;
+    ct::newState s = start;
+    //while (!isTerminal)
+    while (index < 200 && !isTerminal)
+    {
+        //std::cout << "hmm" << std::endl;
+        s = qUpdate(s, alpha, gamma, epsilon);
+        if (s.isTerminal)
+            isTerminal = true;
+
+        //std::cout << "is terminal: " << isTerminal << std::endl;
+        std::cout << index++ << std::endl;
+    }
+}
+
+// Private methods
+int q_learning::findMatrixIndex(ct::newState s)
+{
+    int matrixIndex = 0;
+    for (unsigned int matrix = 0; matrix < matrixOrder.size(); matrix++)
+    {
+        bool allEqual = true;
+        for (int room = 0; room < matrixOrder[matrix].size(); room++)
         {
-            cv::Point point = centerOfMassRooms[room]->centerOfMass;
-            *imageValues.ptr<cv::Vec3b>(point.y,point.x) = {255, 0, 0};
-            *imagePolicy.ptr<cv::Vec3b>(point.y,point.x) = {255, 0, 0};
+            if (s.roomsVisited[room] != matrixOrder[matrix][room])
+                allEqual = false;
         }
+        if (allEqual)
+            matrixIndex = matrix;
     }
+    //std::cout << "matrix index: " << matrixIndex << std::endl;
+    return matrixIndex;
 }
 
-void q_learning::paintOutsideEnvironment()
+float q_learning::getRandom(int min, int max)
 {
-    std::vector<cv::Point> outsideEnvironment;
-    //= {cv::Point(17,0), cv::Point(18,0), cv::Point(19,0),
-      //  cv::Point(20,0), cv::Point(21,0), cv::Point(22,0), cv::Point(23,0), cv::Point(31,0)};
-    for (int i = 17; i < 24; i++)
-        outsideEnvironment.push_back(cv::Point(i,0));
-
-    for (int i = 31; i < 53; i++)
-        outsideEnvironment.push_back(cv::Point(i,0));
-
-    for (int i = 85; i < 101; i++)
-    {
-        outsideEnvironment.push_back(cv::Point(i,0));
-        outsideEnvironment.push_back(cv::Point(i,1));
-        outsideEnvironment.push_back(cv::Point(i,2));
-        outsideEnvironment.push_back(cv::Point(i,3));
-    }
-
-    for (int i = 27; i < 41; i++)
-        outsideEnvironment.push_back(cv::Point(i,79));
-
-    for (int i = 65; i < 77; i++)
-        outsideEnvironment.push_back(cv::Point(i,79));
-
-    for (int i = 117; i < 120; i++)
-        outsideEnvironment.push_back(cv::Point(i,79));
-
-    for (int i = 35; i < 48; i++)
-        outsideEnvironment.push_back(cv::Point(0,i));
-
-    for (int i = 32; i < 64; i++)
-        outsideEnvironment.push_back(cv::Point(119,i));
-
-    for (unsigned int i = 0; i < outsideEnvironment.size(); i++)
-    {
-        *imageValues.ptr<cv::Vec3b>(outsideEnvironment[i].y,outsideEnvironment[i].x) = {255, 255, 255};
-        *imagePolicy.ptr<cv::Vec3b>(outsideEnvironment[i].y,outsideEnvironment[i].x) = {255, 255, 255};
-    }
+    std::uniform_real_distribution<double> unif(min, max);
+    float randomNumb = unif(rng);
+    return randomNumb;
 }
 
-void q_learning::saveImage(int testNumb, int runNumb, int sweepNumb)
+int q_learning::getRandomIndex(int size)
 {
-    QDir path = QDir::current();
-    path.cdUp();
-    std::string fileNameOne = std::to_string(testNumb) + "/Policy" + std::to_string(testNumb) + "." + std::to_string(runNumb) + "." + std::to_string(sweepNumb) + ".png";
-    std::string fileNameTwo = std::to_string(testNumb) + "/Value_estimates" + std::to_string(testNumb) + "." + std::to_string(runNumb) + "." + std::to_string(sweepNumb) + ".png";
-    std::string filePathOne = path.path().toStdString() + "/test_files/q_learning/test" + fileNameOne;
-    std::string filePathTwo = path.path().toStdString() + "/test_files/q_learning/test" + fileNameTwo;
-    cv::imwrite(filePathOne, imagePolicy);
-    cv::imwrite(filePathTwo, imageValues);
+    std::uniform_int_distribution<int> unif(0,size - 1);
+    int randomNumb = unif(rng);
+    return randomNumb;
 }

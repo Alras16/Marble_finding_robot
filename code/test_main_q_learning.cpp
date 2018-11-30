@@ -1,83 +1,114 @@
-#include "bst_coordinates.h"
-#include "map_class.h"
-#include "dataloggin.h"
 #include "q_learning.h"
 
 int main(int _argc, char **_argv)
 {
     /* This document calculates the average probability of a marble being placed in a specific room */
 
-    std::cout << "hmm" << std::endl;
-    map_class map("map_small.png",14,true);
-    map.find_center_of_mass();
-    q_learning qLearn(map);
-    qLearn.setReward(5,10);
-
-    qLearn.resetReward(ct::state({43, 39, false}));
-    qLearn.resetReward(ct::state({41, 15, false}));
-    qLearn.resetReward(ct::state({68, 25, false}));
-    qLearn.resetReward(ct::state({68, 9, false}));
-    qLearn.resetReward(ct::state({17, 20, false}));
-    qLearn.resetReward(ct::state({9, 7, false}));
-    qLearn.resetReward(ct::state({31, 62, false}));
-    qLearn.resetReward(ct::state({9, 62, false}));
-    qLearn.resetReward(ct::state({92, 21, false}));
-    qLearn.resetReward(ct::state({110, 15, false}));
-    qLearn.resetReward(ct::state({106, 55, false}));
-    qLearn.resetReward(ct::state({70, 53, false}));
-    qLearn.resetReward(ct::state({78, 70, false}));
-
-    int sweeps = qLearn.doEstimation(0.0);
-    std::cout << "number of sweeps: " << sweeps << std::endl;
-    qLearn.paintValueEstimates();
-    qLearn.paintPolicy();
-
-    std::vector<ct::state> path = qLearn.getPath(ct::state({78, 70, false}));
-    std::cout << path[path.size() - 1].x  << "," << path[path.size() - 1].y << std::endl;
-    //qLearn.resetReward(path[path.size() - 1]);
-
-    qLearn.scaleImage(5);
-    qLearn.showPolicy("Policy");
-    qLearn.showValueEstimates("Value Estimates");
-
-    qLearn.saveImage(2,14,sweeps);
-
-
-
-
-
-
-
-
-
-
-    cv::waitKey(0);
-
-
-    /*int numberOfTests = 2;
-    int numberOfRuns = 10;
-
-    // Make matrix of the probabilities
-    std::vector<std::vector<float>> probabilityMatrix;
-    for (int test = 1; test < 1 + numberOfTests; test++)
+    std::cout << "hello world" << std::endl;
+    /*q_learning QL(2);
+    int zero = 0;
+    int one = 0;
+    int two = 0;
+    for (int i = 0; i < 10000; i++)
     {
-        for (int run = 1; run < 1 + numberOfRuns; run++)
+        //float randomNumb = rand() / double(RAND_MAX);
+        int randomNumb = QL.getRandomIndex(3);
+        std::cout << "random number: " << randomNumb << std::endl;
+        if (randomNumb == 0)
+            zero++;
+        else if (randomNumb == 1)
+            one++;
+        else
+            two++;
         {
-            dataloggin statsLog("StatsRun",test,run,'s');
-            probabilityMatrix.push_back(statsLog.readStats());
+            std::cout << "random action" << std::endl;
+            randomAction++;
+        }
+        else
+        {
+            std::cout << "policy action" << std::endl;
+            policyAction++;
         }
     }
+    std::cout << std::endl;
+    std::cout << "Number of 0: " << zero << std::endl;
+    std::cout << "Number of 1: " << one << std::endl;
+    std::cout << "Number of 2: " << two << std::endl;*/
 
-    // Calculate average probability
-    std::vector<float> averageProbability;
-    for (unsigned int i = 0; i < probabilityMatrix[0].size(); i++) // rooms
-    {
-        float sum = 0.0;
-        for (unsigned int j = 0; j < probabilityMatrix.size(); j++) // runs
-            sum += probabilityMatrix[j][i];
+    q_learning QL(2);
+    ct::newState start;
+    start.isTerminal = false;
+    start.RoomNumber = 0;
+    start.roomsVisited = {false,false};
+    ct::newState room1 = start;
+    room1.RoomNumber = 1;
+    ct::newState room2 = start;
+    room2.RoomNumber = 2;
+    QL.setDistancePunishment(start, room1, 6.0);
+    QL.setDistancePunishment(start, room2, 6.0);
 
-        sum /= probabilityMatrix.size();
-        averageProbability.push_back(sum);
-        std::cout << "Room" << std::setw(3) << i + 1 << ": " << std::setw(10) << sum << std::endl;
-    }*/
+    QL.setReward(1,100.0);
+    QL.setReward(2,75.0);
+    QL.makeNewStateMatrix();
+
+    QL.doEpisode(start,0.2,0.9,0.2);
+    /*std::cout << "visited rooms: " << start.roomsVisited[0] << ", " << start.roomsVisited[1] << std::endl;
+    ct::newState next = QL.qUpdate(start,0.5,0.9,0.2);
+    std::cout << "state: " << next.RoomNumber << std::endl;
+    std::cout << "visited rooms: " << next.roomsVisited[0] << ", " << next.roomsVisited[1] << std::endl;
+
+    next = QL.qUpdate(next,0.5,0.9,0.2);
+    std::cout << "state: " << next.RoomNumber << std::endl;
+    std::cout << "visited rooms: " << next.roomsVisited[0] << ", " << next.roomsVisited[1] << std::endl;
+
+    next = QL.qUpdate(next,0.5,0.9,0.2);
+    std::cout << "state: " << next.RoomNumber << std::endl;
+    std::cout << "visited rooms: " << next.roomsVisited[0] << ", " << next.roomsVisited[1] << std::endl;
+
+    next = QL.qUpdate(next,0.5,0.9,0.2);
+    std::cout << "state: " << next.RoomNumber << std::endl;
+    std::cout << "visited rooms: " << next.roomsVisited[0] << ", " << next.roomsVisited[1] << std::endl;
+
+    next = QL.qUpdate(next,0.5,0.9,0.2);
+    std::cout << "state: " << next.RoomNumber << std::endl;
+    std::cout << "visited rooms: " << next.roomsVisited[0] << ", " << next.roomsVisited[1] << std::endl;
+
+    next = QL.qUpdate(next,0.5,0.9,0.2);
+    std::cout << "state: " << next.RoomNumber << std::endl;
+    std::cout << "visited rooms: " << next.roomsVisited[0] << ", " << next.roomsVisited[1] << std::endl;
+
+    next = QL.qUpdate(next,0.5,0.9,0.2);
+    std::cout << "state: " << next.RoomNumber << std::endl;
+    std::cout << "visited rooms: " << next.roomsVisited[0] << ", " << next.roomsVisited[1] << std::endl;
+
+    next = QL.qUpdate(next,0.5,0.9,0.2);
+    std::cout << "state: " << next.RoomNumber << std::endl;
+    std::cout << "visited rooms: " << next.roomsVisited[0] << ", " << next.roomsVisited[1] << std::endl;
+
+    next = QL.qUpdate(next,0.5,0.9,0.2);
+    std::cout << "state: " << next.RoomNumber << std::endl;
+    std::cout << "visited rooms: " << next.roomsVisited[0] << ", " << next.roomsVisited[1] << std::endl;
+
+    next = QL.qUpdate(next,0.5,0.9,0.2);
+    std::cout << "state: " << next.RoomNumber << std::endl;
+    std::cout << "visited rooms: " << next.roomsVisited[0] << ", " << next.roomsVisited[1] << std::endl;
+
+    next = QL.qUpdate(next,0.5,0.9,0.2);
+    std::cout << "state: " << next.RoomNumber << std::endl;
+    std::cout << "visited rooms: " << next.roomsVisited[0] << ", " << next.roomsVisited[1] << std::endl;
+
+    next = QL.qUpdate(next,0.5,0.9,0.2);
+    std::cout << "state: " << next.RoomNumber << std::endl;
+    std::cout << "visited rooms: " << next.roomsVisited[0] << ", " << next.roomsVisited[1] << std::endl;
+
+    next = QL.qUpdate(next,0.5,0.9,0.2);
+    std::cout << "state: " << next.RoomNumber << std::endl;
+    std::cout << "visited rooms: " << next.roomsVisited[0] << ", " << next.roomsVisited[1] << std::endl;*/
+
+    QL.printStateMatrix();
+    QL.printQMatrix();
+    //QL.visitRoom(room1);
+    //QL.visitRoom(2);
+    //QL.makeNewStateMatrix();
+
 }

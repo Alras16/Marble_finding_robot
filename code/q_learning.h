@@ -7,54 +7,57 @@
 #include <string>
 #include <iostream>
 #include "ct.h"
-#include "map_class.h"
-#include "dataloggin.h"
+#include <time.h>
 
-#define FREE_SPACE  2.0
-#define WALL        3.0
+#include <random>
+#include <chrono>
+//#include "map_class.h"
+//#include "dataloggin.h"
+
+#define ACTION_NOT_ABLE  -100.0
+#define NO_ACTION -1.0
 
 class q_learning
 {
 public:
-    q_learning(map_class map);
+    q_learning(int numberOfRooms);
 
-    void setReward(int numberOfTests, int numberOfRuns);
+    void setDistancePunishment(ct::newState stateOne, ct::newState stateTwo, float punishment);
+    void makeNewStateMatrix();
+    void makeNewQMatrix();
+    void setReward(int roomNumber, float reward);
 
-    ct::state getNextState(ct::state s, ct::action a);
-    float getReward(ct::state s, ct::action a);
-    ct::action getNextAction(ct::state s);
-    void resetReward(ct::state s);
-    void deleteMaxReward();
+    void printStateMatrix();
+    void printQMatrix();
 
-    float performFullSweep();
-    float doEstimation(float theta);
-    std::vector<ct::state> getPath(ct::state startState);
+    ct::newState visitRoom(ct::newState s);
 
+    // Q-learning
+    ct::newState getNextState(ct::newState s, int a);
+    float getReward(ct::newState s, int a);
+    int getNextAction(ct::newState s);
+    int eGreedyPolicy(ct::newState s, float epsilon);
+    float maxQValue(ct::newState s);
+    ct::newState qUpdate(ct::newState s, float alpha, float gamma, float epsilon);
+    void doEpisode(ct::newState start, float alpha, float gamma, float epsilon);
 
-    void paintValueEstimates();
-    void paintPolicy();
-    void showValueEstimates(std::string name);
-    void showPolicy(std::string name);
-    void scaleImage(int factor);
-    void saveImage(int testNumb, int runNumb, int sweepNumb);
+    float getRandom(int min, int max);
+    int getRandomIndex(int size);
 
 private:
-    void paintWalls();
-    void paintCenterOfMass();
-    void paintOutsideEnvironment();
+    int findMatrixIndex(ct::newState s);
 
-    int width = 0;
-    int height = 0;
 
-    std::vector<std::vector<float>> stateMatrix; // Environment
-    std::vector<std::vector<float>> stateValueEstimates;
-    cv::Mat imageValues;
-    cv::Mat imagePolicy;
+    std::vector<std::vector<float>> baseStateMatrix; // Base environment (matrix)
+    std::vector<std::vector<std::vector<float>>> stateMatrix; // Environment (vector of matrices)
+    std::vector<std::vector<std::vector<float>>> qValues;
 
-    float discountRate = 0.9;
+    std::vector<std::vector<bool>> matrixOrder;
+    std::vector<bool> visitedRooms;
 
-    std::vector<ct::room*> centerOfMassRooms;
-    std::vector<float> averageProbability;
+    std::vector<float> rewards; // averageProbability
+
+    std::mt19937_64 rng;
 };
 
 #endif // Q_LEARNING_H
