@@ -7,7 +7,6 @@ SOURCES += main.cpp \
     laserscanner.cpp \
     motion_planning.cpp \
     setup.cpp \
-
     bst_coordinates.cpp \
     map_class.cpp \
     c_vision.cpp \
@@ -16,7 +15,6 @@ SOURCES += main.cpp \
     ct.cpp \
     value_iteration.cpp \
     q_learning.cpp \
-
     lidar_sensor.cpp \
     brushfire.cpp \
 
@@ -34,7 +32,6 @@ HEADERS += \
     laserscanner.h \
     motion_planning.h \
     setup.h \
-
     bst_coordinates.h \
     map_class.h \
     c_vision.h \
@@ -43,7 +40,6 @@ HEADERS += \
     ct.h \
     value_iteration.h \
     q_learning.h \
-
     lidar_sensor.h \
     brushfire.h \
 
