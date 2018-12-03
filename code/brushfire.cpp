@@ -100,8 +100,8 @@ void brushfire::brushfireAlgorithm(int iterations)
     for (int h = 0; h < iterations; h++)
     {
         label++;
-        std::cout << matrix.size() << std::endl;
-        std::cout << matrix[0].size() << std::endl;
+        //std::cout << matrix.size() << std::endl;
+        //std::cout << matrix[0].size() << std::endl;
         for(unsigned int i = 1; i < matrix.size() - 1; i++)
         {
             for(unsigned int j = 1; j < matrix[i].size() - 1; j++)
