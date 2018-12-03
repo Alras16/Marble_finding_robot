@@ -15,7 +15,7 @@
 //#include "dataloggin.h"
 
 #define ACTION_NOT_ABLE  -100.0
-#define NO_ACTION -1.0
+#define NO_ACTION -50.0
 
 class q_learning
 {
@@ -44,15 +44,19 @@ public:
     float getRandom(int min, int max);
     int getRandomIndex(int size);
 
+    std::vector<bool> binaryIncrement(std::vector<bool> numb);
+
 private:
-    int findMatrixIndex(ct::newState s);
+    int findStateMatrixIndex(ct::newState s);
+    int findQMatrixIndex(ct::newState s);
 
 
     std::vector<std::vector<float>> baseStateMatrix; // Base environment (matrix)
     std::vector<std::vector<std::vector<float>>> stateMatrix; // Environment (vector of matrices)
     std::vector<std::vector<std::vector<float>>> qValues;
 
-    std::vector<std::vector<bool>> matrixOrder;
+    std::vector<std::vector<bool>> stateMatrixOrder;
+    std::vector<std::vector<bool>> qMatrixOrder;
     std::vector<bool> visitedRooms;
 
     std::vector<float> rewards; // averageProbability
