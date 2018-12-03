@@ -16,7 +16,7 @@ class map_class
 public:
     map_class(std::string fileName, int numb_of_rooms, bool setAsTree);
 
-    std::vector<ct::room*> getRooms();
+    std::vector<ct::room> getRooms();
     void showMap(std::string title);
     cv::Point convertToPixel(ct::point aPoint);
     ct::point convertToCoordinate(cv::Point pixel);
@@ -34,10 +34,10 @@ private:
     void set_image(std::string fileName);
     std::vector<cv::Point> find_color(int color);
     void init_rooms(int numb_of_rooms);
+    void paintRoom(ct::room theRoom, cv::Vec3i color);
+    void paintMarble(ct::foundMarble marble);
 
-
-
-    std::vector<ct::room*> listOfRooms;
+    std::vector<ct::room> listOfRooms;
     std::vector<ct::foundMarble*> foundMarbles;
 
     cv::Point currLocation;

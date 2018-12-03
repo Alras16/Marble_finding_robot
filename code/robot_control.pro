@@ -12,15 +12,11 @@ SOURCES += main.cpp \
     dataloggin.cpp \
     ct.cpp \
     value_iteration.cpp \
-    motion_planning.cpp \
-    setup.cpp \
     q_learning.cpp \
     motion_planning.cpp \
     setup.cpp \
-    motion_planning.cpp \
-    setup.cpp \
-    q_learning.cpp \
     brushfire.cpp \
+    laserscanner.cpp \
 
 CONFIG += link_pkgconfig
 PKGCONFIG += gazebo
@@ -40,13 +36,11 @@ HEADERS += \
     dataloggin.h \
     ct.h \
     value_iteration.h \
-    q_learning.h \
-    motion_planning.h \
-    setup.h \
     motion_planning.h \
     setup.h \
     q_learning.h \
     brushfire.h \
+    laserscanner.h \
 
 DISTFILES += \
     fuzzybugcontroller.fll

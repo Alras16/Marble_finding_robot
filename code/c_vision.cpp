@@ -49,7 +49,7 @@ void c_vision::find_color()
         //processed_image = binary_image.clone();
         processed_image = binary_image.clone();
         image_updated = false;
-        //cv::imshow("Color found",binary_image);
+      //  cv::imshow("Color found",binary_image);
     }
 
 
@@ -60,7 +60,7 @@ void c_vision::find_marbles()
     if (image_updated)
     {
         find_color();
-
+        marbles.clear();
         int image_w = processed_image.cols; // cols
         int image_h = processed_image.rows; // rows
         cv::Mat temp_image(image_h,image_w,CV_8UC3,cv::Scalar(0,0,0));
@@ -97,34 +97,67 @@ void c_vision::find_marbles()
             }
         }
 
-        std::cout << "number of contours: " << contours.size() << std::endl;
+       // std::cout << "number of contours: " << contours.size() << std::endl;
 
         std::vector<cv::Vec3f> circles;
 
-        ct::marble *new_marble;
+        ct::marble new_marble;
+
 
         for (unsigned int i = 0; i < contours.size(); i++)
         {
-            new_marble->center.x = ((max_col[i] - min_col[i])/2) + min_col[i];
-            new_marble->center.y = ((max_row[i] - min_row[i])/2) + min_row[i];
-            new_marble->distance_to_center = ((max_col[i] - min_col[i])/2) + min_col[i] - ori_image.cols / 2;
-            new_marble->radius = (max_row[i] - min_row[i])/2;
+            new_marble.center.x = ((max_col[i] - min_col[i])/2) + min_col[i];
+            new_marble.center.y = ori_image.rows - (((max_row[i] - min_row[i])/2) + min_row[i]);
+            new_marble.distance_to_center = ((max_col[i] - min_col[i])/2) + min_col[i] - ori_image.cols / 2;
+            new_marble.radius = (max_row[i] - min_row[i])/2;
+            if ( (new_marble.center.x && new_marble.center.y) != 0)
+              new_marble.centerPolar.theta = std::atan(new_marble.center.y/new_marble.center.x);
+               //std::cout << "Marble: " << new_marble.centerPolar.theta <<"   " << new_marble.center.x << "," << new_marble.center.y << std::endl;
+               //std::cout << "FUCK: " << new_marble.center.y/new_marble.center.x << std::endl;
+             marbles.push_back(new_marble);
         }
 
-        marbles.push_back(new_marble);
+
 
         for (unsigned int i = 0; i < circles.size(); i++)
         {
             // circle center
-            cv::circle( temp_image, new_marble->center, 2, cv::Scalar(0,255,0), -1, 8, 0 );
+            cv::circle( temp_image, new_marble.center, 2, cv::Scalar(0,255,0), -1, 8, 0 );
              //circle outline
-            cv::circle( temp_image, new_marble->center, new_marble->radius, cv::Scalar(0,0,255), 1, 8, 0 );
+            cv::circle( temp_image, new_marble.center, new_marble.radius, cv::Scalar(0,0,255), 1, 8, 0 );
         }
-      //  cv::imshow( "Contour demo", temp_image ); // Must have the same mutex lock
+        //cv::imshow( "Contour demo", temp_image ); // Must have the same mutex lock
     }
 }
 
-std::vector<ct::marble*> c_vision::getMarbles()
+ct::marble c_vision::find_closest_marble()
+{
+
+    ct::marble closest_marble;
+
+    if (marbles.size() != 0)
+    {
+
+        closest_marble = marbles[0];
+        for (unsigned i = 0; i < marbles.size(); i++)
+        {
+               // std::cout << "Marble: " << marbles[i].centerPolar.theta << std::endl;
+            if (closest_marble.centerPolar.theta > marbles[i].centerPolar.theta)
+            {
+                closest_marble = marbles[i];
+               // std::cout << "Marble: " << marbles[i].centerPolar.theta << std::endl;
+            }
+        }
+    }
+    else
+    {
+        closest_marble.radius = 0;
+    }
+
+    return closest_marble;
+}
+
+std::vector<ct::marble> c_vision::getMarbles()
 {
     return marbles;
 }
