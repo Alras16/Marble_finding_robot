@@ -101,16 +101,13 @@ void map_class::init_rooms(int numb_of_rooms)
     {
         for (int i = 0; i < numb_of_rooms; i++)
         {
-            ct::room * tempRoom = new ct::room;
+            ct::room tempRoom;
             tempRoom.roomNumber = roomNumb++;
             tempRoom.probabilityOfMarbles = 0.0;
             std::vector<cv::Point> temp = find_color(color);
             tempRoom.numbOfPixels = temp.size();
             tempRoom.coordinates = temp;
-            ct::room  tempRoom;
             tempRoom.roomNumber = roomNumb++;
-            tempRoom.probabilityOfMarbles = 0.0;
-            tempRoom.coordinates = find_color(color);
             listOfRooms.push_back(tempRoom);
             color -= 10;
         }
