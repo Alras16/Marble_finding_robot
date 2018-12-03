@@ -39,4 +39,4 @@ HEADERS += \
     setup.h
 
 DISTFILES += \
-    #fuzzybugcontroller.fll
+    fuzzybugcontroller.fll
