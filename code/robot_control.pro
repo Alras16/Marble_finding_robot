@@ -12,6 +12,8 @@ SOURCES += main.cpp \
     dataloggin.cpp \
     ct.cpp \
     value_iteration.cpp \
+    motion_planning.cpp \
+    setup.cpp \
     q_learning.cpp \
     motion_planning.cpp \
     setup.cpp \
@@ -42,7 +44,7 @@ HEADERS += \
     motion_planning.h \
     setup.h \
     motion_planning.h \
-    setup.h
+    setup.h \
     q_learning.h \
     brushfire.h \
 
