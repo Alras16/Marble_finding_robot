@@ -17,9 +17,15 @@ int main()
 {
     std::string fileName = "map_small.png";
     brushfire map(fileName);
-    map.brushfireAlgorithm();
+    map.brushfireAlgorithm(13);
     map.paintMap();
-    map.showImage(fileName);
+    map.findMedianPoints(7);
+    map.plotMedianPoints();
+    map.findCornerPoints();
+    map.scaleImage(5);
+    map.showImage("distance values");
+    map.showValues("fileName");
+
 
     cv::waitKey(0);
 }
