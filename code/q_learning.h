@@ -39,17 +39,16 @@ public:
     int eGreedyPolicy(ct::newState s, float epsilon);
     float maxQValue(ct::newState s);
     ct::newState qUpdate(ct::newState s, float alpha, float gamma, float epsilon);
-    void doEpisode(ct::newState start, float alpha, float gamma, float epsilon);
-
-    float getRandom(int min, int max);
-    int getRandomIndex(int size);
-
-    std::vector<bool> binaryIncrement(std::vector<bool> numb);
+    void doEpisode(ct::newState start, float alpha, float gamma, float epsilon);    
+    std::vector<int> getPath(ct::newState start);
 
 private:
     int findStateMatrixIndex(ct::newState s);
     int findQMatrixIndex(ct::newState s);
 
+    float getRandom(int min, int max);
+    int getRandomIndex(int size);
+    std::vector<bool> binaryIncrement(std::vector<bool> numb);
 
     std::vector<std::vector<float>> baseStateMatrix; // Base environment (matrix)
     std::vector<std::vector<std::vector<float>>> stateMatrix; // Environment (vector of matrices)

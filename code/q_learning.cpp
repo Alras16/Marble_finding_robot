@@ -296,6 +296,31 @@ void q_learning::doEpisode(ct::newState start, float alpha, float gamma, float e
     std::cout << "  episode iteration number " << index << std::endl;
 }
 
+std::vector<int> q_learning::getPath(ct::newState start)
+{
+    stateMatrix.clear();
+    for (unsigned int room = 0; room < visitedRooms.size(); room++)
+        visitedRooms[room] = false;
+
+    stateMatrixOrder.clear();
+    stateMatrixOrder.push_back(visitedRooms);
+    makeNewStateMatrix();
+
+    bool isTerminal = false;
+    ct::newState s = start;
+
+    std::vector<int> path;
+    path.push_back(s.RoomNumber);
+    while (!isTerminal)
+    {
+        s = qUpdate(s, 0.0, 1.0, 0.0);
+        path.push_back(s.RoomNumber);
+        if (s.isTerminal)
+            isTerminal = true;
+    }
+    return path;
+}
+
 // Private methods
 int q_learning::findStateMatrixIndex(ct::newState s)
 {
