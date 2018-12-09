@@ -2,7 +2,7 @@ TEMPLATE = app
 CONFIG += console c++11
 CONFIG -= app_bundle
 
-SOURCES += \
+SOURCES += test_main_q_learning_14_rooms.cpp \
     #fuzzybugcontroller.cpp \
     #laserscanner.cpp \
     #motion_planning.cpp \
@@ -17,8 +17,6 @@ SOURCES += \
     q_learning.cpp \
     lidar_sensor.cpp \
     brushfire.cpp \
-    test_main_q_learning_2_rooms.cpp
-
 
 CONFIG += link_pkgconfig
 PKGCONFIG += gazebo

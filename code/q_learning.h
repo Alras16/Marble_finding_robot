@@ -41,6 +41,7 @@ public:
     ct::newState qUpdate(ct::newState s, float alpha, float gamma, float epsilon);
     void doEpisode(ct::newState start, float alpha, float gamma, float epsilon);    
     std::vector<int> getPath(ct::newState start);
+    float getTotalReward(ct::newState start);
 
 private:
     int findStateMatrixIndex(ct::newState s);
@@ -61,6 +62,8 @@ private:
     std::vector<float> rewards; // averageProbability
 
     std::mt19937_64 rng;
+
+    int numbOfRooms;
 };
 
 #endif // Q_LEARNING_H

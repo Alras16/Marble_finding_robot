@@ -2,6 +2,7 @@
 
 q_learning::q_learning(int numberOfRooms)
 {
+    numbOfRooms = numberOfRooms;
     // Initialise the base state matrix to 0
     std::vector<std::vector<float>> tempMatrix;
     for (int i = 0; i < numberOfRooms + 1; i++)
@@ -79,7 +80,7 @@ void q_learning::makeNewStateMatrix()
                 {
                     // reward will be placed
                     float punishment = tempMatrix[state][action];
-                    tempMatrix[state][action] = rewards[action - 1] - punishment;
+                    tempMatrix[state][action] = rewards[action - 1] + punishment;
                 }
             }
         }
@@ -163,6 +164,12 @@ ct::newState q_learning::visitRoom(ct::newState s)
     if (!visited)
     {
         visitedRooms[s.RoomNumber - 1] = true;
+
+        /*std::cout << "new room status: ";
+        for (unsigned int i = 0; i < visitedRooms.size(); i++)
+            std::cout << visitedRooms[i] << " ";
+        std::cout << std::endl;*/
+
         if (!isTerminal)
         {
             stateMatrixOrder.push_back(temp.roomsVisited);
@@ -196,7 +203,7 @@ int q_learning::getNextAction(ct::newState s)
     for (unsigned int action = 0; action < baseStateMatrix.size(); action++)
         possibleActions.push_back(action);
 
-    float currentMaxValue = -std::numeric_limits<float>::min();
+    float currentMaxValue = -std::numeric_limits<float>::max();
     std::vector<float> maxValues;
     std::vector<int> actions;
 
@@ -204,7 +211,7 @@ int q_learning::getNextAction(ct::newState s)
     int matrixIndex = findQMatrixIndex(s);
     for (unsigned int action = 0; action < possibleActions.size(); action++)
     {
-        if (qValues[matrixIndex][s.RoomNumber][action] > currentMaxValue && s.RoomNumber != signed(action))
+        if (qValues[matrixIndex][s.RoomNumber][action] > currentMaxValue)
         {
             maxValues.clear();
             actions.clear();
@@ -213,7 +220,7 @@ int q_learning::getNextAction(ct::newState s)
             currentMaxValue = qValues[matrixIndex][s.RoomNumber][action];
             bestAction = possibleActions[action];
         }
-        else if (maxValues.size() != 0 && s.RoomNumber != signed(action))
+        else if (maxValues.size() != 0)
         {
             if (qValues[matrixIndex][s.RoomNumber][action] == maxValues[maxValues.size() - 1])
             {
@@ -227,6 +234,7 @@ int q_learning::getNextAction(ct::newState s)
     {
         int index = getRandomIndex(actions.size());
         bestAction = actions[index];
+
     }
     return bestAction;
 }
@@ -238,9 +246,15 @@ int q_learning::eGreedyPolicy(ct::newState s, float epsilon)
         possibleActions.push_back(action);
 
     if (getRandom(0, 1) < epsilon)
-        return possibleActions[getRandomIndex(possibleActions.size())];
+    {
+        int action = possibleActions[getRandomIndex(possibleActions.size())];
+        return action;
+    }
     else
-        return getNextAction(s);
+    {
+        int action = getNextAction(s);
+        return action;
+    }
 }
 
 float q_learning::maxQValue(ct::newState s)
@@ -258,12 +272,11 @@ float q_learning::maxQValue(ct::newState s)
 ct::newState q_learning::qUpdate(ct::newState s, float alpha, float gamma, float epsilon)
 {
     int a = eGreedyPolicy(s, epsilon);
-    //std::cout << "action: " << a << std::endl;
     float reward = getReward(s, a);
     ct::newState next = getNextState(s, a);
-    std::cout << "next state: " << next.RoomNumber << "   " << next.roomsVisited[0] << ", " << next.roomsVisited[1] << std::endl;
+    //std::cout << "next state: " << next.RoomNumber << "   " << next.roomsVisited[0] << ", " << next.roomsVisited[1] << std::endl;
     int matrixIndex = findQMatrixIndex(s);
-    std::cout << "matrix index qUpdate: " << matrixIndex << std::endl;
+    //std::cout << "matrix index qUpdate: " << matrixIndex << std::endl;
     qValues[matrixIndex][s.RoomNumber][a] += alpha * (reward + gamma * maxQValue(next) - qValues[matrixIndex][s.RoomNumber][a]);
 
     if (next.RoomNumber != 0)
@@ -311,14 +324,57 @@ std::vector<int> q_learning::getPath(ct::newState start)
 
     std::vector<int> path;
     path.push_back(s.RoomNumber);
-    while (!isTerminal)
+    int index = 1000;
+    while (!isTerminal && index != 0)
     {
+        index--;
         s = qUpdate(s, 0.0, 1.0, 0.0);
         path.push_back(s.RoomNumber);
         if (s.isTerminal)
             isTerminal = true;
     }
+    if (index == 0)
+    {
+        path.clear();
+        path.push_back(s.RoomNumber);
+    }
     return path;
+}
+
+float q_learning::getTotalReward(ct::newState start)
+{
+    stateMatrix.clear();
+    for (unsigned int room = 0; room < visitedRooms.size(); room++)
+        visitedRooms[room] = false;
+
+    stateMatrixOrder.clear();
+    stateMatrixOrder.push_back(visitedRooms);
+    makeNewStateMatrix();
+
+    bool isTerminal = false;
+    ct::newState s = start;
+
+    float totalReward = 0.0;
+    int index = 1000;
+    while (!isTerminal && index != 0)
+    {
+        index--;
+        int a = eGreedyPolicy(s, 0.0);
+        float reward = getReward(s, a);
+        totalReward += reward;
+        s = getNextState(s, a);
+
+        if (s.RoomNumber != 0)
+            s = visitRoom(s);
+
+        if (s.isTerminal)
+            isTerminal = true;
+    }
+
+    if (index == 0)
+        totalReward -= 10000;
+
+    return totalReward;
 }
 
 // Private methods
