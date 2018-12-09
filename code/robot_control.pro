@@ -3,10 +3,10 @@ CONFIG += console c++11
 CONFIG -= app_bundle
 
 SOURCES += main.cpp \
-    fuzzybugcontroller.cpp \
-    laserscanner.cpp \
-    motion_planning.cpp \
-    setup.cpp \
+#    fuzzybugcontroller.cpp \
+#    laserscanner.cpp \
+#    motion_planning.cpp \
+#    setup.cpp \
     bst_coordinates.cpp \
     map_class.cpp \
     c_vision.cpp \
@@ -23,15 +23,15 @@ CONFIG += link_pkgconfig
 PKGCONFIG += gazebo
 PKGCONFIG += opencv
 
-INCLUDEPATH += /media/kenni/usb1/linuxUbuntu/fuzzylite-6.0-linux64/fuzzylite-6.0/fuzzylite
-LIBS += -L/media/kenni/usb1/linuxUbuntu/fuzzylite-6.0-linux64/fuzzylite-6.0/release/bin -lfuzzylite-static
-DEPENDPATH += /media/kenni/usb1/linuxUbuntu/fuzzylite-6.0-linux64/fuzzylite-6.0
+#INCLUDEPATH += /media/kenni/usb1/linuxUbuntu/fuzzylite-6.0-linux64/fuzzylite-6.0/fuzzylite
+#LIBS += -L/media/kenni/usb1/linuxUbuntu/fuzzylite-6.0-linux64/fuzzylite-6.0/release/bin -lfuzzylite-static
+#DEPENDPATH += /media/kenni/usb1/linuxUbuntu/fuzzylite-6.0-linux64/fuzzylite-6.0
 
 HEADERS += \
-    fuzzybugcontroller.h \
-    laserscanner.h \
-    motion_planning.h \
-    setup.h \
+#    fuzzybugcontroller.h \
+#    laserscanner.h \
+#    motion_planning.h \
+#    setup.h \
     bst_coordinates.h \
     map_class.h \
     c_vision.h \
@@ -44,4 +44,4 @@ HEADERS += \
     brushfire.h \
 
 DISTFILES += \
-    fuzzybugcontroller.fll
+#    fuzzybugcontroller.fll
