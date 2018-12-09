@@ -30,9 +30,9 @@ InputVariable: MarbleDirection
   enabled: true
   range: -200 200
   lock-range: false
-  term: marbleRight Ramp -1 -10
-  term: marbleCenter Triangle -3 0 3
-  term: marbleLeft Ramp 1 10
+  term: marbleRight Ramp -1 -20
+  term: marbleCenter Triangle -5 0 5
+  term: marbleLeft Ramp 1 20
 
 InputVariable: MarbleFound
   enabled: true
@@ -75,7 +75,7 @@ OutputVariable: SteerDirection
 
 OutputVariable: Speed
   enabled: true
-  range: -1 1
+  range: -5 5
   lock-range: false
   aggregation: Maximum
   defuzzifier: Centroid 100
@@ -84,7 +84,7 @@ OutputVariable: Speed
   term: backward Ramp  -0.75 -2
   term: softbackward Triangle -1 -0.5 0.000
   term: softforward Triangle 0.000 0.5 1
-  term: forward Ramp  -0.75 2
+  term: forward Ramp  -2 4
 
 
 RuleBlock: mamdani

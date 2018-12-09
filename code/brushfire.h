@@ -24,6 +24,8 @@ public:
     void scaleImage(int factor);
     void brushfireAlgorithm(int iterations);
 
+    std::vector<cv::Point> getRoadPath();
+
     void findMedianPoints(int threshold);
     void plotMedianPoints();
 
@@ -35,7 +37,7 @@ public:
 
     ~brushfire();
 private:
-    int maxValue;
+    int maxValue, colorPic;
     cv::Mat ori_map;
     cv::Mat point_map;
     cv::Mat connected_map;

@@ -36,7 +36,10 @@ public:
     float homogeneous_transformation(ct::current_position, cv::Point);
     std::vector<ct::room> get_rooms();
     void show_path_of_robot(cv::Point robot_pos, cv::Point center_mass_room, cv::Point, bool);
+
+    // Plannings algorithm
     void tangent_bug_algoritm(ct::current_position, std::vector<ct::room>);
+    void model_based_planner(ct::current_position pos, std::vector<cv::Point> points, float index);
 
 
 protected:

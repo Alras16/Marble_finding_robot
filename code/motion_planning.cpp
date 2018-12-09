@@ -64,7 +64,7 @@ void motion_planning::show_path_of_robot(cv::Point pos, cv::Point room_start, cv
         cv::circle(path_of_robot,room_end,4,cv::Scalar({0,0,255}),-1);
         dummy++;
     }
-     cv::circle(path_of_robot,pos,1,cv::Scalar({100,255,255}),-1);
+     cv::circle(path_of_robot,pos,1,cv::Scalar({0,0,255}),-1);
      cv::imshow("Path of robot",path_of_robot);
 
      if ( target_reached && (dummy == 1) )
@@ -72,6 +72,7 @@ void motion_planning::show_path_of_robot(cv::Point pos, cv::Point room_start, cv
         cv::imwrite("/media/kenni/usb1/linuxUbuntu/Robotics5semesterProject/Tests/test3.png", path_of_robot);
         dummy++;
      }
+
 }
 
 float motion_planning::homogeneous_transformation(ct::current_position robot, cv::Point goal)
@@ -228,4 +229,25 @@ void motion_planning::tangent_bug_algoritm(ct::current_position pos, std::vector
 
 
 }
+
+void motion_planning::model_based_planner(ct::current_position pos, std::vector<cv::Point> points, float index)
+{
+   rotation.orientation_to_goal = homogeneous_transformation(pos,points[index]);
+   cv::Point start, end;
+
+   if ( sqrt( pow( (pos.robot_pos.x - points[index].x),2) + pow( (pos.robot_pos.y - points[index].y),2) ) < 2 )
+       target_location_reached = true;
+   else
+       target_location_reached = false;
+
+   start.x = (points[0].x*1.411764706+60)*5; // (120/2)/(85/2) = 1.411..
+   start.y = ((-1)*points[0].y*1.428571429+40)*5; // (80/2)/(56/2) = 1.428..
+
+   end.x = (points[points.size()-1].x*1.411764706+60)*5; // (120/2)/(85/2) = 1.411..
+   end.y = ((-1)*points[points.size()-1].y*1.428571429+40)*5; // (80/2)/(56/2) = 1.428..
+
+   show_path_of_robot(pos.robot_pos_pic, start, end, target_location_reached);
+}
+
+
 

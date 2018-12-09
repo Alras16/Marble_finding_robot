@@ -127,8 +127,7 @@ void brushfire::brushfireAlgorithm(int iterations)
     for (int h = 0; h < iterations; h++)
     {
         label++;
-       // std::cout << matrix.size() << std::endl;
-       // std::cout << matrix[0].size() << std::endl;
+
         for(unsigned int i = 1; i < matrix.size() - 1; i++)
         {
             for(unsigned int j = 1; j < matrix[i].size() - 1; j++)
@@ -328,7 +327,6 @@ void brushfire::findIntersectingPoints()
 
      }
 
-
    // Remove points closer than 3 from another
    for (unsigned int i = 0; i < intersectionPoins.size(); i++)
    {
@@ -337,12 +335,10 @@ void brushfire::findIntersectingPoints()
          if (i != j)
          {
             if ( sqrt( pow( (intersectionPoins[i].x - intersectionPoins[j].x),2) + pow(intersectionPoins[i].y - intersectionPoins[j].y,2)) < 6)
-                     intersectionPoins.erase(intersectionPoins.begin() + j);
+                     intersectionPoins.erase(intersectionPoins.begin() + i);
          }
       }
    }
-
-
 
     for (unsigned int i = 0; i < intersectionPoins.size(); i++)
         *point_map.ptr<cv::Vec3b>(intersectionPoins[i].y,intersectionPoins[i].x) = cv::Vec3b({255, 0, 0});
@@ -357,8 +353,6 @@ void brushfire::connectPoints()
     bool obstacle_on_line = false;
 
     std::vector<cv::Point> buf;
-    std::vector<cv::Point> pointsToConnect;
-   // std::vector<ct::edge> edges;
 
     // Find all edges that connects two points without hitting an obstacle
     for (unsigned int i = 0; i < intersectionPoins.size(); i++)
@@ -421,13 +415,9 @@ void brushfire::connectPoints()
               obstacle_on_line = false;
               buf.clear();
 
-
           }
 
-
        }
-      //   connectedPoints.push_back(pointsToConnect);
-      //   pointsToConnect.clear();
 
     }
 
@@ -482,13 +472,6 @@ void brushfire::connectPoints()
     }
 
     edges = mst;
-/*
-   for (int i = 0; i < mst.size(); i++)
-        std::cout << mst[i].start << "," << mst[i].end << std::endl;
-
-       std::cout << std::endl << "Numb of vertices: " << numVertices << std::endl;
-       std::cout << "Numb of edges: " << mst.size() << std::endl;
-*/
 
     for (unsigned int i = 0; i < mst.size(); i++)
          cv::line(connected_map, mst[i].start*5, mst[i].end*5, cv::Scalar({0,0,255}), 2, 1, 0);
@@ -500,28 +483,19 @@ void brushfire::connectPoints()
 void brushfire::findPathPoints(cv::Point curPos, cv::Point goal)
 {
 
+  // Scaling from gazebo coordinates to picture pixels
+  curPos.x = curPos.x*1.411764706+60; // (120/2)/(85/2) = 1.411..
+  curPos.y = (-1)*curPos.y*1.428571429+40; // (80/2)/(56/2) = 1.428..
+
+  goal.x = goal.x*1.411764706+60; // (120/2)/(85/2) = 1.411..
+  goal.y = (-1)*goal.y*1.428571429+40; // (80/2)/(56/2) = 1.428..
+
   cv::Point start, end;
   float closest_point_start = 1000, closest_point_end = 1000;
-  std::vector<std::vector<ct::vertex>> list_of_vertexes;
+  pathPointsResult.clear();
+  pathPoints.clear();
+  connectedPoints.clear();
 
-  /*
-
-  // Show points connected to one another
-  std::cout << "List connection of points: " << std:: endl;
-  for (unsigned int i = 0; i < connectedPoints.size(); i++)
-  {
-      std::cout << "Point:" << i+1 << " <" << intersectionPoins[i].y << "," << intersectionPoins[i].x << ">" << " can be connected to" << std::endl;
-
-      for ( unsigned int j = 0; j < connectedPoints[i].size(); j++)
-      {
-          std::cout << "subPoint: " << connectedPoints[i][j].y << "," << connectedPoints[i][j].x  << std::endl;
-      }
-     std::cout << std::endl;
-  }
-
-  */
-
-  // Find points closest to the current position and goal location
   for (int i = 0; i < intersectionPoins.size(); i++)
   {
       if (sqrt( pow( (intersectionPoins[i].y - curPos.y),2) +  pow( (intersectionPoins[i].x - curPos.x),2) ) < closest_point_start )
@@ -537,22 +511,8 @@ void brushfire::findPathPoints(cv::Point curPos, cv::Point goal)
       }
   }
 
- // std::cout << "startPoint: " << start.y << "," << start.x << std::endl;
- // std::cout << "endPoint: " << end.y << "," << end.x << std::endl;
 
-
-  // Find points to create the path for the robot
-
-//std::cout << "Vertixes:" << std::endl;
-//  for (int i = 0; i < edges.size(); i++)
-//       std::cout << edges[i].v1 << "," << edges[i].v2 << std::endl;
-
-//  std::cout << std::endl << "Start: " << start << "," << "end:" << end << std::endl;
-
-  std::vector<float> visited;
-  std::vector<ct::vertex> vertex;
   std::vector<cv::Point> adjacent;
-  std::vector<std::vector<cv::Point>> connections;
 
   for (int i = 0; i < intersectionPoins.size(); i++)
   {
@@ -571,7 +531,7 @@ void brushfire::findPathPoints(cv::Point curPos, cv::Point goal)
 
   }
 
-
+/*
   for (int i = 0; i < connectedPoints.size(); i++)
   {
       std::cout <<"Point " << i + 1 << ": " << intersectionPoins[i] << " is connected to: " <<std::endl;
@@ -583,18 +543,14 @@ void brushfire::findPathPoints(cv::Point curPos, cv::Point goal)
     std::cout << std::endl;
   }
 
-
-  std::vector<cv::Point> result;
-
+*/
   DFS(start,end);
 
-
-
-  for (int i = 0; i < pathPointsResult.size(); i++)
-      std::cout << std::endl << "Point" << i+1 << ": " << pathPointsResult[i] << std::endl;
+ // for (int i = 0; i < pathPointsResult.size(); i++)
+ //     std::cout << std::endl << "Point" << i+1 << ": " << pathPointsResult[i] << std::endl;
 
   for (unsigned int i = 0; i < pathPointsResult.size(); i++)
-       cv::circle(connected_map,pathPointsResult[i]*5,4,cv::Scalar({255,200,0}),-1);
+       cv::circle(connected_map,pathPointsResult[i]*5,4,cv::Scalar({0,0,0}),-1);
 
 }
 
@@ -627,9 +583,6 @@ void brushfire::DFS(cv::Point start, cv::Point goal)
             index = i;
     }
 
-    std::cout << start << std::endl;
-    std::cout << index << std::endl;
-
     if (start == goal)
         pathPointsResult = pathPoints;
 
@@ -648,8 +601,6 @@ void brushfire::DFS(cv::Point start, cv::Point goal)
                     if (connectedPoints[index][i] == pathPoints[j])
                     {
                         visited = true;
-                       // pathPoints.push_back(connectedPoints[index][i]);
-
                     }
                 }
 
@@ -660,10 +611,28 @@ void brushfire::DFS(cv::Point start, cv::Point goal)
                 }
             }
             visited = false;
-      // pathPoints.pop_back();
     }
-    //pathPoints.pop_back();
+}
 
+std::vector<cv::Point> brushfire::getRoadPath()
+{
+    cv::Point pointPath;
+    std::vector<cv::Point> path;
+
+    //Scaling from picture pixels to gazebo coordinates
+    std::cout << "New set of points from position to goal: " << std::endl;
+    for (int i = 0; i < pathPointsResult.size(); i++)
+    {
+        pointPath.x = (pathPointsResult[i].x-60)/1.411764706; // To find the coordinate from pixel of picture;
+        pointPath.y = ( (-1)*(pathPointsResult[i].y-40) )/1.428571429;
+        path.push_back(pointPath);
+
+        std::cout << "Point" << i + 1 << " " << pointPath.x << "," << pointPath.y << std::endl;
+    }
+
+    std::cout << std::endl;
+
+    return path;
 }
 
 brushfire::~brushfire()

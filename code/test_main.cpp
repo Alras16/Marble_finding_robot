@@ -11,58 +11,57 @@ int main() {
   beginSetup.map_class_object.find_center_of_mass();
   brushfire brush("map_small.png");
 
-  float dir, speed;
+  float dir, speed, index = 1, indexRooms = 0;
   ct::marble closest_marble;
   ct::robot_action robotAction;
   ct::current_position pos1;
-  //beginSetup.motion_planning_object.get_room_info(beginSetup.map_class_object.getRooms());
-  std::vector<ct::room>rooms1 = beginSetup.map_class_object.getRooms();
- // beginSetup.motion_planning_object.tangent_bug_algoritm(closest_marble,beginSetup.get_robot_position(),beginSetup.map_class_object.getRooms());
+ // beginSetup.motion_planning_object.get_room_info(beginSetup.map_class_object.getRooms());
+  std::vector<ct::room> rooms1 = beginSetup.map_class_object.getRooms();
+  std::vector<cv::Point> pathPoints;
+
   brush.brushfireAlgorithm(13);
   brush.paintMap();
- // brush.findMedianPoints(7);
- // brush.plotMedianPoints();
   brush.findCornerPoints();
   brush.findCenterPoints();
   brush.findIntersectingPoints();
   brush.scaleImage(5);
   brush.connectPoints();
-  brush.findPathPoints(cv::Point(55,70), cv::Point(8,7));
-  brush.showImage("Brushfire algorithm");
-  brush.showValues("Voronoi diagram");
-  brush.showConnectedPoints("Kruskal's algorithm and DFS");
+ // brush.showImage("Brushfire algorithm");
+ // brush.showValues("Voronoi diagram");
 
-
-   while(true)
+   while(indexRooms <= rooms1.size())
    {
 
+      if (beginSetup.motion_planning_object.target_location())
+           index++;
+
+      if (index == pathPoints.size() || indexRooms == 0)
+      {
+         pathPoints.clear();
+         brush.findPathPoints(beginSetup.get_robot_position().robot_pos, rooms1[indexRooms++].centerOfMass);
+         brush.showConnectedPoints("Kruskal's algorithm and DFS");
+         pathPoints = brush.getRoadPath();
+         index = 1;
+      }
+
       gazebo::common::Time::MSleep(50);
-
-     // beginSetup.lidar_object.filter_data();
-     // beginSetup.lidar_object.find_marbles();
-     // beginSetup.lidar_object.find_lines();
-     // beginSetup.lidar_object.merge_lines();
-     // beginSetup.lidar_object.visualize_lidar("test");
-     beginSetup.camera.find_marbles();
-
-    //  std::cout << "Marble: " << beginSetup.camera.find_closest_marble().centerPolar.theta << std::endl;
-
-    //  std::cout << "Marble radius: " << beginSetup.lidar_object.get_closest_marble().distance_to_center << std::endl;
+      beginSetup.camera.find_marbles();
 
       closest_marble = beginSetup.camera.find_closest_marble();
-      //closest_marble = beginSetup.lidar_object.get_closest_marble();
       ct::robot_orientation angle = beginSetup.motion_planning_object.get_rotation();
       pos1 = beginSetup.get_robot_position();
 
     //  beginSetup.motion_planning_object.show_path_of_robot(beginSetup.get_robot_position().robot_pos_pic);
     //  beginSetup.motion_planning_object.tangent_bug_algoritm(pos1,rooms1);
 
+      beginSetup.motion_planning_object.model_based_planner(pos1,pathPoints,index);
+
       robotAction = beginSetup.controller.getControlOutput(closest_marble,angle);
       speed = robotAction.speed;
       dir = robotAction.dir;
 
       // Generate a pose
-      ignition::math::Pose3d pose(double(0), 0, 0, 0, 0, double(0));
+      ignition::math::Pose3d pose(double(speed), 0, 0, 0, 0, double(dir));
 
       // Convert to a pose message
       gazebo::msgs::Pose msg;
@@ -70,6 +69,8 @@ int main() {
       beginSetup.movementPublisher->Publish(msg);
 
   }
+
+  std::cout << "Mission complete! All rooms searched.." << std::endl;
 
   // Make sure to shut everything down.
   gazebo::client::shutdown();
