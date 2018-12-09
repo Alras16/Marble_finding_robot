@@ -25,6 +25,25 @@ public:
 
     };
 
+    struct edge
+    {
+        cv::Point start;
+        int v1;
+        bool visitedV1;
+        int v2;
+        bool visitedV2;
+        cv::Point end;
+        float distance;
+
+    };
+
+    struct vertex
+    {
+        int vertex;
+        cv::Point vertex_point;
+        bool visited;
+    };
+
     struct angle_to_obstacle
     {
         float fSmallestReading;

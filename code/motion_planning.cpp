@@ -222,7 +222,7 @@ void motion_planning::tangent_bug_algoritm(ct::current_position pos, std::vector
     rotation.orientation_to_goal = homogeneous_transformation(pos,goal);
     rotation.orientation_to_obstacle = homogeneous_transformation(pos,pos.obstacle_point);
 
-    show_path_of_robot(pos.robot_pos_pic,Rooms[9].centerOfMassPic, Rooms[1].centerOfMassPic, target_location_reached);
+   // show_path_of_robot(pos.robot_pos_pic,Rooms[9].centerOfMassPic, Rooms[1].centerOfMassPic, target_location_reached);
 
   //  std::cout << "Current pos: " << pos.robot_pos.x << "," << pos.robot_pos.y << "   " << "Goal pos: " << goal.x<<","<< goal.y << std::endl;
 

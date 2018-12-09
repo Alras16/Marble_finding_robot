@@ -1,5 +1,6 @@
 #include "setup.h"
 #include <iostream>
+#include <brushfire.h>
 
 setup beginSetup;
 static boost::mutex mutex;
@@ -8,6 +9,7 @@ int main() {
   beginSetup.initGazebo();
   beginSetup.controller.buildController();
   beginSetup.map_class_object.find_center_of_mass();
+  brushfire brush("map_small.png");
 
   float dir, speed;
   ct::marble closest_marble;
@@ -16,6 +18,20 @@ int main() {
   //beginSetup.motion_planning_object.get_room_info(beginSetup.map_class_object.getRooms());
   std::vector<ct::room>rooms1 = beginSetup.map_class_object.getRooms();
  // beginSetup.motion_planning_object.tangent_bug_algoritm(closest_marble,beginSetup.get_robot_position(),beginSetup.map_class_object.getRooms());
+  brush.brushfireAlgorithm(13);
+  brush.paintMap();
+ // brush.findMedianPoints(7);
+ // brush.plotMedianPoints();
+  brush.findCornerPoints();
+  brush.findCenterPoints();
+  brush.findIntersectingPoints();
+  brush.scaleImage(5);
+  brush.connectPoints();
+  brush.findPathPoints(cv::Point(55,70), cv::Point(8,7));
+  brush.showImage("Brushfire algorithm");
+  brush.showValues("Voronoi diagram");
+  brush.showConnectedPoints("Kruskal's algorithm and DFS");
+
 
    while(true)
    {
@@ -39,14 +55,14 @@ int main() {
       pos1 = beginSetup.get_robot_position();
 
     //  beginSetup.motion_planning_object.show_path_of_robot(beginSetup.get_robot_position().robot_pos_pic);
-      beginSetup.motion_planning_object.tangent_bug_algoritm(pos1,rooms1);
+    //  beginSetup.motion_planning_object.tangent_bug_algoritm(pos1,rooms1);
 
       robotAction = beginSetup.controller.getControlOutput(closest_marble,angle);
       speed = robotAction.speed;
       dir = robotAction.dir;
 
       // Generate a pose
-      ignition::math::Pose3d pose(double(speed), 0, 0, 0, 0, double(dir));
+      ignition::math::Pose3d pose(double(0), 0, 0, 0, 0, double(0));
 
       // Convert to a pose message
       gazebo::msgs::Pose msg;

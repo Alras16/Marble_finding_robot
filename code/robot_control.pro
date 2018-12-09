@@ -11,7 +11,7 @@ SOURCES += main.cpp \
     lidar_sensor.cpp \
     dataloggin.cpp \
     ct.cpp \
-    value_iteration.cpp \
+ #   value_iteration.cpp \
     q_learning.cpp \
     motion_planning.cpp \
     setup.cpp \
@@ -35,7 +35,7 @@ HEADERS += \
     lidar_sensor.h \
     dataloggin.h \
     ct.h \
-    value_iteration.h \
+  #  value_iteration.h \
     motion_planning.h \
     setup.h \
     q_learning.h \

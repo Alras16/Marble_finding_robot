@@ -25,7 +25,6 @@ public:
     void find_center_of_mass();
 
     void paintRoom(ct::room* theRoom, cv::Vec3i color);
-    void paintMarble(ct::foundMarble marble);
 
     std::vector<std::vector<float>> genStateMap(float freeSpaceVal, float wallVal);
 
