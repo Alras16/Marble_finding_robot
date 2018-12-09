@@ -42,4 +42,9 @@ int main(int _argc, char **_argv)
 
     QL.printStateMatrix();
     QL.printQMatrix();
+
+    std::vector<int> path = QL.getPath(start);
+    for (unsigned int i = 0; i < path.size(); i++)
+        std::cout << "Path next state: " << path[i] << std::endl;
+
 }

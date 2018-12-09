@@ -51,6 +51,7 @@ void value_iteration::setReward(int numberOfTests, int numberOfRuns)
         if (averageProbability[room] > max)
             max = averageProbability[room];
 
+    // Normalise with max
     for (unsigned int room = 0; room < averageProbability.size(); room++)
     {
         cv::Point point = centerOfMassRooms[room].centerOfMass;

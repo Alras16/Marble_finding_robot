@@ -161,4 +161,3 @@ std::vector<ct::marble> c_vision::getMarbles()
 {
     return marbles;
 }
-
