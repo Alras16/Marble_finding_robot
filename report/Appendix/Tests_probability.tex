@@ -1,0 +1,33 @@
+\documentclass[../Head/Main.tex]{subfiles}
+\begin{document}
+\subsection{Room based probability of marbles spawning}
+The purpose of this test is to determine the probability of a marble spawning in each of the 14 rooms described in section \ref{subsec:design_environment}.\par 
+This is done by conduction 50 tests, where the position of each of the 20 marbles in the Gazebo environment are saved resulting in a total of 1000 samples.\par 
+Using the class \texttt{map\_class} the position of the marbles are mapped from gazebo coordinates to pixel positions in the map. That is then used to determine in which room the marbles spawned.
+
+\begin{table}[H]
+	\centering
+	\begin{tabular}{l c}
+		\hline
+		\multicolumn{2}{l}{\textbf{Dataset for all 50 tests}}  			\\ \hline
+		Total number of marbles found in room 1  & 1000\\
+		Total number of marbles found in room 2  & 1000\\
+		Total number of marbles found in room 3  & 1000\\
+		Total number of marbles found in room 4  & 1000\\
+		Total number of marbles found in room 5  & 1000\\
+		Total number of marbles found in room 6  & 1000\\
+		Total number of marbles found in room 7  & 1000\\
+		Total number of marbles found in room 8  & 1000\\
+		Total number of marbles found in room 9  & 1000\\
+		Total number of marbles found in room 10 & 1000\\
+		Total number of marbles found in room 11 & 1000\\
+		Total number of marbles found in room 12 & 1000\\
+		Total number of marbles found in room 13 & 1000\\
+		Total number of marbles found in room 14 & 1000\\			\hline
+	\end{tabular}
+	\caption{Table of how the marbles are distributed in the 14 rooms}
+	\label{tab:probability_raw_data}
+\end{table}   
+
+
+\end{document}
