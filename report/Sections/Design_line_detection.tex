@@ -1,72 +1,66 @@
 \documentclass[../Head/Main.tex]{subfiles}
 \begin{document}
 \subsection{Line detection}
-\subsubsection{Line Parameters}
-First let $Z = \left\{z_1, …, z_n\right\}$ be a dataset of points, where each point is represented in cartesian coordinates $z_i=\left\langle x_i, y_i \right\rangle$. From this dataset, one can detect lines by looking at the linear relation between its x and y-coordinate, which is represented as follows:
-$$y = ax + b$$
-where a is the slope of the straight line and b is the y-axis intersection. Using this line representation, one can have some complications detecting vertical lines, because a→∞. To avoid this, one can represent a line in the plane by its normal form, using the following formula:
-$$l=\left\langle r, \alpha \right\rangle$$
-where r is the distance from the origin to the closest point on the line and α is the angle between the x-axis and the plane normal. By using $z_i = \left\langle x_i,y_i \right\rangle$ as points on the line $l=\left\langle r, \alpha \right\rangle$ (see figure xx) leads to the expression:
+\subsubsection{Total Least Square Method}
+The Total Least Square method uses the normal parametrization of a line in polar coordinates, which is given by the following formula:
 \begin{align}
-    r = x\cdot\cos(\alpha)+y\cdot\sin(\alpha)
+    l:~~~~r = x\cdot\cos(\alpha)+y\cdot\sin(\alpha)
+\end{align}
+where r represents the distance from the origin to the closest point on the line and α is the angle between the x-axis and the plane normal. This method involves a determination of the orthogonal distance (the shortest distance) from a point $(x,y)$ to a line $l$ (see figure xx). The normal parametrization of the line $l_i$ is given by the following formula:
+\begin{align}
+    l_i:~~~~r_i = x_i\cdot\cos(\alpha)+y_i\cdot\sin(\alpha)
 \end{align}
 {\color{red} Missing figure} \par
-The points are converted into polar coordinates, changing the line presentation to the following:
-\begin{align}
-    r &= \rho\cos(\theta)\cos(\alpha)+\rho\sin(\theta)\sin(\alpha) \\
-    r &= \rho\cos(\theta - \alpha)
-\end{align}
-\subsubsection{Orthogonal distance from point to line}
-The shortest distance from a given point $\left\langle x_i, y_i \right\rangle$ to a line $l=\left\langle r, \alpha \right\rangle$, denoted by $d_i$, is computed by drawing a line $l_i$, that goes through this point and are parallel to the line $l$ (see figure yy).  This line $l_i$ is given by the following formula:
-\begin{align}
-    r_i = x_i\cdot\cos(\alpha)+y_i\cdot\sin(\alpha)
-\end{align}
-{\color{red} Missing figure} \par
-The separation between those two parallel lines is the difference $d_i = r_i - r$, because both lines have the same $\alpha$. The desired distance is also called the orthogonal distance and is determined as follows:
+The separation between those two lines ($l$ and $l_i$) is given by the difference $d_i=r_i-r$, since both lines have the same α. This means that the orthogonal distance can be described using the following formula:
 \begin{align}
     d_i = x_i\cdot\cos(\alpha)+y_i\cdot\sin(\alpha) - r
 \end{align}
-This only applies if we assume that there is noise on the measurements.\par
-Likewise, the points in the formula for the orthogonal distance can be converted into polar coordinates, changing the line presentation to the following:
-\begin{align}
-    d_i &= \rho_i\cos(\theta_i)\cos(\alpha) + \rho_i\sin(\theta_i)\sin(\alpha_i) - r \\
-    d_i &= \rho_i\cos(\theta_i - \alpha) - r
-\end{align}
-The line parameter r is determined using least square line fitting, while α is determined using the total least square problem.   
-
-\subsubsection{Least square line fitting}
-If you want to fit a straight line to a dataset with n measurements having errors, you need to consider each measurement to be equally uncertain. This means that you can sum the square of all measurement point errors together to determine an overall fit between the line and all the measurements:
-\begin{align}
-    S &= \sum_{i = 1}^{n}d_i^2 \\
-    S &= \sum_{i = 1}^{n}\left(\rho_i\cos(\theta_i - \alpha) - r\right)^2
-\end{align} 
-It is considered to be an unweighted least squares solution, because no distinction is made from among the measurements. A condition for minimizing S is done by solving the nonlinear equation system with respect to the line parameters ($r$ and $\alpha$).
-$$\frac{\partial S}{\partial r} = 0 \hspace{1cm} \frac{\partial S}{\partial \alpha} = 0$$
-By solving the nonlinear equation system, an expression for these two line parameters are determined to the following:
-\begin{align}
-    \alpha &= \frac{1}{2}\arctan\left(\frac{\sum_{i = 1}^{n} w_i\rho_i^2 \sin(2\theta_i) - \frac{2}{\sum_{i = 1}^{n} w_i}\cdot\sum_{i = 1}^{n}\sum_{j = 1}^{n}w_{i}w_{j}\rho_{i}\rho_{j}\cos(\theta_i)\sin(\theta_j)}{\sum_{i = 1}^{n}w_i\rho_i^2\cos(2\theta_i) - \frac{1}{\sum_{i = 1}^{n} w_i}\cdot\sum_{i = 1}^{n}\sum_{j = 1}^{n}w_{i}w_{j}\rho_{i}\rho_{j}\cos(\theta_i + \theta_j)}\right) \\
-    r &= \frac{\sum_{i = 1}^{n}w_i\rho_i\cos(\theta_i - \alpha)}{\sum_{i = 1}^{n}w_i}
-\end{align}
-
-\subsubsection{Total least square line fitting}
-The problem of fitting a straight line to a dataset with n measurements having errors, can be determined using the following sum:
+This only applies if we assume that there is no noise on the measurements. \par
+The Total Least Square Method solves the problem of fitting a straight line to a dataset of points p with n measurements having errors. The problem of fitting a line can be determined using the following sum:
 \begin{align}
     \chi^2\left(l, z_1, ..., z_n\right) = \sum_{i = 1}^{n} \left[\frac{\left(x_k - X_k\right)^2}{u_{x, k}^{2}} + \frac{\left(y_k - Y_k\right)^2}{u_{y, k}^{2}}\right]
 \end{align}
-where $\left(x_k,y_k\right)$ are the points coordinates with corresponding uncertainties $\left(u_{x, k},u_{y, k}\right)$ and $(X_k,Y_k)$ denote its corresponding point of the straight line $l$. In case of fitting the best line, minimizes the expression for $\chi^2$ by setting $u_{x, k} = u_{y, k} = \sigma$ and $k = 1, …, n$. This reduces the problem to the so-called total least square problem and minimizing is equal to minimizing the orthogonal distance of the measurements to the fitting line. Therefore, in the case of fitting the best line minimizes the expression in the equation above.
+where $(x_k,y_k)$ are the points coordinates with corresponding uncertainties $(u_{x, k},u_{y, k})$ and $(X_k,Y_k)$ denote its corresponding point of the straight line l. In the case of fitting the best line to the dataset, minimizes the expression for $\chi^2$ by setting $u_{x, k}=u_{y, k}=\sigma$ and $k=1,…,n$. This reduces the problem to the Total Least Square method and minimizing is equal to minimizing the orthogonal distance of the measurements to the fitting line. Therefore, in the case  of fitting the best line minimizes the expression above to the following:
 \begin{align}
     \chi^2\left(l; Z\right) &= \sum_{i = 1}^{n} \frac{d_i^2}{\sigma^2} \\
     &= \sum_{i = 1}^{n}\frac{\left(x_i\cos(\alpha) + y_i\sin⁡(\alpha)-r\right)^2}{\sigma^2}\\
     &= \frac{1}{\sigma^2}\cdot\sum_{i = 1}^{n}\left(x_i\cos(\alpha) + y_i\sin⁡(\alpha)-r\right)^2
 \end{align}
-A condition for minimizing $\chi^2$ is done by solving the nonlinear equation system with respect to each of the two line parameters ($r$ and $\alpha$). 
+A condition for minimizing $\chi^2$ is done by solving the nonlinear equation system with respect to each of the two line parameters ($r$ and $\alpha$)
 \begin{align}
     \frac{\partial\chi^2}{\partial r} = 0 \hspace{1.5cm} \frac{\partial\chi^2}{\partial\alpha} = 0
 \end{align}
-By solving the nonlinear equation system, an expression for these two line parameters are determined to the following:
+The solution of this nonlinear equation system is determined to the following:
 \begin{align}
-    \alpha &= \frac{1}{2}\arctan\left(\frac{-2\sum_{i=1}^{n}\left[\left(x_i-\overline{X}\right) - \left(y_i-\overline{Y}\right)\right]}{\sum_{i = 1}^{n}\left[\left(x_i-\overline{X}\right)^2 - \left(y_i-\overline{Y}\right)^2\right]}\right) \\
-    r &= \overline{X}\cos(\alpha)+\overline{Y}\sin(\alpha)
+	r &= \overline{X}\cos(\alpha)+\overline{Y}\sin(\alpha) \\
+    \alpha &= \frac{1}{2}\arctan\left(\frac{-2\sum_{i=1}^{n}\left[\left(x_i-\overline{X}\right) - \left(y_i-\overline{Y}\right)\right]}{\sum_{i = 1}^{n}\left[\left(x_i-\overline{X}\right)^2 - \left(y_i-\overline{Y}\right)^2\right]}\right)
 \end{align}
-
+where $\overline{x}$ and $\overline{y}$ are the means of $x$ and $y$.
+\subsubsection{Line Extraction Algorithms}
+It is usually important for a mobile robot to know its environment. There are several reasons for that, one is that robot must know the location of the obstacles relative to it to avoid driving into them. The environment is predefined in this project, and only has walls as obstacles. These walls can be detected using the robots Lidar sensor and a line extraction algorithm, since all obstacles in the Lidar data can be presented as a straight line. Here, there are several line extraction techniques to choose from.
+We have chosen to implement the incremental line extraction algorithm, because of its simplicity. The incremental algorithm is shown in table xx.\par
+\begin{figure}[H]
+	\centering
+	\begin{tabular}{c l}
+		\hline
+		\multicolumn{2}{l}{\textbf{Table							\ref{tab:Incremental}: Incremental Algorithm}}  			\\ \hline
+		1 & Start by the first 2 points, construct a 				line \\
+		2 & Add the next point to the current line model 		\\
+		3 & Recompute the line parameters \\
+		4 & If it satisfies line condition (go to 2) \\
+		5 & Otherwise, put back the last point, 					recompute the line parameters, return the line  			\\
+		6 & Continue to the next 2 points, go to 2 \\ 				\hline
+	\end{tabular}
+	\caption{Description of the Incremental algorithm}
+	\label{tab:Incremental}
+\end{figure}
+This algorithm implements the Total Least Square method then computing the line parameters. Furthermore, the line model consists of points, which all must comply some line conditions. In that case all points must comply these line conditions. The first condition is a threshold for the angle between the previous and current line model (see figure xx). The threshold is defined to be the following:
+\begin{align*}
+	\theta_{max} = 0,0025
+\end{align*}
+The second condition is the angle between two points relative to the robot location (see figure yx). This angle should be greater than this difference, but not twice as great, since this condition should separate the points into two lines, if one point is missing on the list (see figure yy). This angle is therefore defined to be the following:
+\begin{align*}
+	\Delta\theta = \left(\theta_0 - \theta_1\right)\cdot 1,25
+\end{align*}
+{\color{red} Missing 3 figures} \par
 \end{document}
