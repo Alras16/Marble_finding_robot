@@ -124,6 +124,31 @@ void c_vision::find_marbles()
     }
 }
 
+/*
+void c_vision::hough_transform(cv::Mat img)
+{
+    if (image_updated)
+    {
+        cv::Mat gray;
+        cvtColor(img, gray, COLOR_BGR2GRAY);
+        GaussianBlur(gray, gray, Size(9, 9), 2, 2);
+        vector<cv::Vec3f> circles;
+        HoughCircles(gray, circles, CV_HOUGH_GRADIENT, 2, 20, 300, 20, 5, 15);
+
+        for(int i = 0; i < circles.size(); i++ )
+        {
+            cv::Vec3i c = circles[i];
+            cv::Point center = cv::Point(c[0], c[1]);
+            // circle center
+            cv::circle(img, center, 1, Scalar(0,100,100), 3, LINE_AA);
+            // circle outline
+            int radius = c[2];
+            cv::circle(img, center, radius, Scalar(255,0,255), 3, LINE_AA);
+        }
+    }
+}
+*/
+
 std::vector<ct::marble*> c_vision::getMarbles()
 {
     return marbles;

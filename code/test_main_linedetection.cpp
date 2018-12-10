@@ -6,7 +6,7 @@ int main(int _argc, char **_argv)
     std::cout << "Hello World" << std::endl;
 
     lidar_sensor lidar;
-    testData lidarD("lidarTestThree");
+    testData lidarD("lidarTestFive");
     testData::lidarData data = lidarD.getLidarData();
     std::vector<ct::polarPoint> temp_vec;
     for (unsigned int i = 0; i < data.angle.size(); i++)
@@ -18,10 +18,10 @@ int main(int _argc, char **_argv)
     }
     lidar.init_data(temp_vec);
     lidar.filter_data();
-    lidar.find_marbles();
-    lidar.find_lines();
-    lidar.merge_lines();
-    lidar.visualize_lidar("lidar test");
+    //lidar.find_marbles();
+    //lidar.find_lines();
+    //lidar.merge_lines();
+    lidar.visualize_lidar("lidar_test_Five_v4");
 
     cv::waitKey(0);
 }
