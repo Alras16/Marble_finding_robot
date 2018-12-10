@@ -1,7 +1,7 @@
 \documentclass[../Head/Main.tex]{subfiles}
 \begin{document}
-\subsection{Line detection}
-\subsubsection{Total Least Square Method}
+\subsubsection{Line detection}
+\paragraph{Least Square Method}
 The Total Least Square method uses the normal parametrization of a line in polar coordinates, which is given by the following formula:
 \begin{align}
     l:~~~~r = x\cdot\cos(\alpha)+y\cdot\sin(\alpha)
@@ -36,7 +36,7 @@ The solution of this nonlinear equation system is determined to the following:
     \alpha &= \frac{1}{2}\arctan\left(\frac{-2\sum_{i=1}^{n}\left[\left(x_i-\overline{X}\right) - \left(y_i-\overline{Y}\right)\right]}{\sum_{i = 1}^{n}\left[\left(x_i-\overline{X}\right)^2 - \left(y_i-\overline{Y}\right)^2\right]}\right)
 \end{align}
 where $\overline{x}$ and $\overline{y}$ are the means of $x$ and $y$.
-\subsubsection{Line Extraction Algorithms}
+\paragraph{Line Extraction Algorithms}
 It is usually important for a mobile robot to know its environment. There are several reasons for that, one is that robot must know the location of the obstacles relative to it to avoid driving into them. The environment is predefined in this project, and only has walls as obstacles. These walls can be detected using the robots Lidar sensor and a line extraction algorithm, since all obstacles in the Lidar data can be presented as a straight line. Here, there are several line extraction techniques to choose from.
 We have chosen to implement the incremental line extraction algorithm, because of its simplicity. The incremental algorithm is shown in table xx.\par
 \begin{figure}[H]
