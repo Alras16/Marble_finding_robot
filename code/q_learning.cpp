@@ -324,7 +324,7 @@ std::vector<int> q_learning::getPath(ct::newState start)
 
     std::vector<int> path;
     path.push_back(s.RoomNumber);
-    int index = 1000;
+    int index = 5000;
     while (!isTerminal && index != 0)
     {
         index--;
