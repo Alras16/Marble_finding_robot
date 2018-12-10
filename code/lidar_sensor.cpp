@@ -26,17 +26,19 @@ ct::marble lidar_sensor::get_closest_marble()
     if (foundMarbles.size() != 0)
     {
         closest_marble = foundMarbles[0];
+        closest_marble.distance_to_center = foundMarbles[0].centerPolar.rho*std::sin(foundMarbles[0].centerPolar.theta);
         for (unsigned i = 0; i < foundMarbles.size(); i++)
         {
-            if (closest_marble.radius < foundMarbles[i].radius)
+            if (closest_marble.centerPolar.rho < foundMarbles[i].centerPolar.rho)
             {
                 closest_marble = foundMarbles[i];
+                closest_marble.distance_to_center = foundMarbles[0].centerPolar.rho*std::sin(foundMarbles[0].centerPolar.theta);
             }
         }
     }
     else
     {
-        closest_marble.radius = 0;
+        closest_marble.centerPolar.rho = 0;
     }
 
     return closest_marble;
@@ -67,6 +69,8 @@ ct::line lidar_sensor::get_closest_line()
 
 void lidar_sensor::visualize_lidar(std::string name)
 {
+
+
     int width = 450;
     int height = 450;
     int range_max = 10.0;
@@ -339,7 +343,7 @@ void lidar_sensor::find_lines()
 void lidar_sensor::merge_lines()
 {
     float threshold = 0.1;
-    float thresholdAlpha = 0.1;
+    float thresholdAlpha = 0.5;
     std::vector<ct::detectedLine*> tempLines;
     std::vector<std::vector<float>> tempAngles;
     for (unsigned int i = 0; i < foundMarbles.size(); i++)

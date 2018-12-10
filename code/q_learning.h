@@ -15,7 +15,7 @@
 //#include "dataloggin.h"
 
 #define ACTION_NOT_ABLE  -100.0
-#define NO_ACTION -1.0
+#define NO_ACTION -50.0
 
 class q_learning
 {
@@ -39,25 +39,31 @@ public:
     int eGreedyPolicy(ct::newState s, float epsilon);
     float maxQValue(ct::newState s);
     ct::newState qUpdate(ct::newState s, float alpha, float gamma, float epsilon);
-    void doEpisode(ct::newState start, float alpha, float gamma, float epsilon);
+    void doEpisode(ct::newState start, float alpha, float gamma, float epsilon);    
+    std::vector<int> getPath(ct::newState start);
+    float getTotalReward(ct::newState start);
+
+private:
+    int findStateMatrixIndex(ct::newState s);
+    int findQMatrixIndex(ct::newState s);
 
     float getRandom(int min, int max);
     int getRandomIndex(int size);
-
-private:
-    int findMatrixIndex(ct::newState s);
-
+    std::vector<bool> binaryIncrement(std::vector<bool> numb);
 
     std::vector<std::vector<float>> baseStateMatrix; // Base environment (matrix)
     std::vector<std::vector<std::vector<float>>> stateMatrix; // Environment (vector of matrices)
     std::vector<std::vector<std::vector<float>>> qValues;
 
-    std::vector<std::vector<bool>> matrixOrder;
+    std::vector<std::vector<bool>> stateMatrixOrder;
+    std::vector<std::vector<bool>> qMatrixOrder;
     std::vector<bool> visitedRooms;
 
     std::vector<float> rewards; // averageProbability
 
     std::mt19937_64 rng;
+
+    int numbOfRooms;
 };
 
 #endif // Q_LEARNING_H

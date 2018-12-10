@@ -13,11 +13,13 @@ public:
     void find_marbles();
     //void hough_transform(cv::Mat img);
     std::vector<ct::marble*> getMarbles();
+    ct::marble find_closest_marble();
+    std::vector<ct::marble> getMarbles();
 
 private:
     cv::Mat ori_image;
     cv::Mat processed_image;
-    std::vector<ct::marble*> marbles;
+    std::vector<ct::marble> marbles;
     int number_of_white_pixels = 0;
     int canny_threshold;
     bool image_updated;

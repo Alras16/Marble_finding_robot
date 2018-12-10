@@ -9,11 +9,15 @@
 #include <string>
 #include <ctime>
 #include <iostream>
+#include <math.h>
 
 #include "c_vision.h"
 #include "fuzzybugcontroller.h"
 #include "lidar_sensor.h"
 #include "ct.h"
+#include "motion_planning.h"
+#include "map_class.h"
+#include "laserscanner.h"
 
 
 class setup
@@ -27,10 +31,14 @@ public:
      void cameraCallback(ConstImageStampedPtr &msg);
      void lidarCallback(ConstLaserScanStampedPtr &msg);
      void initGazebo();
+     ct::current_position get_robot_position();
 
      c_vision camera;
      lidar_sensor lidar_object;
      FuzzyBugController controller;
+     motion_planning motion_planning_object;
+     map_class map_class_object;
+     LaserScanner laser_scanner;
 
      gazebo::transport::NodePtr node;
      gazebo::transport::PublisherPtr movementPublisher;
@@ -43,7 +51,8 @@ public:
 
 private:
 
-static boost::mutex mutex1;
+ static boost::mutex mutex1;
+ ct::current_position pos_robot;
 
 };
 

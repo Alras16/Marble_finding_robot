@@ -34,6 +34,8 @@
 
     <!-- Pioneer2dx with camera and lidar -->
     <model name="pioneer2dx">
+
+	 <pose>35 17 0 0 0 0</pose>
       <include>
         <uri>model://pioneer2dx</uri>
       </include>
@@ -87,7 +89,7 @@
       <box>
         <size>65 45 0.01</size>
       </box>
-      <model_count>20</model_count>
+      <model_count>1</model_count>
       <distribution>
         <type>random</type>
       </distribution>

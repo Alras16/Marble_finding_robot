@@ -1,0 +1,48 @@
+\documentclass[../Head/Main.tex]{subfiles}
+\begin{document}
+\subsection{Q-learning}
+Here is something on Q-learning
+bla bla bla
+\begin{Pseudo}{Q-learning}{}
+\begin{Indentation}
+    \item Algorithm parameters: step size: $\alpha\in$ [0,1], small  $\epsilon$ > 0 \vspace{-2pt}
+    \item Initialise $Q(s,a)$, for all $s\in S^{+}$, $a\in A(s)$, arbitrarily except that $Q(terminal,\dot)=0$
+    \item Loop for each episode: \vspace{-2pt}
+    \begin{Indentation}
+        \item Initialise $S$ \vspace{-2pt}
+        \item Loop for each step of episode: \vspace{-2pt}
+        \begin{Indentation}
+            \item Choose $A$ from $S$ using policy derived from $Q(e.g., \epsilon-greedy)$ \vspace{-2pt}
+            \item Take action $A$, observe $R$, $S^{'}$ \vspace{-1pt}
+            \item $Q(S,A) \leftarrow Q(S,A) + \alpha \left[R + \gamma \max\limits_{a} Q(S',a) - Q(S,A)\right]$
+            \item $S\leftarrow S^{'}$ \vspace{-2pt}
+        \end{Indentation}
+        \item until $S$ is terminal 
+    \end{Indentation}
+\end{Indentation}
+\end{Pseudo}
+
+
+\begin{Pseudo}{$\epsilon$-greedy policy}{}
+	\begin{Indentation}
+		\item if random number < $\epsilon$ \vspace{-2pt}
+			\begin{Indentation}
+				\item return random action \vspace{-2pt}
+			\end{Indentation}
+		\item else \vspace{-2pt}
+		\begin{Indentation}
+			\item return policy action
+		\end{Indentation}
+	\end{Indentation}
+\end{Pseudo}
+
+
+\begin{Pseudo}{getNextAction()}{}
+	\begin{Indentation}
+		\item loop all actions for a given state \vspace{-2pt}
+		\begin{Indentation}
+			\item if Q-value is higher than maxValue
+		\end{Indentation}
+	\end{Indentation}
+\end{Pseudo}
+\end{document}

@@ -51,9 +51,10 @@ void value_iteration::setReward(int numberOfTests, int numberOfRuns)
         if (averageProbability[room] > max)
             max = averageProbability[room];
 
+    // Normalise with max
     for (unsigned int room = 0; room < averageProbability.size(); room++)
     {
-        cv::Point point = centerOfMassRooms[room]->centerOfMass;
+        cv::Point point = centerOfMassRooms[room].centerOfMass;
         stateMatrix[point.y][point.x] = averageProbability[room] / max;
     }
 }
@@ -121,7 +122,7 @@ void value_iteration::resetReward(ct::state s)
     // Reset the reward
     for (unsigned int room = 0; room < averageProbability.size(); room++)
     {
-        cv::Point point = centerOfMassRooms[room]->centerOfMass;
+        cv::Point point = centerOfMassRooms[room].centerOfMass;
         if ((point.x == s.x) && (point.y == s.y))
             averageProbability[room] = 0.0;
     }
@@ -135,7 +136,7 @@ void value_iteration::resetReward(ct::state s)
     // Normalise
     for (unsigned int room = 0; room < averageProbability.size(); room++)
     {
-        cv::Point point = centerOfMassRooms[room]->centerOfMass;
+        cv::Point point = centerOfMassRooms[room].centerOfMass;
         if (averageProbability[room] != 0.0)
             stateMatrix[point.y][point.x] = averageProbability[room] / max;
         else
@@ -165,7 +166,7 @@ void value_iteration::deleteMaxReward()
     // Normalise
     for (unsigned int room = 0; room < averageProbability.size(); room++)
     {
-        cv::Point point = centerOfMassRooms[room]->centerOfMass;
+        cv::Point point = centerOfMassRooms[room].centerOfMass;
         if (averageProbability[room] != 0.0)
             stateMatrix[point.y][point.x] = averageProbability[room] / max;
         else
@@ -368,7 +369,7 @@ void value_iteration::paintCenterOfMass()
     {
         if (averageProbability[room] != 0.0)
         {
-            cv::Point point = centerOfMassRooms[room]->centerOfMass;
+            cv::Point point = centerOfMassRooms[room].centerOfMass;
             *imageValues.ptr<cv::Vec3b>(point.y,point.x) = {255, 0, 0};
             *imagePolicy.ptr<cv::Vec3b>(point.y,point.x) = {255, 0, 0};
         }

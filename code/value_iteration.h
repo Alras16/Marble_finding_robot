@@ -53,7 +53,7 @@ private:
 
     float discountRate = 0.9;
 
-    std::vector<ct::room*> centerOfMassRooms;
+    std::vector<ct::room> centerOfMassRooms;
     std::vector<float> averageProbability;
 };
 

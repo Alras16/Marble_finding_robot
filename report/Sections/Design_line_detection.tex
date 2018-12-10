@@ -1,9 +1,5 @@
-\documentclass[../Main.tex]{subfiles}
+\documentclass[../Head/Main.tex]{subfiles}
 \begin{document}
-\section{Robot Sensoring}
-%This section describes the processing of data from both the camera and the lidar sensor. It describes the process of finding the marbles in the picture from the camera, the detected walls (obstacles) in the area of the lidar sensor and the entrances to the individual rooms from the camera and the lidar sensor. \\
-%The aim of this section is to {\color{red} bla. bla. bla.} 
-
 \subsection{Line detection}
 \subsubsection{Line Parameters}
 First let $Z = \left\{z_1, …, z_n\right\}$ be a dataset of points, where each point is represented in cartesian coordinates $z_i=\left\langle x_i, y_i \right\rangle$. From this dataset, one can detect lines by looking at the linear relation between its x and y-coordinate, which is represented as follows:
@@ -63,7 +59,7 @@ where $\left(x_k,y_k\right)$ are the points coordinates with corresponding uncer
     &= \sum_{i = 1}^{n}\frac{\left(x_i\cos(\alpha) + y_i\sin⁡(\alpha)-r\right)^2}{\sigma^2}\\
     &= \frac{1}{\sigma^2}\cdot\sum_{i = 1}^{n}\left(x_i\cos(\alpha) + y_i\sin⁡(\alpha)-r\right)^2
 \end{align}
-A condition for minimizing $\chi^2$ is done by solving the nonlinear equation system with respect to the line parameters ($r$ and $\alpha$). 
+A condition for minimizing $\chi^2$ is done by solving the nonlinear equation system with respect to each of the two line parameters ($r$ and $\alpha$). 
 \begin{align}
     \frac{\partial\chi^2}{\partial r} = 0 \hspace{1.5cm} \frac{\partial\chi^2}{\partial\alpha} = 0
 \end{align}

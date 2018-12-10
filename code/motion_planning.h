@@ -3,17 +3,14 @@
 
 #include <opencv2/opencv.hpp>
 #include <opencv2/core.hpp>
-//#include "fl/Headers.h"
 #include <gazebo/gazebo_client.hh>
 #include <gazebo/msgs/msgs.hh>
 #include <gazebo/transport/transport.hh>
 #include <opencv2/opencv.hpp>
-//#include "fl/Headers.h"
 #include <vector>
-#include <iostream>
-#include <fstream>
 #include "ct.h"
-#include "map_class.h"
+#include "math.h"
+
 
 struct goal_position
 {
@@ -30,13 +27,38 @@ struct current_position
 class motion_planning
 {
 public:
+
     motion_planning();
-    virtual goal_position tangent_bug_algoritm();
+    void get_room_info(std::vector<ct::room> rooms);
+    void get_sensor_data(std::vector<ct::polarPoint>);
+    float target_location();
+    ct::robot_orientation get_rotation();
+    float homogeneous_transformation(ct::current_position, cv::Point);
+    std::vector<ct::room> get_rooms();
+    void show_path_of_robot(cv::Point robot_pos, cv::Point center_mass_room, cv::Point, bool);
+    void tangent_bug_algoritm(ct::current_position, std::vector<ct::room>);
+
 
 protected:
 
+    int index = 0;
+    int dummy = 0;
+    float path_time;
+    bool one_second_ellapes = false;
+    float start_orientation;
+    float rotation_to_goal;
+    float sum_of_angles;
     bool target_location_reached = false;
+    bool target_allowed = true;
     bool all_rooms_searched = false;
+    bool found_center_of_mass = false;
+    bool rotate_to_goal = false;
+    std::vector<ct::polarPoint> data_ori;
+    std::vector <ct::room> room_info;
+    std::vector<float> obstacle_range;
+    std::vector<float> time_steps;
+    cv::Mat path_of_robot = cv::imread("/home/kenni/git_workspace/Marble_finding_robot/test_files/maps/map_medium.png",cv::IMREAD_COLOR);
+    ct::robot_orientation rotation;
 
 };
 
