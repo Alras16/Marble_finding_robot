@@ -76,7 +76,7 @@ void q_learning::makeNewStateMatrix()
         {
             for (unsigned int state = 0; state < visitedRooms.size() + 1; state++)
             {
-                if ((tempMatrix[state][action] != ACTION_NOT_ABLE) && (tempMatrix[state][action] != NO_ACTION))
+                if ((tempMatrix[state][action] != ACTION_NOT_ABLE) && (state != action))
                 {
                     // reward will be placed
                     float punishment = tempMatrix[state][action];
@@ -351,34 +351,26 @@ float q_learning::getTotalReward(std::vector<int> path)
     stateMatrixOrder.push_back(visitedRooms);
     makeNewStateMatrix();
 
-    bool isTerminal = false;
-    ct::newState start;
-    start.RoomNumber = path[0];
-    std
+    ct::newState s;
+    s.RoomNumber = path[0];
+    std::vector<bool> temp;
     for (int i = 0; i < numbOfRooms; i++)
-    {
+        temp.push_back(false);
 
-    }
+    s.roomsVisited = temp;
+    s.isTerminal = false;
 
     float totalReward = 0.0;
-    int index = 1000;
-    while (!isTerminal && index != 0)
-    {
-        index--;
-        int a = eGreedyPolicy(s, 0.0);
-        float reward = getReward(s, a);
-        totalReward += reward;
-        s = getNextState(s, a);
 
+    for (unsigned int i = 1; i < path.size(); i++)
+    {
+        float reward = getReward(s,path[i]);
+        std::cout << "reward " << reward << std::endl;
+        totalReward += reward;
+        s = getNextState(s, path[i]);
         if (s.RoomNumber != 0)
             s = visitRoom(s);
-
-        if (s.isTerminal)
-            isTerminal = true;
     }
-
-    if (index == 0)
-        totalReward -= 10000;
 
     return totalReward;
 }

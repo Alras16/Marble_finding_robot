@@ -12,7 +12,6 @@ public:
     void find_color();
     void find_marbles();
     //void hough_transform(cv::Mat img);
-    std::vector<ct::marble*> getMarbles();
     ct::marble find_closest_marble();
     std::vector<ct::marble> getMarbles();
 
