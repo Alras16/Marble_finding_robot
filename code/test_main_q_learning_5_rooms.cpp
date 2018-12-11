@@ -15,7 +15,7 @@ int main(int _argc, char **_argv)
 
     float alpha = 0.1;
     float gamma = 0.9;
-    float epsilon = 0.075;
+    float epsilon = 0.01;
 
     // Init base states
     ct::newState start;
@@ -70,11 +70,11 @@ int main(int _argc, char **_argv)
             max = averageProbability[room];
 
     std::vector<float> rewards;
-    std::vector<int> iterations;
+    std::vector<float> iterations;
     for (unsigned int variable = 0; variable < numberOfEpisodes.size(); variable++)
     {
         float totalReward = 0.0;
-        int totalNumbIterations = 0;
+        float totalNumbIterations = 0.0;
         for (int test = 0; test < numberOfSamples; test++)
         {
             q_learning QL(numberOfRooms);
@@ -117,13 +117,17 @@ int main(int _argc, char **_argv)
         std::cout << "number of episodes: " << numberOfEpisodes[variable] << std::endl;
         std::cout << "average reward: " << totalReward / numberOfSamples << std::endl;
         rewards.push_back(totalReward / numberOfSamples);
-        iterations.push_back(totalNumbIterations / (numberOfEpisodes * numberOfSamples));
+        totalNumbIterations /= (numberOfEpisodes[variable] * numberOfSamples);
+        std::cout << "average number of iterations: " << totalNumbIterations << std::endl;
+        iterations.push_back(totalNumbIterations);
     }
 
+    iterations[0] = 0;
     for (unsigned int i = 0; i < rewards.size(); i++)
     {
         std::cout << numberOfEpisodes[i] << ";";
         std::cout << rewards[i] << ";";
-        std::cout << iterations[i] << std::endl;
+        std::cout << round(iterations[i]);
+        std::cout << std::endl;
     }
 }
