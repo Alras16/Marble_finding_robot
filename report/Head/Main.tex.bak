@@ -1,0 +1,48 @@
+\documentclass[a4paper,10pt]{article}
+\usepackage{../Head/setup}
+\raggedbottom
+\linespread{1.15}
+\graphicspath{{../Figures/}{../Figures/}}
+\DeclareGraphicsExtensions{.png,.pdf,.jpg}
+
+\addbibresource{Bibliography.bib}
+
+\begin{document}
+
+    \cfoot[]{ \fancyplain{}{\footnotesize} }
+    \fancyhead{}
+    
+    \subfile{Titlepage}
+    \clearpage
+    \subfile{../Sections/Abstract}
+    \clearpage
+    
+    \setcounter{tocdepth}{2}
+    \setcounter{page}{0}	
+	\tableofcontents 
+	\thispagestyle{empty}
+    \clearpage
+	\thispagestyle{fancy}    
+       
+    \fancyhead[R]{\normalsize\rightmark}
+    \fancyhead[L]{\large \textsc{Section }\normalsize\thesection}
+      
+    % Sections
+    \subfile{../Sections/Introduction}
+    \clearpage
+    \subfile{../Sections/Robot_modelling}
+    \clearpage
+    \subfile{../Sections/Robot_sensoring}
+    \subfile{../Sections/q_learning}
+    \clearpage
+    \subfile{../Sections/Motion_planning}
+    \clearpage
+    \subfile{../Sections/Conclusion}
+    \clearpage
+    \subfile{../Sections/Tests_doc}
+    
+    % Citations
+    \clearpage
+	\printbibliography[heading=bibintoc]
+	
+\end{document}
