@@ -10,7 +10,7 @@ int main(int _argc, char **_argv)
     float scalingDistance = 1.2;
     int numberOfTests = 5;
     int numberOfRuns = 10;
-    int numberOfEpisodes = 250000;
+    int numberOfEpisodes = 25000;
     int numberOfSamples = 1;
 
     // Init base states
@@ -78,7 +78,7 @@ int main(int _argc, char **_argv)
     {
         q_learning QL(numberOfRooms);
         // Set distance punishments
-        QL.setDistancePunishment(start, room5, 0*scalingDistance); // which room to start in
+        QL.setDistancePunishment(start, room3, 0*scalingDistance); // which room to start in
         QL.setDistancePunishment(room1, room2, -1.39*scalingDistance);
         QL.setDistancePunishment(room2, room3, -2.16*scalingDistance);
         QL.setDistancePunishment(room3, room4, -1.94*scalingDistance);
@@ -92,7 +92,8 @@ int main(int _argc, char **_argv)
         for (int room = 0; room < numberOfRooms; room++)
         {
             std::cout << "Reward for entering room " << room + 1 << ": " << (averageProbability[room] / max)*scalingReward << std::endl;
-            QL.setReward(room + 1, (averageProbability[room] / max)*scalingReward);
+            //QL.setReward(room + 1, (averageProbability[room] / max)*scalingReward);
+            QL.setReward(room + 1, 10.0);
         }
         std::cout << std::endl;
 

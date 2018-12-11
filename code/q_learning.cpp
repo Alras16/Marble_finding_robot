@@ -309,7 +309,7 @@ void q_learning::doEpisode(ct::newState start, float alpha, float gamma, float e
     std::cout << "  episode iteration number " << index << std::endl;
 }
 
-std::vector<int> q_learning::getPath(ct::newState start)
+std::vector<int> q_learning::getPath(ct::newState start, float alpha, float gamma, float epsilon)
 {
     stateMatrix.clear();
     for (unsigned int room = 0; room < visitedRooms.size(); room++)
@@ -328,7 +328,7 @@ std::vector<int> q_learning::getPath(ct::newState start)
     while (!isTerminal && index != 0)
     {
         index--;
-        s = qUpdate(s, 0.0, 1.0, 0.0);
+        s = qUpdate(s, alpha, gamma, epsilon);
         path.push_back(s.RoomNumber);
         if (s.isTerminal)
             isTerminal = true;
@@ -341,7 +341,7 @@ std::vector<int> q_learning::getPath(ct::newState start)
     return path;
 }
 
-float q_learning::getTotalReward(ct::newState start)
+float q_learning::getTotalReward(std::vector<int> path)
 {
     stateMatrix.clear();
     for (unsigned int room = 0; room < visitedRooms.size(); room++)
@@ -352,7 +352,13 @@ float q_learning::getTotalReward(ct::newState start)
     makeNewStateMatrix();
 
     bool isTerminal = false;
-    ct::newState s = start;
+    ct::newState start;
+    start.RoomNumber = path[0];
+    std
+    for (int i = 0; i < numbOfRooms; i++)
+    {
+
+    }
 
     float totalReward = 0.0;
     int index = 1000;
