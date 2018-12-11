@@ -286,7 +286,7 @@ ct::newState q_learning::qUpdate(ct::newState s, float alpha, float gamma, float
     return next;
 }
 
-void q_learning::doEpisode(ct::newState start, float alpha, float gamma, float epsilon)
+int q_learning::doEpisode(ct::newState start, float alpha, float gamma, float epsilon)
 {
     stateMatrix.clear();
     for (unsigned int room = 0; room < visitedRooms.size(); room++)
@@ -307,6 +307,7 @@ void q_learning::doEpisode(ct::newState start, float alpha, float gamma, float e
         index++;
     }
     std::cout << "  episode iteration number " << index << std::endl;
+    return index;
 }
 
 std::vector<int> q_learning::getPath(ct::newState start, float alpha, float gamma, float epsilon)
