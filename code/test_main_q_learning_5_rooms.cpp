@@ -15,7 +15,7 @@ int main(int _argc, char **_argv)
 
     float alpha = 0.1;
     float gamma = 0.9;
-    float epsilon = 0.01;
+    float epsilon = 0.05;
 
     // Init base states
     ct::newState start;
