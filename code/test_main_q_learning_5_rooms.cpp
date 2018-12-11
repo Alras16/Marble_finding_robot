@@ -10,10 +10,10 @@ int main(int _argc, char **_argv)
     float scalingDistance = 1.2;
     int numberOfTests = 5;
     int numberOfRuns = 10;
-    int numberOfEpisodes = 1000;
-    int numberOfSamples = 1;
+    int numberOfEpisodes = 5;
+    int numberOfSamples = 100;
 
-    float alpha = 0.5;
+    float alpha = 0.05;
     float gamma = 0.9;
     float epsilon = 0.2;
 
@@ -99,8 +99,8 @@ int main(int _argc, char **_argv)
         //QL.printQMatrix();
 
         std::vector<int> path = QL.getPath(start, alpha, gamma, epsilon);
-        for (unsigned int i = 0; i < path.size(); i++)
-            std::cout << "Path next state: " << path[i] << std::endl;
+        //for (unsigned int i = 0; i < path.size(); i++)
+            //std::cout << "Path next state: " << path[i] << std::endl;
 
         std::cout << std::endl;
         float reward = QL.getTotalReward(path);

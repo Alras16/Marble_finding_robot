@@ -365,7 +365,7 @@ float q_learning::getTotalReward(std::vector<int> path)
     for (unsigned int i = 1; i < path.size(); i++)
     {
         float reward = getReward(s,path[i]);
-        std::cout << "reward " << reward << std::endl;
+        //std::cout << "reward " << reward << std::endl;
         totalReward += reward;
         s = getNextState(s, path[i]);
         if (s.RoomNumber != 0)
