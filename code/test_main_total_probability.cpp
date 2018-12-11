@@ -3,7 +3,7 @@
 
 int main(int _argc, char **_argv)
 {
-    int numberOfTests = 3;
+    int numberOfTests = 5;
     int numberOfRuns = 10;
 
     std::vector<float> averageProbability;
@@ -39,6 +39,6 @@ int main(int _argc, char **_argv)
     // Print probabilities
     for (unsigned int room = 0; room < averageProbability.size(); room++)
     {
-        std::cout << "Probability of a marble accuring in room " << room + 1 << ": " << (averageProbability[room] / max)*100 << std::endl;
+        std::cout << "Probability of a marble accuring in room " << room + 1 << ": " << averageProbability[room]*100 << std::endl;
     }
 }
