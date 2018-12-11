@@ -1,0 +1,74 @@
+\documentclass[../Head/Main.tex]{subfiles}
+\begin{document}
+\subsection{Room based probability of marbles spawning}
+The purpose of this test is to determine the probability of a marble spawning in each of the 14 rooms described in section \ref{subsec:design_environment}.
+
+\subsubsection{Description of test}
+This test was done by conduction a total of 50 tests, where the position of the 20 marbles in the Gazebo environment are saved resulting in a total of 1000 samples.\par 
+These marbles was then mapped to one of the 14 rooms using the  class \texttt{map\_class}. The total amount of marbles found in each room can be seen in table \ref{tab:probability_raw_data}. This data was then divided by the total number of marbles, to find the probability.\par 
+Due to the fact that the rooms are not the same size, this probability was divided by the size of the room (number of pixels in the map) and the normalised. The result can be ssen in table \ref{tab:probability_data}.
+
+\subsubsection{Test parameters}
+\begin{tabular}{l r}
+	- World used                & bigworld\\	
+	- Number of spawned marbles & 20\\
+	- Number of tests           & 50
+\end{tabular}
+
+\subsubsection{Data}
+
+\begin{minipage}[c]{0.45\textwidth}
+	\begin{table}[H]
+	\centering
+	\begin{tabular}{l r}
+		\hline
+		\multicolumn{2}{l}{\textbf{Distribution of marbles}}  			\\ \hline
+		Total number of marbles found in room 1  & 5\\
+		Total number of marbles found in room 2  & 65\\
+		Total number of marbles found in room 3  & 75\\
+		Total number of marbles found in room 4  & 52\\
+		Total number of marbles found in room 5  & 72\\
+		Total number of marbles found in room 6  & 158\\
+		Total number of marbles found in room 7  & 17\\
+		Total number of marbles found in room 8  & 118\\
+		Total number of marbles found in room 9  & 100\\
+		Total number of marbles found in room 10 & 22\\
+		Total number of marbles found in room 11 & 75\\
+		Total number of marbles found in room 12 & 160\\
+		Total number of marbles found in room 13 & 47\\
+		Total number of marbles found in room 14 & 34\\			\hline
+	\end{tabular}
+	\caption{Table of how the marbles are distributed in the 14 rooms based on all 50 tests}
+	\label{tab:probability_raw_data}
+\end{table}
+\end{minipage}
+\hfill
+\begin{minipage}[c]{0.49\textwidth}
+	\begin{table}[H]
+	\centering
+	\begin{tabular}{l r}
+		\hline
+		\multicolumn{2}{l}{\textbf{Probability of marbles}}  			\\ \hline
+		Probability of marbles found in room 1  & 0.012232\\
+		Probability of marbles found in room 2  & 0.061057\\
+		Probability of marbles found in room 3  & 0.078610\\
+		Probability of marbles found in room 4  & 0.059975\\
+		Probability of marbles found in room 5  & 0.117993\\
+		Probability of marbles found in room 6  & 0.098801\\
+		Probability of marbles found in room 7  & 0.019629\\
+		Probability of marbles found in room 8  & 0.099063\\
+		Probability of marbles found in room 9  & 0.114518\\
+		Probability of marbles found in room 10 & 0.027633\\
+		Probability of marbles found in room 11 & 0.044562\\
+		Probability of marbles found in room 12 & 0.130379\\
+		Probability of marbles found in room 13 & 0.072915\\
+		Probability of marbles found in room 14 & 0.062541\\			\hline
+	\end{tabular}
+	\caption{Table of how the probabilities are distributed in the 14 rooms with room size taken into account}
+	\label{tab:probability_data}
+\end{table}
+\end{minipage}
+
+\subsubsection{Conclusion}
+It can be concluded that the highest number of marbles was found in room 12 closely followed by 6 and 8. But due to the size of the rooms, the highest probability is found in room 12, followed by 5 and 9.
+\end{document}

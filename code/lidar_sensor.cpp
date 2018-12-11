@@ -89,8 +89,9 @@ void lidar_sensor::visualize_lidar(std::string name)
 
         cv::Point2f startpt(center,center);
         cv::Point2f endpt(center + range * px_per_m * std::cos(angle),center - range * px_per_m * std::sin(angle));
-        int green;
-        int red;
+        int green = 255;
+        int red = 255;
+
         if (range == 10.0)
         {
             green = 255;
@@ -101,6 +102,7 @@ void lidar_sensor::visualize_lidar(std::string name)
             green = 25 * range;
             red = 0;
         }
+
         cv::line(im, startpt * 16, endpt * 16, cv::Scalar(255, green, red), 1, cv::LINE_AA, 4);
     }
 
@@ -138,6 +140,15 @@ void lidar_sensor::visualize_lidar(std::string name)
 
 
     // Show the finished image
+    QDir path = QDir::current();
+    path.cdUp();
+    std::string filePath = path.path().toStdString() + "/test_files/lidar_test_files/images/" + name + ".png";
+
+    std::vector<int> compression_param;
+    compression_param.push_back(CV_IMWRITE_PNG_COMPRESSION);
+    compression_param.push_back(9);
+
+    cv::imwrite(filePath, im, compression_param);
     cv::imshow(name, im);
 }
 

@@ -10,8 +10,8 @@ int main(int _argc, char **_argv)
     float scalingDistance = 1.2;
     int numberOfTests = 5;
     int numberOfRuns = 10;
-    int numberOfEpisodes = 900;
-    int numberOfSamples = 1000;
+    int numberOfEpisodes = 2000;
+    int numberOfSamples = 1;
 
     // Init base states
     ct::newState start;
@@ -72,7 +72,7 @@ int main(int _argc, char **_argv)
     {
         q_learning QL(numberOfRooms);
         // Set distance punishments
-        QL.setDistancePunishment(start, room3, 0*scalingDistance);
+        QL.setDistancePunishment(start, room5, 0*scalingDistance); // which room to start in
         QL.setDistancePunishment(room1, room2, -1.39*scalingDistance);
         QL.setDistancePunishment(room2, room3, -2.16*scalingDistance);
         QL.setDistancePunishment(room3, room4, -1.94*scalingDistance);
@@ -109,8 +109,8 @@ int main(int _argc, char **_argv)
         }
         else
         {
-            //for (unsigned int i = 0; i < path.size(); i++)
-                //std::cout << "Path next state: " << path[i] << std::endl;
+            for (unsigned int i = 0; i < path.size(); i++)
+                std::cout << "Path next state: " << path[i] << std::endl;
 
             std::cout << std::endl;
             float reward = QL.getTotalReward(start);

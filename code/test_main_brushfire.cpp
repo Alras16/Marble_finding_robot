@@ -21,7 +21,7 @@ int main()
     map.paintMap();
     map.findMedianPoints(7);
     map.plotMedianPoints();
-    map.findCornerPoints();
+    map.findCenterPoints();
     map.scaleImage(5);
     map.showImage("distance values");
     map.showValues("fileName");

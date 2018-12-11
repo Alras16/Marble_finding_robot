@@ -1,8 +1,15 @@
 \documentclass[../Head/Main.tex]{subfiles}
 \begin{document}
 \subsection{Q-learning}
-Here is something on Q-learning
-bla bla bla
+In order to effectively search the environment and collect marbles, a good search strategy must be found. This can be done by utilising reinforcement learning. By using reinforcement learning, the robot can learn from its experience and obtain a good strategy for navigating the environment.\par
+By using a Temporal-Difference learning strategy the optimal action-value function can be estimated by every move taken unlike a Monte Carlo strategy where an episode terminates before any learning is obtained. In some cases with long episodes the Monte Carlo strategy is considered too slow.\\
+Generally there are two categories of Temporal-Difference learning; on-policy and off-policy methods. One of the advantages of an off-policy over an on-policy method are that the action-value function can be estimated independent from the policy being used. The policy only influences which state-action pairs that are visited and updated.\par 
+Based on this Q-learning are chosen, the Q-learning method builds on the following update function for updating the action-value function (Q-values).
+\begin{equation}\label{eq:q_update_func}
+Q\left(S_t,A_t\right) \leftarrow Q\left(S_t,A_t\right) + \alpha\left[R_{t+1}+\gamma\max_a Q\left(S_{t+1},a\right)-Q\left(S_t,A_t\right)\right]
+\end{equation}
+The update function for Q-learning consists of the old value for a given state-action combination plus a scaled difference between the old value, the immediate reward and the maximal value for the next state. The learning rate are denoted $\alpha$ and ranging from 0-1 preferable closer to 0, in order to not to base the policy on this action only. $\gamma$ denotes the discount factor and are also ranging from 0-1, preferable closer to 1, to ensure that future actions matter.\par
+In the box below, the algorithm for Q-learning can be seen.
 \begin{Pseudo}{Q-learning}{}
 \begin{Indentation}
     \item Algorithm parameters: step size: $\alpha\in$ [0,1], small  $\epsilon$ > 0 \vspace{-2pt}
@@ -21,7 +28,13 @@ bla bla bla
     \end{Indentation}
 \end{Indentation}
 \end{Pseudo}
+\subsubsection{Definition of states}
 
+\begin{itemize}
+	\item[-] Room number
+	\item[-] Vector of boolean values one for each room to know which rooms have been visited
+	\item[-] Boolean for knowing if the state is terminal or not 
+\end{itemize}
 
 \begin{Pseudo}{$\epsilon$-greedy policy}{}
 	\begin{Indentation}

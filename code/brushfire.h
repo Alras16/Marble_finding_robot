@@ -23,7 +23,8 @@ public:
     void findMedianPoints(int threshold);
     void plotMedianPoints();
 
-    void findCornerPoints();
+    //void findCornerPoints();
+    void findCenterPoints();
 
     ~brushfire();
 private:
@@ -33,6 +34,7 @@ private:
     std::vector<std::vector<float>> matrix;
     std::vector<cv::Point> imagePoints;
     std::vector<cv::Point> cornerPoints;
+    std::vector<cv::Point> centerPoints;
 };
 
 #endif // TRAPEZOIDAL_DECOMPOSITION_H
