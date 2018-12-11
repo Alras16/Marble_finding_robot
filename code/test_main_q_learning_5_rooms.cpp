@@ -10,8 +10,12 @@ int main(int _argc, char **_argv)
     float scalingDistance = 1.2;
     int numberOfTests = 5;
     int numberOfRuns = 10;
-    int numberOfEpisodes = 2000;
+    int numberOfEpisodes = 1000;
     int numberOfSamples = 1;
+
+    float alpha = 0.5;
+    float gamma = 0.9;
+    float epsilon = 0.2;
 
     // Init base states
     ct::newState start;
@@ -65,14 +69,12 @@ int main(int _argc, char **_argv)
         if (averageProbability[room] > max)
             max = averageProbability[room];
 
-    float succeses = 0.0;
-    float failiures = 0.0;
     float totalReward = 0.0;
     for (int test = 0; test < numberOfSamples; test++)
     {
         q_learning QL(numberOfRooms);
         // Set distance punishments
-        QL.setDistancePunishment(start, room5, 0*scalingDistance); // which room to start in
+        QL.setDistancePunishment(start, room3, 0*scalingDistance); // which room to start in
         QL.setDistancePunishment(room1, room2, -1.39*scalingDistance);
         QL.setDistancePunishment(room2, room3, -2.16*scalingDistance);
         QL.setDistancePunishment(room3, room4, -1.94*scalingDistance);
@@ -85,45 +87,30 @@ int main(int _argc, char **_argv)
         }
         std::cout << std::endl;
 
-        //QL.makeNewStateMatrix();
-        //QL.printStateMatrix();
-
         // Do estimation episodes
         for (int episode = 0; episode < numberOfEpisodes; episode++)
         {
             std::cout << "episode number " << episode << std::endl;
-            QL.doEpisode(start,0.1,0.9,0.5);
+            QL.doEpisode(start, alpha, gamma, epsilon);
             std::cout << std::endl;
         }
 
         //QL.printStateMatrix();
         //QL.printQMatrix();
 
-        std::vector<int> path = QL.getPath(start);
+        std::vector<int> path = QL.getPath(start, alpha, gamma, epsilon);
+        for (unsigned int i = 0; i < path.size(); i++)
+            std::cout << "Path next state: " << path[i] << std::endl;
 
-        if (path.size() == 1)
-        {
-            std::cout << "no solution found" << std::endl;
-            failiures++;
-            totalReward -= 10000;
-        }
-        else
-        {
-            for (unsigned int i = 0; i < path.size(); i++)
-                std::cout << "Path next state: " << path[i] << std::endl;
+        std::cout << std::endl;
+        float reward = QL.getTotalReward(path);
+        totalReward += reward;
+        std::cout << "total reward: " << reward << std::endl;
 
-            std::cout << std::endl;
-            float reward = QL.getTotalReward(start);
-            totalReward += reward;
-            std::cout << "total reward: " << reward << std::endl;
-            succeses++;
-        }
     }
 
     std::cout << std::endl;
     std::cout << "number of episodes: " << numberOfEpisodes << std::endl;
-    std::cout << "success rate: " << succeses << std::endl;
-    std::cout << "failiure rate: " << failiures << std::endl;
     std::cout << "average reward: " << totalReward / numberOfSamples << std::endl;
 
 }
