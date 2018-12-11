@@ -2,7 +2,7 @@ TEMPLATE = app
 CONFIG += console c++11
 CONFIG -= app_bundle
 
-SOURCES += test_main_q_learning_14_rooms.cpp \
+SOURCES += test_main_total_probability.cpp \
     #fuzzybugcontroller.cpp \
     #laserscanner.cpp \
     #motion_planning.cpp \
