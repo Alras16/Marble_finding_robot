@@ -112,5 +112,4 @@ int main(int _argc, char **_argv)
     std::cout << std::endl;
     std::cout << "number of episodes: " << numberOfEpisodes << std::endl;
     std::cout << "average reward: " << totalReward / numberOfSamples << std::endl;
-
 }
