@@ -1,22 +1,32 @@
 \documentclass[../Head/Main.tex]{subfiles}
 \begin{document}
+
 \subsubsection{Line detection}
-\paragraph{Least Square Method}
-The Total Least Square method uses the normal parametrization of a line in polar coordinates, which is given by the following formula:
+It is usually important for a mobile robot to know its environment. There are several reasons for that, one is that robot must know the location of the obstacles (walls) relative to it to avoid driving into them. In the "bigworld" environment, the obstacles is walls which can be represented as lines from the filtered datapoints. These lines can be represented using a normal parametrization in polar coordinates, given by the following formula:
 \begin{align}
     l:~~~~r = x\cdot\cos(\alpha)+y\cdot\sin(\alpha)
+    \label{eq:line}
 \end{align}
-where r represents the distance from the origin to the closest point on the line and α is the angle between the x-axis and the plane normal. This method involves a determination of the orthogonal distance (the shortest distance) from a point $(x,y)$ to a line $l$ (see figure xx). The normal parametrization of the line $l_i$ is given by the following formula:
+where $r$ represents the distance from the origin to the closest point on the line and $\alpha$ is the angle between the x-axis and the plane normal. \par
+\begin{wrapfigure}{r}{6cm}
+	\vspace{-12pt}
+	\centering
+	\subfile{../Figures/Orthogonal_distance_between_two_lines}
+	\vspace{-5pt}
+	\caption{Orthogonal distance from point $p_1$ to line $l$}
+	\label{fig:orthogonal_distance}
+	\vspace{-5pt}
+\end{wrapfigure}
+The Total Least Square method assumes that a line can be represented as in equation \ref{eq:line}. This method also involves a determination of the orthogonal distance (the shortest distance) from a point $p_i$ to a line $l$ as shown on  figure \ref{fig:orthogonal_distance}. The normal parametrization of the line $l_i$ is given by the following formula:
 \begin{align}
     l_i:~~~~r_i = x_i\cdot\cos(\alpha)+y_i\cdot\sin(\alpha)
 \end{align}
-{\color{red} Missing figure} \par
-The separation between those two lines ($l$ and $l_i$) is given by the difference $d_i=r_i-r$, since both lines have the same α. This means that the orthogonal distance can be described using the following formula:
+The separation between those two lines ($l$ and $l_i$) is given by the difference $d_i=r_i-r$, since both lines have the same $\alpha$. This means that the orthogonal distance can be described using the following formula:
 \begin{align}
     d_i = x_i\cdot\cos(\alpha)+y_i\cdot\sin(\alpha) - r
 \end{align}
 This only applies if we assume that there is no noise on the measurements. \par
-The Total Least Square Method solves the problem of fitting a straight line to a dataset of points p with n measurements having errors. The problem of fitting a line can be determined using the following sum:
+This method gives an solution to the problem of fitting a straight line to a dataset of points $p$ with $n$ measurements having errors. The problem of fitting a line can be determined using the following sum:
 \begin{align}
     \chi^2\left(l, z_1, ..., z_n\right) = \sum_{i = 1}^{n} \left[\frac{\left(x_k - X_k\right)^2}{u_{x, k}^{2}} + \frac{\left(y_k - Y_k\right)^2}{u_{y, k}^{2}}\right]
 \end{align}
@@ -35,11 +45,11 @@ The solution of this nonlinear equation system is determined to the following:
 	r &= \overline{X}\cos(\alpha)+\overline{Y}\sin(\alpha) \\
     \alpha &= \frac{1}{2}\arctan\left(\frac{-2\sum_{i=1}^{n}\left[\left(x_i-\overline{X}\right) - \left(y_i-\overline{Y}\right)\right]}{\sum_{i = 1}^{n}\left[\left(x_i-\overline{X}\right)^2 - \left(y_i-\overline{Y}\right)^2\right]}\right)
 \end{align}
-where $\overline{x}$ and $\overline{y}$ are the means of $x$ and $y$.
-\paragraph{Line Extraction Algorithms}
-It is usually important for a mobile robot to know its environment. There are several reasons for that, one is that robot must know the location of the obstacles relative to it to avoid driving into them. The environment is predefined in this project, and only has walls as obstacles. These walls can be detected using the robots Lidar sensor and a line extraction algorithm, since all obstacles in the Lidar data can be presented as a straight line. Here, there are several line extraction techniques to choose from.
-We have chosen to implement the incremental line extraction algorithm, because of its simplicity. The incremental algorithm is shown in table xx.\par
-\begin{figure}[H]
+where $\overline{x}$ and $\overline{y}$ are the means of $x$ and $y$. \par
+
+
+As explained earlier, the two-wheeled robot should avoid obstacles (walls). To do so, the robot needs to know the location of the walls. It is done by processing the datapoints from the lidar scanner and determining the points which fits to a straight line using a line extraction algorithm. There are several different line extraction algorithms to choose from. The incremental line extraction algorithm is chosen, because it is simple to implement. The pseudo code for the incremental algorithm is shown below. \par
+\begin{table}[H]
 	\centering
 	\begin{tabular}{c l}
 		\hline
@@ -53,12 +63,12 @@ We have chosen to implement the incremental line extraction algorithm, because o
 	\end{tabular}
 	\caption{Description of the Incremental algorithm}
 	\label{tab:Incremental}
-\end{figure}
-This algorithm implements the Total Least Square method then computing the line parameters. Furthermore, the line model consists of points, which all must comply some line conditions. In that case all points must comply these line conditions. The first condition is a threshold for the angle between the previous and current line model (see figure xx). The threshold is defined to be the following:
+\end{table}
+This algorithm implements the Total Least Square method then computing the line parameters. Furthermore, the line model consists of points, which all must comply some line conditions. In that case all points must comply these conditions. The first condition is a threshold for the angle between the previous and current line model as shown on figure xx. The threshold is defined to be the following:
 \begin{align*}
 	\theta_{max} = 0,0025
 \end{align*}
-The second condition is the angle between two points relative to the robot location (see figure yx). This angle should be greater than this difference, but not twice as great, since this condition should separate the points into two lines, if one point is missing on the list (see figure yy). This angle is therefore defined to be the following:
+The second condition is the angle between two points relative to the robot location as shown on figure yx. This angle should be greater than this difference, but not twice as great, since this condition should separate the points into two lines, if one point is missing on the list as shown on figure yy. This angle is therefore defined to be the following:
 \begin{align*}
 	\Delta\theta = \left(\theta_0 - \theta_1\right)\cdot 1,25
 \end{align*}
