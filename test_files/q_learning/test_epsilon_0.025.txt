@@ -1,48 +1,48 @@
-Number of episodes:    0   Average reward: 27.3506
-Number of episodes:    1   Average reward: 38.1473
-Number of episodes:    2   Average reward: 38.3201
-Number of episodes:    3   Average reward: 37.6425
-Number of episodes:    4   Average reward: 36.9465
-Number of episodes:    5   Average reward: 38.994
-Number of episodes:    6   Average reward: 39.2053
-Number of episodes:    7   Average reward: 39.6479
-Number of episodes:    8   Average reward: 39.6331
-Number of episodes:    9   Average reward: 39.8236
-Number of episodes:   10   Average reward: 40.366
-Number of episodes:   11   Average reward: 40.6539
-Number of episodes:   12   Average reward: 40.6294
-Number of episodes:   13   Average reward: 40.3934
-Number of episodes:   14   Average reward: 40.5322
-Number of episodes:   15   Average reward: 39.9739
-Number of episodes:   16   Average reward: 40.2545
-Number of episodes:   17   Average reward: 40.507
-Number of episodes:   18   Average reward: 39.7906
-Number of episodes:   19   Average reward: 40.378
-Number of episodes:   20   Average reward: 40.6391
-Number of episodes:   25   Average reward: 40.5107
-Number of episodes:   30   Average reward: 40.4536
-Number of episodes:   35   Average reward: 40.7623
-Number of episodes:   40   Average reward: 40.4108
-Number of episodes:   45   Average reward: 40.6712
-Number of episodes:   50   Average reward: 40.2653
-Number of episodes:   60   Average reward: 40.4214
-Number of episodes:   70   Average reward: 40.4239
-Number of episodes:   80   Average reward: 40.8511
-Number of episodes:   90   Average reward: 39.9738
-Number of episodes:  100   Average reward: 40.729
-Number of episodes:  125   Average reward: 40.5248
-Number of episodes:  150   Average reward: 40.6984
-Number of episodes:  175   Average reward: 40.6968
-Number of episodes:  200   Average reward: 40.4483
-Number of episodes:  250   Average reward: 40.7607
-Number of episodes:  300   Average reward: 40.697
-Number of episodes:  350   Average reward: 40.5929
-Number of episodes:  400   Average reward: 40.489
-Number of episodes:  450   Average reward: 40.6736
-Number of episodes:  500   Average reward: 40.4494
-Number of episodes:  600   Average reward: 40.7687
-Number of episodes:  700   Average reward: 40.1968
-Number of episodes:  800   Average reward: 40.5721
-Number of episodes:  900   Average reward: 39.3857
-Number of episodes: 1000   Average reward: 39.2609
+0;24.9459;0
+1;36.3485;613
+2;37.4396;681
+3;38.383;700
+4;37.8332;724
+5;38.9368;694
+6;39.0694;692
+7;38.7156;761
+8;39.5958;654
+9;39.4669;680
+10;40.2659;652
+11;40.7617;600
+12;40.3969;559
+13;40.339;555
+14;40.332;561
+15;40.6824;468
+16;40.4591;513
+17;40.4617;428
+18;40.6277;431
+19;40.6004;402
+20;39.979;404
+25;40.5221;336
+30;40.3535;289
+35;40.3804;254
+40;40.5766;218
+45;40.5078;196
+50;40.8025;165
+60;40.7059;157
+70;40.1711;135
+80;40.1983;122
+90;40.3326;116
+100;40.1581;100
+125;40.1447;86
+150;40.647;75
+175;40.5904;64
+200;40.7497;59
+250;40.3062;51
+300;40.4899;46
+350;40.4636;41
+400;40.7976;36
+450;39.3884;39
+500;40.2568;44
+600;40.4759;39
+700;40.1568;41
+800;39.5801;42
+900;39.442;42
+1000;39.5641;48
 
