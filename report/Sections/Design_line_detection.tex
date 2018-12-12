@@ -57,8 +57,6 @@ As explained earlier, the two-wheeled robot should avoid obstacles (walls). To d
 		\item Continue to the next 2 points, go to 2
 	\end{enumerate}
 \end{Pseudo}
-This algorithm implements the Total Least Square method then computing the line parameters. Furthermore, the line model consists of points, which all must comply some line conditions. In that case all points must comply these conditions. The first condition is a threshold for the angle between the previous and current line model as shown on figure xx. The threshold is defined to be the following:
-\\
 This algorithm implements the Total Least Square method then computing the line parameters. Furthermore, the line model consists of points, which all must comply some line conditions. In that case all points must comply these conditions. The first condition is a threshold for the angle between the previous and current line model as shown on figure \ref{fig:Line_model_angle}. The threshold is defined to be the following:
 \begin{align*}
 	\theta_{max} = 0,0025
