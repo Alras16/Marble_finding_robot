@@ -29,33 +29,40 @@ In the box below, the algorithm for Q-learning can be seen.
 \end{Indentation}
 \end{Pseudo}
 \subsubsection{Definition of states}
-
-\begin{itemize}
-	\item[-] Room number
-	\item[-] Vector of boolean values one for each room to know which rooms have been visited
-	\item[-] Boolean for knowing if the state is terminal or not 
-\end{itemize}
-
-\begin{Pseudo}{$\epsilon$-greedy policy}{}
+In order to perform Q-learning a definition of states must be made. These states must have the Markov property meaning that the probability of a marble being in a room must not depend on whether other rooms have been visited or not.\par 
+In order to achieve this, it have been chosen to implement a vector of boolean values, one element for each room. This will be used to store which rooms have been visited.\\
+By doing this all possible combinations will be possible and the reward of entering a room will not depend on the other rooms, only the room itself.\par 
+It have also been chosen to implement the state with an integer storing the room number, and a boolean for storing whether the state is terminal or not. The definition of the state can be seen below.
+\begin{Indentation}
+	\item \texttt{qState} \vspace{-2pt}
 	\begin{Indentation}
-		\item if random number < $\epsilon$ \vspace{-2pt}
-			\begin{Indentation}
-				\item return random action \vspace{-2pt}
-			\end{Indentation}
-		\item else \vspace{-2pt}
-		\begin{Indentation}
-			\item return policy action
-		\end{Indentation}
+		\item \texttt{int roomNumber} \vspace{-2pt}
+		\item \texttt{std::vector<bool> roomsVisited} \vspace{-2pt}
+		\item \texttt{bool isTerminal}
 	\end{Indentation}
-\end{Pseudo}
+\end{Indentation}
 
 
-\begin{Pseudo}{getNextAction()}{}
-	\begin{Indentation}
-		\item loop all actions for a given state \vspace{-2pt}
-		\begin{Indentation}
-			\item if Q-value is higher than maxValue
-		\end{Indentation}
-	\end{Indentation}
-\end{Pseudo}
+%\begin{Pseudo}{$\epsilon$-greedy policy}{}
+	%\begin{Indentation}
+		%\item if random number < $\epsilon$ \vspace{-2pt}
+			%\begin{Indentation}
+				%\item return random action \vspace{-2pt}
+			%\end{Indentation}
+		%\item else \vspace{-2pt}
+		%\begin{Indentation}
+			%\item return policy action
+		%\end{Indentation}
+	%\end{Indentation}
+%\end{Pseudo}
+
+
+%\begin{Pseudo}{getNextAction()}{}
+	%\begin{Indentation}
+		%\item loop all actions for a given state \vspace{-2pt}
+		%\begin{Indentation}
+			%\item if Q-value is higher than maxValue
+		%\end{Indentation}
+	%\end{Indentation}
+%\end{Pseudo}
 \end{document}

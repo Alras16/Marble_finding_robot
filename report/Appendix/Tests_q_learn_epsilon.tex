@@ -1,0 +1,84 @@
+\documentclass[../Head/Main.tex]{subfiles}
+\begin{document}
+\subsection{The impact of $\epsilon$ on Q-learning performance}
+The purpose of this test is to show how different values of $\epsilon$ influences the performance of Q-learning.
+\subsubsection{Description of test}
+This test was done by performing 100 trials of each selected value of $\epsilon$ for a range of episodes. The test was conducted using the world "5-room world" seen on figure \ref{fig:5_room_world}.\\
+The distance punishments are bases on those found in the test in appendix \ref{subsec:est_path_length}. The distance punishments was scaled with a factor of 1.2 to make the distance a bigger factor in final path.\\
+The probabilities used for each room was found in the test in appendix \ref{subsec:probability_test}. These probabilities was divided by the maximal value and scaled by a factor of 20. This was done to ensure that the total reward for entering a room the first time would be positive.\par 
+The initial state for all tests was set to room 3 in order to ensure greatest number of possible paths.
+
+\begin{figure}[H]
+	\centering
+		\begin{tikzpicture}
+		\node[anchor=south west, inner sep=0] (image) at (0,0) {\includegraphics[width=0.65\textwidth]{map_5_rooms}};
+		\node[align=center, black, font={\large}] at (1.25,3.25) {Room 1};
+		\node[align=center, black, font={\large}] at (2,1.25) {Room 2};
+		\node[align=center, black, font={\large}] at (5.45,2.25) {Room 3};
+		\node[align=center, black, font={\large}] at (9,3) {Room 4};
+		\node[align=center, black, font={\large}] at (9,0.9) {Room 5};
+		\end{tikzpicture}		
+	\caption{Illustration of "5-room world"}
+	\label{fig:5_room_world}
+\end{figure}
+
+\subsubsection{Test parameters}
+
+\begin{minipage}[c]{0.35\textwidth}
+	\begin{tabular}{l r}
+	- World used                & 5-room world\\
+	- Initial room              & room 3\\	
+	- Probabilities based on    & 50 tests\\	
+	- Number of tests           & 100\\
+	- Scaling factor distance   & 1.2\\
+	- Scaling factor reward     & 20\\
+	- Learning rate $\alpha$    & 0.1\\
+	- Discount factor $\gamma$  & 0.9\\
+	\end{tabular}
+\end{minipage}	
+\hfill
+\begin{minipage}[c]{0.2\textwidth}
+	\begin{table}[H]
+		\centering
+		\begin{tabular}{r r}
+		\hline
+		\multicolumn{2}{l}{\textbf{Tested values of $\epsilon$}}\\ 			\hline
+		0.01   & 0.15\\
+		0.025  & 0.2\\
+		0.05   & 0.3\\
+		0.075  & 0.4\\
+		0.1    & 0.5\\
+		\hline
+		\end{tabular}
+		\caption{Table of tested the values of $\epsilon$. Ranging from 1 \% to 50 \%}
+		\label{tab:test_epsilon}
+	\end{table}
+\end{minipage}
+\hfill
+\begin{minipage}[c]{0.3\textwidth}
+	\begin{table}[H]
+	\centering
+	\begin{tabular}{l r}
+		\hline
+		\multicolumn{2}{l}{\textbf{Distance punishments}}\\ 			\hline
+		Start to room 3   & 0\\
+		Room 1 to room 2  & -1.668\\
+		Room 2 to room 3  & -2.592\\
+		Room 3 to room 4  & -2.328\\
+		Room 3 to room 5  & -2.544\\
+		\hline
+	\end{tabular}
+	\caption{Table of the distance punishments. The distances are found in the test in appendix \ref{subsec:est_path_length}}
+	\label{tab:distance_punishment_5_rooms}
+\end{table}
+\end{minipage}
+
+
+\subsubsection{Data}
+g,åghe
+
+\subsubsection{Conclusion}
+hhrehr
+
+
+\end{document}

@@ -1,6 +1,26 @@
 \documentclass[../Head/Main.tex]{subfiles}
 \begin{document}
 \subsection{Q-learning}
+Q-learning was implemented by designing a class containing the functionality of holding the state space and update the Q-matrix. This class was named \texttt{q\_learning}.\par 
+Due to the definition of the state, each room will have 2\textsuperscript{number of rooms} number of states, corresponding to the number of possible combinations of how the rooms could be visited. This will result in a very large Q-matrix. 
+This could be overcome by splitting the Q-matrix into several smaller Q-matrices and then keep track of the mapping between them.\\
+The Q-matrix would consist of number of base states by the number of actions which would be a 6 x 6 matrix with 5 rooms (including an initial state)
 
+
+\begin{table}[H]
+	\centering
+	\begin{tabular}{|l|r|r|r|r|r|r|}
+	\hline
+     & \multicolumn{1}{l|}{\textbf{Start}} & \multicolumn{1}{l|}{\textbf{Room 1}} & \multicolumn{1}{l|}{\textbf{Room 2}} & \multicolumn{1}{l|}{\textbf{Room 3}} & \multicolumn{1}{l|}{\textbf{Room 4}} & \multicolumn{1}{l|}{\textbf{Room 5}} \\ \hline
+\textbf{Start}  & 0                                   & {\color{red} -100}          & {\color{red} -100}          & 13.33971                             & {\color{red} -100}          & {\color{red} -100}          \\ \hline
+\textbf{Room 1} & {\color{red} -100}         & 0                                    & 8.681309                             & {\color{red} -100}          & {\color{red} -100}          & {\color{red} -100}          \\ \hline
+\textbf{Room 2} & {\color{red} -100}         & 0.405394                             & 0                                    & 10.74771                             & {\color{red} -100}          & {\color{red} -100}          \\ \hline
+\textbf{Room 3} & {\color{red} -100}         & {\color{red} -100}          & 7.757309                             & 0                                    & 7.837891                             & 17.456                               \\ \hline
+\textbf{Room 4} & {\color{red} -100}         & {\color{red} -100}          & {\color{red} -100}          & 11.01171                             & 0                                    & {\color{red} -100}          \\ \hline
+\textbf{Room 5} & {\color{red} -100}         & {\color{red} -100}          & {\color{red} -100}          & 10.79571                             & {\color{red} -100}          & 0                                    \\ \hline
+	\end{tabular}
+	\caption{Rewards for all state-action combinations given that no rooms have been visited and initial state is room 3}
+	\label{tab:reward_matrix_5_room}
+\end{table}
 
 \end{document}

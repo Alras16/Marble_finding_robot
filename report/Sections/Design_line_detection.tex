@@ -49,21 +49,16 @@ where $\overline{x}$ and $\overline{y}$ are the means of $x$ and $y$. \par
 
 
 As explained earlier, the two-wheeled robot should avoid obstacles (walls). To do so, the robot needs to know the location of the walls. It is done by processing the datapoints from the lidar scanner and determining the points which fits to a straight line using a line extraction algorithm. There are several different line extraction algorithms to choose from. The incremental line extraction algorithm is chosen, because it is simple to implement. The pseudo code for the incremental algorithm is shown below. \par
-\begin{table}[H]
-	\centering
-	\begin{tabular}{c l}
-		\hline
-		\multicolumn{2}{l}{\textbf{Table							\ref{tab:Incremental}: Incremental Algorithm}}  			\\ \hline
-		1 & Start by the first 2 points, construct a 				line \\
-		2 & Add the next point to the current line model 		\\
-		3 & Recompute the line parameters \\
-		4 & If it satisfies line condition (go to 2) \\
-		5 & Otherwise, put back the last point, 					recompute the line parameters, return the line  			\\
-		6 & Continue to the next 2 points, go to 2 \\ 				\hline
-	\end{tabular}
-	\caption{Description of the Incremental algorithm}
-	\label{tab:Incremental}
-\end{table}
+\begin{Pseudo}{Incremental}{}
+	\begin{enumerate}
+		\item Start by the first 2 points, construct a 				line
+		\item Add the next point to the current line model
+		\item Recompute the line parameters
+		\item If it satisfies line condition (go to 2)
+		\item Otherwise, put back the last point, 					recompute the line parameters, return the line
+		\item Continue to the next 2 points, go to 2
+	\end{enumerate}
+\end{Pseudo}
 This algorithm implements the Total Least Square method then computing the line parameters. Furthermore, the line model consists of points, which all must comply some line conditions. In that case all points must comply these conditions. The first condition is a threshold for the angle between the previous and current line model as shown on figure xx. The threshold is defined to be the following:
 \begin{align*}
 	\theta_{max} = 0,0025
