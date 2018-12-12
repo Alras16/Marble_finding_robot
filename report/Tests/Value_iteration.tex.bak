@@ -1,10 +1,10 @@
 \documentclass[../Head/Main.tex]{subfiles}
 
 \begin{document}
-\subsection{Basic test}
+\section{Basic test}
 This test is based on value iteration
 \begin{figure}[H]
-    \centering
+    \centering    
     \includegraphics[width=8cm]{{../Figures/Policy2.1.32}.png}
     \caption{$dt=0.1$}
     \label{fig:prob1_6_2}

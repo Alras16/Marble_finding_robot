@@ -15,7 +15,7 @@
 //#include "dataloggin.h"
 
 #define ACTION_NOT_ABLE  -100.0
-#define NO_ACTION -50.0
+#define NO_ACTION 0.0
 
 class q_learning
 {
@@ -39,9 +39,9 @@ public:
     int eGreedyPolicy(ct::newState s, float epsilon);
     float maxQValue(ct::newState s);
     ct::newState qUpdate(ct::newState s, float alpha, float gamma, float epsilon);
-    void doEpisode(ct::newState start, float alpha, float gamma, float epsilon);    
-    std::vector<int> getPath(ct::newState start);
-    float getTotalReward(ct::newState start);
+    int doEpisode(ct::newState start, float alpha, float gamma, float epsilon);
+    std::vector<int> getPath(ct::newState start, float alpha, float gamma, float epsilon);
+    float getTotalReward(std::vector<int> path);
 
 private:
     int findStateMatrixIndex(ct::newState s);

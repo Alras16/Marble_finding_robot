@@ -76,7 +76,7 @@ void q_learning::makeNewStateMatrix()
         {
             for (unsigned int state = 0; state < visitedRooms.size() + 1; state++)
             {
-                if ((tempMatrix[state][action] != ACTION_NOT_ABLE) && (tempMatrix[state][action] != NO_ACTION))
+                if ((tempMatrix[state][action] != ACTION_NOT_ABLE) && (state != action))
                 {
                     // reward will be placed
                     float punishment = tempMatrix[state][action];
@@ -286,7 +286,7 @@ ct::newState q_learning::qUpdate(ct::newState s, float alpha, float gamma, float
     return next;
 }
 
-void q_learning::doEpisode(ct::newState start, float alpha, float gamma, float epsilon)
+int q_learning::doEpisode(ct::newState start, float alpha, float gamma, float epsilon)
 {
     stateMatrix.clear();
     for (unsigned int room = 0; room < visitedRooms.size(); room++)
@@ -307,9 +307,10 @@ void q_learning::doEpisode(ct::newState start, float alpha, float gamma, float e
         index++;
     }
     std::cout << "  episode iteration number " << index << std::endl;
+    return index;
 }
 
-std::vector<int> q_learning::getPath(ct::newState start)
+std::vector<int> q_learning::getPath(ct::newState start, float alpha, float gamma, float epsilon)
 {
     stateMatrix.clear();
     for (unsigned int room = 0; room < visitedRooms.size(); room++)
@@ -324,11 +325,11 @@ std::vector<int> q_learning::getPath(ct::newState start)
 
     std::vector<int> path;
     path.push_back(s.RoomNumber);
-    int index = 1000;
+    int index = 5000;
     while (!isTerminal && index != 0)
     {
         index--;
-        s = qUpdate(s, 0.0, 1.0, 0.0);
+        s = qUpdate(s, alpha, gamma, epsilon);
         path.push_back(s.RoomNumber);
         if (s.isTerminal)
             isTerminal = true;
@@ -341,7 +342,7 @@ std::vector<int> q_learning::getPath(ct::newState start)
     return path;
 }
 
-float q_learning::getTotalReward(ct::newState start)
+float q_learning::getTotalReward(std::vector<int> path)
 {
     stateMatrix.clear();
     for (unsigned int room = 0; room < visitedRooms.size(); room++)
@@ -351,28 +352,26 @@ float q_learning::getTotalReward(ct::newState start)
     stateMatrixOrder.push_back(visitedRooms);
     makeNewStateMatrix();
 
-    bool isTerminal = false;
-    ct::newState s = start;
+    ct::newState s;
+    s.RoomNumber = path[0];
+    std::vector<bool> temp;
+    for (int i = 0; i < numbOfRooms; i++)
+        temp.push_back(false);
+
+    s.roomsVisited = temp;
+    s.isTerminal = false;
 
     float totalReward = 0.0;
-    int index = 1000;
-    while (!isTerminal && index != 0)
-    {
-        index--;
-        int a = eGreedyPolicy(s, 0.0);
-        float reward = getReward(s, a);
-        totalReward += reward;
-        s = getNextState(s, a);
 
+    for (unsigned int i = 1; i < path.size(); i++)
+    {
+        float reward = getReward(s,path[i]);
+        //std::cout << "reward " << reward << std::endl;
+        totalReward += reward;
+        s = getNextState(s, path[i]);
         if (s.RoomNumber != 0)
             s = visitRoom(s);
-
-        if (s.isTerminal)
-            isTerminal = true;
     }
-
-    if (index == 0)
-        totalReward -= 10000;
 
     return totalReward;
 }
