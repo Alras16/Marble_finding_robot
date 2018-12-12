@@ -1,7 +1,6 @@
 \documentclass[../Head/Main.tex]{subfiles}
 \begin{document}
-
-\subsubsection{Marble detection}
+\subsection{Tangent bug}
 
 
 

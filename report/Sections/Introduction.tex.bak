@@ -1,0 +1,29 @@
+\documentclass[../Head/Main.tex]{subfiles}
+\begin{document}
+\section{Introduction}
+
+
+\subsection{Problem statement}
+\subsubsection{Problems}
+The following problems are stated to better describe the focus points throughout the project.\todo{XXXX}
+\begin{enumerate}
+        \item How can an algorithm, which can find marbles in a closed map, be designed?
+        \item How can this algorithm be optimized, so the robot can find the ball faster, based on previous trails? 
+        \item How can marbles and obstacles be detected from lidar data?
+        \item How can marbles and obstacles be detected from camera data?
+        \item How can a Fuzzy-control algorithm be constructed?
+        \item How can computer vision be used to detect marbles and obstacles, and to construct the map? \todo[inline]{XXXX}
+\end{enumerate}
+\subsubsection{Limitations}
+The robot must be able to find marbles in a closed map and optimize itself based on previous trails. Thus the following limitations to the algorithms is listed: 
+\begin{enumerate}
+    \item To detect marbles and obstacles.
+    \item To construct a map.
+    \item To optimize for the shortest distance and time.
+\end{enumerate}
+QT Creator, Fuzzy Lite, Gazebo and Matlab will be used throughout the project.
+
+\subsection{Report structure}
+
+
+\end{document}

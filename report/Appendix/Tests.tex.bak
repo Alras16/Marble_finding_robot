@@ -4,7 +4,10 @@
 \section{Tests}
 \subfile{../Appendix/Tests_probability}
 \subfile{../Appendix/Tests_value_iteration}
+<<<<<<< HEAD
+=======
 \subfile{../Appendix/Tests_motion_planning}
+>>>>>>> origin
 
 
 
