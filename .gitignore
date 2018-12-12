@@ -4,6 +4,7 @@
 *.log
 *.bcf
 *.out
+*.bak
 *.xml
 *.gz
 *.toc

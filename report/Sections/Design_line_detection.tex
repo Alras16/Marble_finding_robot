@@ -46,8 +46,6 @@ The solution of this nonlinear equation system is determined to the following:
     \alpha &= \frac{1}{2}\arctan\left(\frac{-2\sum_{i=1}^{n}\left[\left(x_i-\overline{X}\right) - \left(y_i-\overline{Y}\right)\right]}{\sum_{i = 1}^{n}\left[\left(x_i-\overline{X}\right)^2 - \left(y_i-\overline{Y}\right)^2\right]}\right)
 \end{align}
 where $\overline{x}$ and $\overline{y}$ are the means of $x$ and $y$. \par
-
-
 As explained earlier, the two-wheeled robot should avoid obstacles (walls). To do so, the robot needs to know the location of the walls. It is done by processing the datapoints from the lidar scanner and determining the points which fits to a straight line using a line extraction algorithm. There are several different line extraction algorithms to choose from. The incremental line extraction algorithm is chosen, because it is simple to implement. The pseudo code for the incremental algorithm is shown below. \par
 \begin{Pseudo}{Incremental}{}
 	\begin{enumerate}
@@ -60,12 +58,36 @@ As explained earlier, the two-wheeled robot should avoid obstacles (walls). To d
 	\end{enumerate}
 \end{Pseudo}
 This algorithm implements the Total Least Square method then computing the line parameters. Furthermore, the line model consists of points, which all must comply some line conditions. In that case all points must comply these conditions. The first condition is a threshold for the angle between the previous and current line model as shown on figure xx. The threshold is defined to be the following:
+\\
+This algorithm implements the Total Least Square method then computing the line parameters. Furthermore, the line model consists of points, which all must comply some line conditions. In that case all points must comply these conditions. The first condition is a threshold for the angle between the previous and current line model as shown on figure \ref{fig:Line_model_angle}. The threshold is defined to be the following:
 \begin{align*}
 	\theta_{max} = 0,0025
 \end{align*}
-The second condition is the angle between two points relative to the robot location as shown on figure yx. This angle should be greater than this difference, but not twice as great, since this condition should separate the points into two lines, if one point is missing on the list as shown on figure yy. This angle is therefore defined to be the following:
+The second condition is the angle between two points relative to the robot location as shown on figure \ref{fig:Datapoints_angle}. This angle should be greater than this difference, but not twice as great, since this condition should separate the points into two lines, if one point is missing on the list as shown on figure \ref{fig:Line_separation}. This angle is therefore defined to be the following:
 \begin{align*}
 	\Delta\theta = \left(\theta_0 - \theta_1\right)\cdot 1,25
 \end{align*}
-{\color{red} Missing 3 figures} \par
+\begin{figure}[H]
+	\begin{subfigure}[b]{0.3\textwidth}
+		\centering
+		\subfile{../Figures/Angle_between_line_models}
+		\caption{Illustration of the angle between current line model (blue line) and previous line model (red line)}
+		\label{fig:Line_model_angle}
+  	\end{subfigure}
+  	\hfill
+  	\begin{subfigure}[b]{0.3\textwidth}
+  		\centering
+		\subfile{../Figures/Angle_between_two_points}
+		\caption{Illustration of the angle from horisontal to datapoint relative to the robot \\}
+		\label{fig:Datapoints_angle}
+	\end{subfigure}
+	\hfill
+	\begin{subfigure}[b]{0.3\textwidth}
+  		\centering
+		\subfile{../Figures/Separating_two_lines}
+		\caption{Illustration of the separation of to lines due to a missing datapoint \\}
+		\label{fig:Line_separation}
+	\end{subfigure}
+  	\caption{Illustration of the angle between two datapoints and two line models}
+\end{figure}
 \end{document}

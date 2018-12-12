@@ -2,6 +2,59 @@
 \begin{document}
 \subsection{Tangent bug}
 
+The tangent bug algorithm is a sensor based planer which relies on inputs from a sensor to determine whether it should continue towards a  specified location $q_{goal}$ or to follow an obstacle $O_i$ until a free path is available. The advantage of using this algorithm is the computational minimization and the fact that it only needs a start and end point. The reason for using this algorithm is the benefits just explained and that it will always try to achieve a shortest path solution to the goal location. Pseudo code for the implementation for the tangent bug algorithm is shown below.        
+
+\begin{Pseudo}{Tangent Bug Algorithm}{}
+	\begin{Indentation}
+		\item \textbf{Input:} A robot with a range sensor
+		\item \textbf{Output:} A path to the $q_{goal}$	or a conclusion no such path exist 
+		\begin{Indentation}
+		
+		\item \textbf{while} True \textbf{do}
+			
+			\begin{Indentation}
+			
+			\item \textbf{repeat}
+			
+				\begin{Indentation}
+
+				\item Continuously move toward the point \textit{n} $\epsilon$ $\left(T,~O_i\right)$ which minimizes $d(x,~n) + d \left(n,~q_{goal}\right)$
+				
+				\item \textbf{until}
+				\begin{itemize}
+					\item The goal is encountered \textbf{or}
+					\item The direction that minimizes ${d(x,n)}$ +d$\left(n,~q_{goal}\right)$ begins to increase d$\left(x,~q_{goal}\right)$ so the robot detects a local minimum d$\left(x,~O_i\right)$ + 
+					d$\left(O_i,~q_{goal}\right)$ on the boundary \textit{i}.
+					\item[ ]		
+				\end{itemize}
+				Now choose the boundary following direction which continuous in the same direction as the most recent motion-to-goal direction. 
+				
+				
+				\item \textbf{repeat}
+				\item Continuously update $d_{reach}$, $d_{followed}$ and $O_i$. 
+				\item Continuously moves toward n $\epsilon$ \{$O_i$\} that is the chosen boundary direction.  
+				
+				\item \textbf{until}
+				
+				\begin{itemize}
+				\item The goal is reached 
+				\item The robot completes a cycle around the obstacle in which case the goal cannot be reached. 
+				\item $d_{reach} < d_{followed}$
+				
+				\end{itemize}	
+														
+				\end{Indentation}			
+			
+			\end{Indentation}
+		\item \textbf{end while}
+		\end{Indentation}
+
+	\end{Indentation}
+	
+\end{Pseudo}
+
+It has been decided to make small changes to the algorithm and make it greedy. Instead of following the boundary $d_{reach} < d_{followed}$, the robot will follow that obstacle that minimizes ${d(x,n)}$ + d$\left(n,~q_{goal}\right)$. The reason for doing this is to reduce the path from a giving point to a target location.       
+
 
 
 \end{document}
