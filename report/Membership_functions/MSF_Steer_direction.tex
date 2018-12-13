@@ -1,0 +1,91 @@
+\documentclass[../Head/Main.tex]{subfiles}
+\begin{document}
+	\begin{tikzpicture}
+		\draw [->](6,-0.25)--(6,3) node[anchor = south]
+			{$\mu$};
+		\draw [->](-0.5,0)--(12.5,0) node[right]{$angle$};
+		\node[anchor = north] at (6,-0.25) {$0$};
+		
+		\node at (6,4.25) {\Large Steer Direction};
+		\node at (0.5,3) {\footnotesize SHARP};
+		\node at (0.5,2.75) {\footnotesize RIGHT};
+		
+		\node at (1.45,2.875) {\footnotesize RIGHT};
+		
+		\node at (2.35,3) {\footnotesize SOFT};
+		\node at (2.35,2.75) {\footnotesize RIGHT};
+		
+		\node at (11.5,3) {\footnotesize SHARP};
+		\node at (11.5,2.75) {\footnotesize LEFT};
+
+		\node at (10.55,2.85) {\footnotesize LEFT};		
+		
+		\node at (9.75,3) {\footnotesize SOFT};
+		\node at (9.75,2.75) {\footnotesize LEFT};
+		
+		\node at (6,3.7) {STRAIGHT};	
+		
+		\draw (0.5,0.125) -- (0.5,-0.125) 
+			node[anchor = north] {$-0.7$};
+		\draw[dashed] (0.5,0) -- (0.5,2.5); 
+			
+		\draw (11.5,0.125) -- (11.5,-0.125)
+			node[anchor = north] {$0.7$};
+		\draw[dashed] (11.5,0) -- (11.5,2.5);
+
+		\draw (2.85,0.125) -- (2.85,-0.125)
+			node[anchor = north] {$-0.9$};
+		
+		\draw (9.15,0.125) -- (9.15,-0.125)
+			node[anchor = north] {$0.9$};
+			
+		\draw (2.5,0.125) -- (2.5,-0.125) ++(0,-0.3)
+			node[anchor = north] {$-1$};
+			
+		\draw (9.5,0.125) -- (9.5,-0.125) ++(0,-0.3)
+			node[anchor = north] {$1$};
+
+		\draw (2.15,0.125) -- (2.15,-0.125)
+			node[anchor = north] {$-1.1$};
+		\draw[dashed] (2.15,0) -- (2.15,2.5);
+				
+		\draw (9.85,0.125) -- (9.85,-0.125)
+			node[anchor = north] {$1.1$};
+		\draw[dashed] (9.85,0) -- (9.85,2.5);
+		
+		\draw (1.45,0.125) -- (1.45,-0.125)
+			node[anchor = north] {$-1.3$};
+		\draw[dashed] (1.45,0) -- (1.45,2.5);		
+		
+		\draw (10.55,0.125) -- (10.55,-0.125)
+			node[anchor = north] {$1.3$};
+		\draw[dashed] (10.55,0) -- (10.55,2.5);					
+		
+		\draw (8.1,0.125) -- (8.1,-0.125)
+			node[anchor = north] {$-0.6$};
+			
+		\draw (3.9,0.125) -- (3.9,-0.125)
+			node[anchor = north] {$0.6$};	
+		
+		\draw[thick] (-0.25,2.5) -- (0.5,2.5);
+		\draw[thick] (11.5,2.5) -- (12.25,2.5);
+		
+		\draw[thick] (0.5,2.5) -- (2.5,0);
+		\draw[thick] (11.5,2.5) -- (9.5,0);
+		
+		\draw[thick] (8.1,0) -- (6,2.5);
+		\draw[thick] (3.9,0) -- (6,2.5);
+		
+		\draw[thick] (1.45,0) -- (2.15,2.5);
+		\draw[thick] (2.5,0) -- (1.45,2.5);
+		
+		\draw[thick] (9.5,0) -- (10.55,2.5);
+		\draw[thick] (10.55,0) -- (9.85,2.5);
+		
+		\draw[thick] (0.5,0) -- (1.45,2.5);
+		\draw[thick] (10.55,2.5) -- (11.5,0);
+		
+		\draw[thick] (2.15,2.5) -- (2.85,0);
+		\draw[thick] (9.15,0) -- (9.85,2.5);
+	\end{tikzpicture}
+\end{document}
