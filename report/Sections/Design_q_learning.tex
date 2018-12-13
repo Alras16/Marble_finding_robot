@@ -10,24 +10,7 @@ Q\left(S_t,A_t\right) \leftarrow Q\left(S_t,A_t\right) + \alpha\left[R_{t+1}+\ga
 \end{equation}
 The update function for Q-learning consists of the old value for a given state-action combination plus a scaled difference between the old value, the immediate reward and the maximal value for the next state. The learning rate are denoted $\alpha$ and ranging from 0-1 preferable closer to 0, in order to not to base the policy on this action only. $\gamma$ denotes the discount factor and are also ranging from 0-1, preferable closer to 1, to ensure that future actions matter.\par
 In the box below, the algorithm for Q-learning can be seen.
-\begin{Pseudo}{Q-learning}{}
-\begin{Indentation}
-    \item Algorithm parameters: step size: $\alpha\in$ [0,1], small  $\epsilon$ > 0 \vspace{-2pt}
-    \item Initialise $Q(s,a)$, for all $s\in S^{+}$, $a\in A(s)$, arbitrarily except that $Q(terminal,\dot)=0$
-    \item Loop for each episode: \vspace{-2pt}
-    \begin{Indentation}
-        \item Initialise $S$ \vspace{-2pt}
-        \item Loop for each step of episode: \vspace{-2pt}
-        \begin{Indentation}
-            \item Choose $A$ from $S$ using policy derived from $Q(e.g., \epsilon-greedy)$ \vspace{-2pt}
-            \item Take action $A$, observe $R$, $S^{'}$ \vspace{-1pt}
-            \item $Q(S,A) \leftarrow Q(S,A) + \alpha \left[R + \gamma \max\limits_{a} Q(S',a) - Q(S,A)\right]$
-            \item $S\leftarrow S^{'}$ \vspace{-2pt}
-        \end{Indentation}
-        \item until $S$ is terminal 
-    \end{Indentation}
-\end{Indentation}
-\end{Pseudo}
+\subfile{../Pseudo/Q-learning}
 \subsubsection{Definition of states}
 In order to perform Q-learning a definition of states must be made. These states must have the Markov property meaning that the probability of a marble being in a room must not depend on whether other rooms have been visited or not.\par 
 In order to achieve this, it have been chosen to implement a vector of boolean values, one element for each room. This will be used to store which rooms have been visited.\\
