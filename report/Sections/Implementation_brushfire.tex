@@ -1,7 +1,92 @@
 \documentclass[../Head/Main.tex]{subfiles}
 \begin{document}
-\subsection{Brushfire algorithm}
+\subsection{Model based planner}
 
+The implementation of the model based planner have been made from a set of key methods using qt-creator namely \textit{brushfireAlgorithm(int iterations}), \textit{findCornerPoints()}, \textit{findCenterPoints()}, \textit{findLinePoints()}, \textit{ConnectPoints()}, \textit{findPathPoints(Point curPos, Point goal)},\textit{ find(int x)}, \textit{unionSets(int V1, int V2)}, \textit{DFS(Point start, Point goal)} and \textit{getRoadPath()}.
+
+The method \textit{brusfireAlgorithm} takes and input as the number of iterations one wants to process. After doing so it is possible to get the pixels furthest away from an obstacle and thereby the center points of rooms and doors.   
+
+\begin{figure}[H]
+  \begin{subfigure}[b]{0.49\textwidth}
+    \centering
+    \includegraphics[width=0.9\textwidth]{Roadmaps/brushfire1}
+    \caption{Illustration of brushfire in use with 1 iteration}
+    \label{fig:Brushfire1}
+  \end{subfigure}
+  \hfill
+   \begin{subfigure}[b]{0.49\textwidth}
+    \centering
+    \includegraphics[width=0.9\textwidth]{Roadmaps/brushfire}
+    \caption{Illustration of brushfire in use with 13 iteration}
+    \label{fig:Brusfire2}
+  \end{subfigure}
+  \end{figure}
+  
+As seen in figure \ref{fig:Brushfire1} and figure \ref{fig:Brusfire2} the algorithm start by consuming all free pixels closest to the obstacle and iterate through the map. For visualization the pixels furthest away from the obstacle, which have been assigned a value, are pictured green and the once closest to an obstacle are red. This gives a map with connections between rooms. 
+  
+Now it is possible to find corner and center points via the newly created brushfire map. For this accomplish this two methods were used namely \textit{findCornerPoints} and \textit{findCenterPoints}. The idea here is the use a 4-point connectivity grid where each $pixel(i,j)$ value is compared to its neighbours. For instance if $pixel(i-1,j)$ equals $pixel(i+1,j)$ and the center point between them, $pixel(i,j)$, has a different value, it is considered to be a point on a line. The same thing goes for the horizontal case. To find corner points, the $pixel(i-1,j-1)$ must equal $pixel(i-1,j+1)$ and the point $pixel(i,j)$ must then be different from those two points. \par
+\subfile{../Pseudo/Find_center_points}      
+
+After completing this operation on the brushfire map it is possible to see corners and center lines in rooms as well as doors. This i visualized in figure \ref{fig:CornersAndCentersOfRoom}.
+  
+  \begin{figure}[H]
+   \begin{subfigure}[b]{0.49\textwidth}
+    \centering
+    \includegraphics[width=0.9\textwidth]{Roadmaps/RoadPoints1}
+    \caption{Illustration of findCornerPoints and centerPoints in use}
+    \label{fig:CornersAndCentersOfRoom}
+  \end{subfigure}
+  \hfill
+   \begin{subfigure}[b]{0.49\textwidth}
+    \centering
+    \includegraphics[width=0.9\textwidth]{Roadmaps/RoadPoints}
+    \caption{Illustration of findLinePoints in use}
+    \label{fig:LinePoints}
+  \end{subfigure}
+  \end{figure}
+
+It is quite interesting to see the amount of possible points that can be used to make connections between rooms after using the method just mentioned. Because the goal is to make full connections between all rooms, the vertical and horizontal lines on figure\ref{fig:CornersAndCentersOfRoom} is going to be taken into consideration as it will satisfy the objective of finding a path between all points without hitting an obstacle. The method findLinePoints was created to solve this task.\subfile{../Pseudo/Find_center_of_lines}A \textit{weight} is assigned to the list of points just found so one can distinguish the wanted points from others. It is worth noting that there are horizontal as well as vertical lines. This will lead to a set of lines points as shown in figure \ref{fig:LinePoints}. 
+
+Now in the creation of the road map every point is considered to be a vertex and a connection between two vertexes is an edge. Now the interesting part is to find out which vertexes that can be connected to one another without hitting an obstacle. Because all obstacles have been assigned the value of 1 it is possible to iterate through the map and see if $pixel(i,j) == 1$ is located somewhere on the edge between these two vertexes. If that is not the case, the edge is considered valid and saved as an edge and thereby a possible connection between two vertexes. This is done in the method \textit{connectPoints} \par
+\subfile{../Pseudo/Connected_vertexes} It is critical to point out that Kruskal's algorithm is used in this method as it is a big part of the procedure of connecting the vertexes by the shortest edge first (Kruskal's algorithm was discussed in the design phase of the model based planner). 
+
+  \begin{figure}[H]
+   \begin{subfigure}[b]{0.49\textwidth}
+    \centering
+    \includegraphics[width=0.9\textwidth]{Roadmaps/RoadMap1}
+    \caption{Illustration of the vertexes on the map}
+    \label{fig:Vertexes}
+  \end{subfigure}
+  \hfill
+   \begin{subfigure}[b]{0.49\textwidth}
+    \centering
+    \includegraphics[width=0.9\textwidth]{Roadmaps/RoadMap}
+    \caption{Illustration of the connected map between vertexes via edges}
+    \label{fig:VertexesAndEdges}
+  \end{subfigure}
+  \end{figure}  
+  
+One can see all the vertexes in figure \ref{fig:Vertexes} and there connections to one another after using the method \textit{connectPoints} in figure \ref{fig:VertexesAndEdges}. Notice that the edges between vertexes do not contain any cycles which is one of the big advantages of using Kruskal's algorithm and thereby making it easier to make a path between vertexes.  
+
+Now the method \textit{findPathPoints} can be used to generate a map from an initial position to a target location giving the two points as parameters.   
+
+  \begin{figure}[H]
+   \begin{subfigure}[b]{0.49\textwidth}
+    \centering
+    \includegraphics[width=0.9\textwidth]{KruskalsAndDFSTest/Pathtest1}
+    \caption{Illustration of a path between 3 edges}
+    \label{fig:Vertexes}
+  \end{subfigure}
+  \hfill
+   \begin{subfigure}[b]{0.49\textwidth}
+    \centering
+    \includegraphics[width=0.9\textwidth]{KruskalsAndDFSTest/Pathtest3}
+    \caption{Illustration of a path between 16 edges}
+    \label{fig:VertexesAndEdges}
+  \end{subfigure}
+  \end{figure}  
+
+    
 
 
 \end{document}

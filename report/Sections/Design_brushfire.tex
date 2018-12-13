@@ -1,7 +1,7 @@
 \documentclass[../Head/Main.tex]{subfiles}
 \begin{document}
 
-\subsection{Model based planer}
+\subsection{Model based planner}
 The brushfire algorithm uses a grid to approximate distance to obstacles. The idea is to give obstacles a starting value of 1 and free-space pixels a value of 0. Then continue until the $'fire'$ has consumed all free pixels thereby giving pixels furthest away from obstacles the highest value. It was decided to use a eight-point connectivity grid. Pseudo code for the implementation of the brushfire algorithm is giving below. \par
 \subfile{../Pseudo/Brushfire_algorithm}
 The reason for choosing this algorithm is that it gives a set of values to the pixels furthest away from the obstacles, which can be used to generate a path for the robot by picking out the pixels that leads to a complete road map for the robot to navigate through the entire map. \par
