@@ -2,6 +2,44 @@
 \begin{document}
 
 \subsubsection{Marble detection}
+The objective for the two-wheeled robot is to collect marbles effectively, while avoiding obstacles such as walls. 
+The Hough transform is a algorithm, that maps from image space to the probability of the existence of features such as lines, circles or other general shapes. The algorithm is also capable of detecting partial object as in the case of the lidar scanner. \\
+However the algorithm are not very robust to noise, and can be very hard to calibrate in order to make the result from the algorithm useful. Furthermore the algorithm have a high computational cost.\par 
+Because of this, it have been chosen to design a simpler method for finding marbles in the lidar data.\\
+Due to the fact that only a part of the circles would be visible from the data, it was chosen to calculate the center and radius of the circles from the chord and arch height of the circles. This can be used to determine the location of the marbles relative to the robot. Given this information the planner would be able to drive towards the marbles and "collect" them. \\
+It is assumed that the two detected outer points on the circle periphery defines the circle chord. It is also assumed that the orthogonal distance from the detected middle point on the circle periphery to the circle chord defines the circle arch height. This only applies for an uneven number of detected point.\\
+The circle chord can be determined using the formula:
+\begin{align*}
+	C = 2r\cdot\sin\left(\frac{\theta}{2}\right)
+\end{align*}
+The circle camber can be determined using the formula:
+\begin{align*}
+	h = r\left(1-\cos\left(\frac{\theta}{2}\right)\right)
+\end{align*}
+Solving this equation system, the circle radius was found to be:
+\begin{align*}
+	r = \frac{K^2+4h^2}{8h}
+\end{align*}
+The polar coordinates of the circle center can be found by adding the radius to the range of the detected middle point.
+
+\begin{figure}[H]
+	\begin{subfigure}[b]{0.49\textwidth}
+		\centering
+		\subfile{../Figures/Lidar_marble_detection}
+		\caption{Illustration of circle chord and arch heigh can be found from the lidar data}
+		\label{fig:lidar_marble_detec}
+  	\end{subfigure}
+  	\hfill
+  	\begin{subfigure}[b]{0.49\textwidth}
+		\centering
+		\subfile{../Figures/Scaled_circle_marble_detection}
+		\caption{Illustration of the angle between current line model (blue line) and previous line model (red line)}
+		\label{fig:lidar_marble_scaled}
+  	\end{subfigure}
+  	\caption{gegegegeger egeg gege}
+  	\label{fig:lidar_marble}
+\end{figure}
+
 
 
 \end{document}
