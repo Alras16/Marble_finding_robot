@@ -10,8 +10,6 @@ int main(int _argc, char **_argv)
     float scalingDistance = 1.2;
     int numberOfTests = 5;
     int numberOfRuns = 10;
-    std::vector<int> numberOfEpisodes = {2000};
-    int numberOfSamples = 10;
 
     float alpha = 0.025;
     float gamma = 0.99;
@@ -69,79 +67,41 @@ int main(int _argc, char **_argv)
         if (averageProbability[room] > max)
             max = averageProbability[room];
 
-    std::vector<float> rewards;
-    std::vector<float> iterations;
-    std::vector<std::vector<int>> paths;
-    for (unsigned int variable = 0; variable < numberOfEpisodes.size(); variable++)
+    q_learning QL(numberOfRooms);
+    // Set distance punishments
+    QL.setDistancePunishment(start, room5, 0*scalingDistance); // which room to start in
+    QL.setDistancePunishment(room1, room2, -1.39*scalingDistance);
+    QL.setDistancePunishment(room2, room3, -2.16*scalingDistance);
+    QL.setDistancePunishment(room3, room4, -1.94*scalingDistance);
+    QL.setDistancePunishment(room3, room5, -2.12*scalingDistance);
+
+    for (int room = 0; room < numberOfRooms; room++)
     {
-        float totalReward = 0.0;
-        float totalNumbIterations = 0.0;
-        for (int test = 0; test < numberOfSamples; test++)
-        {
-            q_learning QL(numberOfRooms);
-            // Set distance punishments
-            QL.setDistancePunishment(start, room2, 0*scalingDistance); // which room to start in
-            QL.setDistancePunishment(room1, room2, -1.39*scalingDistance);
-            QL.setDistancePunishment(room2, room3, -2.16*scalingDistance);
-            QL.setDistancePunishment(room3, room4, -1.94*scalingDistance);
-            QL.setDistancePunishment(room3, room5, -2.12*scalingDistance);
-
-            for (int room = 0; room < numberOfRooms; room++)
-            {
-                std::cout << "Reward for entering room " << room + 1 << ": " << (averageProbability[room] / max)*scalingReward << std::endl;
-                QL.setReward(room + 1, (averageProbability[room] / max)*scalingReward);
-            }
-            std::cout << std::endl;
-
-            // Do estimation episodes
-            for (int episode = 0; episode < numberOfEpisodes[variable]; episode++)
-            {
-                std::cout << "episode number " << episode << std::endl;
-                totalNumbIterations += QL.doEpisode(start, alpha, gamma, epsilon);
-                std::cout << std::endl;
-            }
-            //QL.printStateMatrix();
-            //QL.printQMatrix();
-
-            std::vector<int> path = QL.getPath(start, alpha, gamma, epsilon);
-            paths.push_back(path);
-            //for (unsigned int i = 0; i < path.size(); i++)
-                //std::cout << "Path next state: " << path[i] << std::endl;
-
-            std::cout << std::endl;
-            float reward = QL.getTotalReward(path);
-            totalReward += reward;
-            std::cout << "total reward: " << reward << std::endl;
-
-        }
-
-        std::cout << std::endl;
-        std::cout << "number of episodes: " << numberOfEpisodes[variable] << std::endl;
-        std::cout << "average reward: " << totalReward / numberOfSamples << std::endl;
-        rewards.push_back(totalReward / numberOfSamples);
-        totalNumbIterations /= (numberOfEpisodes[variable] * numberOfSamples);
-        std::cout << "average number of iterations: " << totalNumbIterations << std::endl;
-        iterations.push_back(totalNumbIterations);
+        std::cout << "Reward for entering room " << room + 1 << ": " << (averageProbability[room] / max)*scalingReward << std::endl;
+        QL.setReward(room + 1, (averageProbability[room] / max)*scalingReward);
     }
-    std::cout << std::endl;
-    std::cout << "Data:" << std::endl;
-    for (unsigned int i = 0; i < paths.size(); i++)
+
+    std::vector<std::vector<int>> path = {
+        {0,5,3,2,1,2,3,4},
+        {0,5,3,2,1,2,3,4},
+        {0,5,3,5,5,3,4,3,2,1},
+        {0,5,3,2,1,2,3,4},
+        {0,5,3,2,1,2,3,4},
+        {0,5,3,2,1,1,2,3,2,3,4},
+        {0,5,3,2,1,2,3,4},
+        {0,5,3,4,3,2,1},
+        {0,5,3,4,3,2,1},
+        {0,5,3,4,3,2,1}
+    };
+    float average_reward = 0.0;
+
+    for (unsigned int i = 0; i < path.size(); i++)
     {
-        for (unsigned int j = 0; j < paths[i].size(); j++)
-        {
-            std::cout << paths[i][j];
-            if (j != paths[i].size() - 1)
-                std::cout << ";";
-        }
-        std::cout << std::endl;
+        float reward = QL.getTotalReward(path[i]);
+        average_reward += reward;
+        std::cout << reward << std::endl;
     }
-    //iterations[0] = 0;
-    for (unsigned int i = 0; i < rewards.size(); i++)
-    {
-        std::cout << numberOfEpisodes[i] << ";";
-        std::cout << rewards[i] << ";";
-        std::cout << round(iterations[i]);
-        std::cout << std::endl;
-    }
+    std::cout << average_reward / path.size() << std::endl;
+
     while (true);
 }
