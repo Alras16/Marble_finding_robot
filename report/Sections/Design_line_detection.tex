@@ -47,16 +47,7 @@ The solution of this nonlinear equation system is determined to the following:
 \end{align}
 where $\overline{x}$ and $\overline{y}$ are the means of $x$ and $y$. \par
 As explained earlier, the two-wheeled robot should avoid obstacles (walls). To do so, the robot needs to know the location of the walls. It is done by processing the datapoints from the lidar scanner and determining the points which fits to a straight line using a line extraction algorithm. There are several different line extraction algorithms to choose from. The incremental line extraction algorithm is chosen, because it is simple to implement. The pseudo code for the incremental algorithm is shown below. \par
-\begin{Pseudo}{Incremental}{}
-	\begin{enumerate}
-		\item Start by the first 2 points, construct a 				line
-		\item Add the next point to the current line model
-		\item Recompute the line parameters
-		\item If it satisfies line condition (go to 2)
-		\item Otherwise, put back the last point, 					recompute the line parameters, return the line
-		\item Continue to the next 2 points, go to 2
-	\end{enumerate}
-\end{Pseudo}
+\subfile{../Pseudo/Incremental}
 This algorithm implements the Total Least Square method then computing the line parameters. Furthermore, the line model consists of points, which all must comply some line conditions. In that case all points must comply these conditions. The first condition is a threshold for the angle between the previous and current line model as shown on figure \ref{fig:Line_model_angle}. The threshold is defined to be the following:
 \begin{align*}
 	\theta_{max} = 0,0025
@@ -65,27 +56,5 @@ The second condition is the angle between two points relative to the robot locat
 \begin{align*}
 	\Delta\theta = \left(\theta_0 - \theta_1\right)\cdot 1,25
 \end{align*}
-\begin{figure}[H]
-	\begin{subfigure}[b]{0.3\textwidth}
-		\centering
-		\subfile{../Figures/Angle_between_line_models}
-		\caption{Illustration of the angle between current line model (blue line) and previous line model (red line)}
-		\label{fig:Line_model_angle}
-  	\end{subfigure}
-  	\hfill
-  	\begin{subfigure}[b]{0.3\textwidth}
-  		\centering
-		\subfile{../Figures/Angle_between_two_points}
-		\caption{Illustration of the angle from horisontal to datapoint relative to the robot \\}
-		\label{fig:Datapoints_angle}
-	\end{subfigure}
-	\hfill
-	\begin{subfigure}[b]{0.3\textwidth}
-  		\centering
-		\subfile{../Figures/Separating_two_lines}
-		\caption{Illustration of the separation of to lines due to a missing datapoint \\}
-		\label{fig:Line_separation}
-	\end{subfigure}
-  	\caption{Illustration of the angle between two datapoints and two line models}
-\end{figure}
+\subfile{../Figures/Visualisation_of_line_conditions}
 \end{document}
