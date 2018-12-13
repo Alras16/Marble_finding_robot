@@ -10,11 +10,11 @@ int main(int _argc, char **_argv)
     float scalingDistance = 1.2;
     int numberOfTests = 5;
     int numberOfRuns = 10;
-    std::vector<int> numberOfEpisodes = {0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,25,30,35,40,45,50,60,70,80,90,100,125,150,175,200,250,300,350,400,450,500,600,700,800,900,1000};
-    int numberOfSamples = 100;
+    std::vector<int> numberOfEpisodes = {2000};
+    int numberOfSamples = 10;
 
     float alpha = 0.025;
-    float gamma = 0.95;
+    float gamma = 0.99;
     float epsilon = 0.05;
 
     // Init base states
@@ -71,6 +71,7 @@ int main(int _argc, char **_argv)
 
     std::vector<float> rewards;
     std::vector<float> iterations;
+    std::vector<std::vector<int>> paths;
     for (unsigned int variable = 0; variable < numberOfEpisodes.size(); variable++)
     {
         float totalReward = 0.0;
@@ -79,7 +80,7 @@ int main(int _argc, char **_argv)
         {
             q_learning QL(numberOfRooms);
             // Set distance punishments
-            QL.setDistancePunishment(start, room3, 0*scalingDistance); // which room to start in
+            QL.setDistancePunishment(start, room2, 0*scalingDistance); // which room to start in
             QL.setDistancePunishment(room1, room2, -1.39*scalingDistance);
             QL.setDistancePunishment(room2, room3, -2.16*scalingDistance);
             QL.setDistancePunishment(room3, room4, -1.94*scalingDistance);
@@ -103,6 +104,7 @@ int main(int _argc, char **_argv)
             //QL.printQMatrix();
 
             std::vector<int> path = QL.getPath(start, alpha, gamma, epsilon);
+            paths.push_back(path);
             //for (unsigned int i = 0; i < path.size(); i++)
                 //std::cout << "Path next state: " << path[i] << std::endl;
 
@@ -121,8 +123,19 @@ int main(int _argc, char **_argv)
         std::cout << "average number of iterations: " << totalNumbIterations << std::endl;
         iterations.push_back(totalNumbIterations);
     }
-
-    iterations[0] = 0;
+    std::cout << std::endl;
+    std::cout << "Data:" << std::endl;
+    for (unsigned int i = 0; i < paths.size(); i++)
+    {
+        for (unsigned int j = 0; j < paths[i].size(); j++)
+        {
+            std::cout << paths[i][j];
+            if (j != paths[i].size() - 1)
+                std::cout << ";";
+        }
+        std::cout << std::endl;
+    }
+    //iterations[0] = 0;
     for (unsigned int i = 0; i < rewards.size(); i++)
     {
         std::cout << numberOfEpisodes[i] << ";";
@@ -130,4 +143,5 @@ int main(int _argc, char **_argv)
         std::cout << round(iterations[i]);
         std::cout << std::endl;
     }
+    while (true);
 }

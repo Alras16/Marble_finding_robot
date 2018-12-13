@@ -1,0 +1,32 @@
+\documentclass[../Head/Main.tex]{subfiles}
+\begin{document}
+\begin{Pseudo}{Brushfire algorithm}{}
+
+	\textbf{while} True \textbf{do}
+	
+
+	\begin{Indentation}
+	\item \textit{label}++
+	\begin{Indentation}
+
+	\item for all \textit{i} hight of image 
+	\begin{Indentation}
+	\item for all \textit{j} width of image 
+	\item if adjacent pixel values to image($i, j $) is \textit{label} $\&$ image($i, j$) is 0 set image($i, j $) to \textit{label} + 1	
+	
+	\end{Indentation}
+	
+	\item \textbf{until}
+				
+	\begin{itemize}
+	\item All pixels have an assigned value 
+	\end{itemize}
+
+	\end{Indentation}
+	
+	 \item end \textbf{while}
+
+	\end{Indentation}
+	
+\end{Pseudo}
+\end{document}

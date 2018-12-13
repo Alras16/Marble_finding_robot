@@ -1,0 +1,30 @@
+\documentclass[../Head/Main.tex]{subfiles}
+\begin{document}
+\begin{Pseudo}{DFS extended}{}
+
+\textbf{Input:} Start and target location 
+
+\textbf{Output:} Vector of vertexes in order
+
+
+	\begin{Indentation}
+		\item push \textit{start} on vector 
+		\item mark \textit{start} as \textit{visited} 
+		\item[ ] 
+		\item \textbf{if} $\textit{start}==\textit{target}$
+		\item return vector
+		\item[ ]
+	\item \textbf{for} all vertexes \textit{adjacent} to start
+	\item \textbf{if} $\textit{adjacent}==\textit{target}$
+		\item push \textit{adjacent} on vector 
+		\item return vector
+		\item[ ]
+	\item \textbf{else if} $\textit{adjacent}\neq\textit{visited}$
+	\item DFS(\textit{adjacent},\textit{target})
+	\item pop last element from vector 
+
+	\end{Indentation}
+	
+	
+\end{Pseudo} 
+\end{document}

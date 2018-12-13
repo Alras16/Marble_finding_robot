@@ -1,0 +1,21 @@
+\documentclass[../Head/Main.tex]{subfiles}
+\begin{document}
+\begin{Pseudo}{Adjacent vertexes}{}
+
+ 
+ 	\textbf{for} all \textit{vertexes}
+	\begin{Indentation}
+		\item 
+	\begin{Indentation}
+	\item \textbf{for} all \textit{edges}
+	\item \textbf{if} \textit{vertex} == edge.\textbf{\textit{V1}}
+		\item push edge.\textbf{\textit{V2}} to vector of vectors
+	\item \textbf{else if} \textit{vertex} == edge.\textbf{\textit{V2}}
+		\item push edge.\textbf{\textit{V1}} to vector of vectors
+
+	\end{Indentation}
+	
+	\end{Indentation}
+
+\end{Pseudo} 
+\end{document}
