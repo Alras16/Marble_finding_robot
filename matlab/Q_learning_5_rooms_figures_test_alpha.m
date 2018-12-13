@@ -88,7 +88,7 @@ ylabel('Average number of iterations pr. episode');
 %% Figure 3: Average Number of iterations pr. episode
 f1 = figure;
 hold on;
-title('Q-learning 5 rooms test on alpha: Average / Iteration');
+title('Q-learning 5 rooms test on alpha: Reward / Iteration');
 plot(x,ar_1./ai_1,'--');
 plot(x,ar_2./ai_2,'-');
 plot(x,ar_3./ai_3,'-.');

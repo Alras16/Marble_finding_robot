@@ -12,25 +12,8 @@ Now the script scales the world from mm to m, which means that the range of the 
 The lidar scanner maps the surrounding environment by collecting 200 datapoint, which must be processed in order to recognize objects such as walls and marbles. This means that circle and line detecting algorithms must be writing. \par
 The datapoints from the lidar scanner is first visualized by drawing white lines from the robot’s location to each of the 200 datapoints using the \texttt{cv::line()} function as shown on figure \ref{fig:white_lines}. Afterwards the datapoints are sorted by checking if the range is equal to max detecting range in order to get the points, that reflects from different object.\par
 The filtered datapoints are drawn as lines upon the unsorted data. These lines can be distinguished by different blue colours depending on the range between the two points ranging from blue to cyan. This blue coloured and white lines are shown on figure \ref{fig:blue_lines}.
-
-\begin{figure}[H]
-  \begin{subfigure}[b]{0.49\textwidth}
-    \centering
-    \includegraphics[width=0.5\textwidth]{lidar_test_Two_v1}
-    \caption{Illustration of the unfiltered data}
-    \label{fig:white_lines}
-  \end{subfigure}
-  \hfill
-  \begin{subfigure}[b]{0.49\textwidth}
-  	\centering
-    \includegraphics[width=0.5\textwidth]{lidar_test_Two_v2}
-    \caption{Illustration of the filtered data}
-    \label{fig:blue_lines}
-  \end{subfigure}
-  \caption{Illustration of the unfiltered and filtered data}
-\end{figure}
+\subfile{../Figures/Visualisation_of_lidar_data}
 The two sections below, describes the design of a line and a marble detection algorithm.
 \subfile{../Sections/Design_line_detection}
 \subfile{../Sections/Design_marble_detection}
-
 \end{document}
