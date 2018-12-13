@@ -3,23 +3,16 @@
 \subsection{The impact of $\alpha$ on Q-learning performance}
 The purpose of this test is to show how different values of $\alpha$ influences the performance of Q-learning.
 \subsubsection{Description of test}
-This test was done by performing 100 trials of each selected value of $\alpha$ for a range of episodes. The test was conducted using the world "5-room world" seen on figure \ref{fig:5_room_world_1}.\\
+This test was done by performing 100 trials of each selected value of $\alpha$ for a range of episodes. The test was conducted using the world "5-room world" seen on figure \ref{fig:5_room_world_alpha}.\\
 The distance punishments are bases on those found in the test in appendix \ref{subsec:est_path_length}. The distance punishments was scaled with a factor of 1.2 to make the distance a bigger factor in final path.\\
 The probabilities used for each room was found in the test in appendix \ref{subsec:probability_test}. These probabilities was divided by the maximal value and scaled by a factor of 20. This was done to ensure that the total reward for entering a room the first time would be positive.\par 
 The initial state for all tests was set to room 3 in order to ensure greatest number of possible paths.
 
 \begin{figure}[H]
 	\centering
-		\begin{tikzpicture}
-		\node[anchor=south west, inner sep=0] (image) at (0,0) {\includegraphics[width=0.65\textwidth]{map_5_rooms}};
-		\node[align=center, black, font={\large}] at (1.25,3.25) {Room 1};
-		\node[align=center, black, font={\large}] at (2,1.25) {Room 2};
-		\node[align=center, black, font={\large}] at (5.45,2.25) {Room 3};
-		\node[align=center, black, font={\large}] at (9,3) {Room 4};
-		\node[align=center, black, font={\large}] at (9,0.9) {Room 5};
-		\end{tikzpicture}		
+	\subfile{../Figures/Map_5_rooms}	
 	\caption{Illustration of "5-room world"}
-	\label{fig:5_room_world_1}
+	\label{fig:5_room_world_alpha}
 \end{figure}
 
 \subsubsection{Test parameters}
@@ -81,14 +74,14 @@ On figure \ref{fig:q-learn_alpha_iterations} the average number of iterations pe
 	\centering
 	\begin{subfigure}[b]{0.49\textwidth}
 		\centering
-		\includegraphics[width=\textwidth]{q_learning_5_rooms_test_alpha_average_reward}
+		\includegraphics[width=\textwidth]{MatlabPlots/q_learning_5_rooms_test_alpha_average_reward}
 		\caption{Plot of how the average reward develops as a function of the number of episodes for each value of $\epsilon$}
 		\label{fig:q-learn_alpha_reward}
 	\end{subfigure}
 	\hfill
 	\begin{subfigure}[b]{0.49\textwidth}
 		\centering
-		\includegraphics[width=\textwidth]{q_learning_5_rooms_test_alpha_average_iterations}
+		\includegraphics[width=\textwidth]{MatlabPlots/q_learning_5_rooms_test_alpha_average_iterations}
 		\caption{Plot of how the average number of episodes develops as a function of the number of episodes for each value of $\alpha$}
 		\label{fig:q-learn_alpha_iterations}
 	\end{subfigure}

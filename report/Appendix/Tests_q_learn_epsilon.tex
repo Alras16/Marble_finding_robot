@@ -3,11 +3,16 @@
 \subsection{The impact of $\epsilon$ on Q-learning performance}
 The purpose of this test is to show how different values of $\epsilon$ influences the performance of Q-learning.
 \subsubsection{Description of test}
-This test was done by performing 100 trials of each selected value of $\epsilon$ for a range of episodes. The test was conducted using the world "5-room world" seen on figure \ref{fig:5_room_world}.\\
+This test was done by performing 100 trials of each selected value of $\epsilon$ for a range of episodes. The test was conducted using the world "5-room world" seen on figure \ref{fig:5_room_world_epsilon}.\\
 The distance punishments are bases on those found in the test in appendix \ref{subsec:est_path_length}. The distance punishments was scaled with a factor of 1.2 to make the distance a bigger factor in final path.\\
 The probabilities used for each room was found in the test in appendix \ref{subsec:probability_test}. These probabilities was divided by the maximal value and scaled by a factor of 20. This was done to ensure that the total reward for entering a room the first time would be positive.\par 
 The initial state for all tests was set to room 3 in order to ensure greatest number of possible paths.
-\subfile{../Figures/Map_5_rooms}
+\begin{figure}[H]
+	\centering
+	\subfile{../Figures/Map_5_rooms}	
+	\caption{Illustration of "5-room world"}
+	\label{fig:5_room_world_epsilon}
+\end{figure}
 
 \subsubsection{Test parameters}
 In the following tables, the parameters for the test can be seen. In order not to make the agent act completely randomly, it have been chosen to make the test on values of $\epsilon$ between 0.01 and 0.5.\\
