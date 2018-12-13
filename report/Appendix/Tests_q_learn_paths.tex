@@ -1,0 +1,113 @@
+\documentclass[../Head/Main.tex]{subfiles}
+\begin{document}
+\subsection{Best path based on Q-learning}
+The purpose of this test was to find the optimal path for covering 5-room world in the best possible way
+\subsubsection{Description of test}
+This test consisted of 5 subtest, where each test was started in different rooms. This was to find out, which room was the most optimal to start in. Each subtest consisted of 10 trials, where all parameters where the same.\\
+The test was conducted using the world "5-room world" seen on figure \ref{fig:5_room_world_path}.\\
+The distance punishments are bases on those found in the test in appendix \ref{subsec:est_path_length}. The distance punishments was scaled with a factor of 1.2 to make the distance a bigger factor in final path.\\
+The probabilities used for each room was found in the test in appendix \ref{subsec:probability_test}. These probabilities was divided by the maximal value and scaled by a factor of 20. This was done to ensure that the total reward for entering a room the first time would be positive.\\
+All tests ran for 2000 episodes, with $\epsilon$ varying from 0.5 to 0.05. $\epsilon$ was started on 0.5 and reduced by 0.05 for each 200 episodes, enabling the algorithm to make larger learning steps in the beginning.  
+\begin{figure}[H]
+	\centering
+	\subfile{../Figures/Map_5_rooms}	
+	\caption{Illustration of "5-room world"}
+	\label{fig:5_room_world_path}
+\end{figure}
+
+\subsubsection{Test parameters}
+In the following tables, the parameters for the test can be seen.\\
+\begin{minipage}[c]{0.69\textwidth}
+	\begin{tabular}{l r}
+	- World used                   & 5-room world\\
+	- Probabilities based on       & 50 tests\\	
+	- Number of tests              & 10\\
+	- Scaling factor distance      & 1.2\\
+	- Scaling factor reward        & 20\\
+	- Randomness factor $\epsilon$ & 0.5, 0.45, 0.4, 0.35, 0.3, 0.25, 0.2, 0.15, 0.1, 0.05\\
+	- Learning rate $\alpha$       & 0.025\\
+	- Discount factor $\gamma$     & 0.99\\
+	\end{tabular}
+\end{minipage}
+\hfill
+\begin{minipage}[c]{0.3\textwidth}
+	\begin{table}[H]
+	\centering
+	\begin{tabular}{l r}
+		\hline
+		\multicolumn{2}{l}{\textbf{Distance punishments}}\\ 			\hline
+		Start to room 3   & 0\\
+		Room 1 to room 2  & -1.668\\
+		Room 2 to room 3  & -2.592\\
+		Room 3 to room 4  & -2.328\\
+		Room 3 to room 5  & -2.544\\
+		\hline
+	\end{tabular}
+	\caption{Table of the distance punishments. The distances are found in the test in appendix \ref{subsec:est_path_length}}
+	\label{tab:distance_punishment_5_rooms_2}
+\end{table}
+\end{minipage}
+
+\clearpage
+\subsubsection{Data}
+In the following tables, the result from those tests can be seen. Looking at the average reward from those 5 tests, it can be seen that the best average was achieved in the test starting in room 1. The best case was found to be was found to be both start in room 1 and 5.\\
+\begin{minipage}[c]{0.49\textwidth}
+	\begin{table}[H]
+		\centering
+		\subfile{../Tables/q_learn_path_room_1}
+		\caption{All 10 paths from test started in room 1}
+		\vspace{-10pt}
+		\label{tab:test_room_1}
+	\end{table}
+\end{minipage}
+\hfill
+\begin{minipage}[c]{0.49\textwidth}
+	\begin{table}[H]
+		\centering
+		\subfile{../Tables/q_learn_path_room_2}
+		\caption{All 10 paths from test started in room 2}
+		\vspace{-10pt}
+		\label{tab:test_room_2}
+	\end{table}
+\end{minipage}
+
+\begin{minipage}[c]{0.49\textwidth}
+	\begin{table}[H]
+		\centering
+		\subfile{../Tables/q_learn_path_room_3}
+		\caption{All 10 paths from test started in room 3}
+		\label{tab:test_room_3}
+	\end{table}
+\end{minipage}
+\hfill
+\begin{minipage}[c]{0.49\textwidth}
+	\begin{table}[H]
+		\centering
+		\subfile{../Tables/q_learn_path_room_4}
+		\caption{All 10 paths from test started in room 4}
+		\label{tab:test_room_4}
+	\end{table}
+\end{minipage} 
+
+\begin{table}[H]
+	\centering
+	\subfile{../Tables/q_learn_path_room_5}
+	\caption{All 10 paths from test started in room 5}
+	\label{tab:test_room_5}
+\end{table}
+
+\subsubsection{Conclusion}
+It can be concluded that the best average reward was found in the test starting in room 1. It can also be concluded that the best path overall was found in either room 1 or 5, where the best case in both tests had the same reward.\\
+The best path was found to be either of the following two.\par 
+\begin{minipage}[b]{\textwidth}
+	\centering
+	\begin{tabular}{r l r}
+	\hline
+	\multicolumn{1}{l}{\textbf{Initial room}} & \textbf{Path} & \textbf{Reward} \\ 			\hline
+	1  & 0, 1, 2, 3, 5, 3, 4  & 44.4681\\
+	5  & 0, 5, 3, 4, 3, 2, 1  & 44.4681\\
+	\hline
+\end{tabular}
+\end{minipage}
+
+\end{document}
