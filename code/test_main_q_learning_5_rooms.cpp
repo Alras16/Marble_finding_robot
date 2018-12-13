@@ -13,7 +13,7 @@ int main(int _argc, char **_argv)
     std::vector<int> numberOfEpisodes = {0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,25,30,35,40,45,50,60,70,80,90,100,125,150,175,200,250,300,350,400,450,500,600,700,800,900,1000};
     int numberOfSamples = 100;
 
-    float alpha = 0.4;
+    float alpha = 0.025;
     float gamma = 0.9;
     float epsilon = 0.05;
 
