@@ -26,7 +26,7 @@ int main(int _argc, char **_argv)
 
     std::string test_name = "camera_hls_histogram_6";
     filePath = path.path().toStdString() + "/test_files/camera_screenshots//" + test_name + ".png";
-    cv::imwrite(filePath,im);
+    //cv::imwrite(filePath,im);
 
     cv::waitKey(0);
 
