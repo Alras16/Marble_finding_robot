@@ -148,7 +148,7 @@ void lidar_sensor::visualize_lidar(std::string name)
     compression_param.push_back(CV_IMWRITE_PNG_COMPRESSION);
     compression_param.push_back(9);
 
-    cv::imwrite(filePath, im, compression_param);
+    //cv::imwrite(filePath, im, compression_param);
     cv::imshow(name, im);
 }
 
