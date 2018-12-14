@@ -18,11 +18,13 @@ int main(int _argc, char **_argv)
     camera.set_image(image);
     camera.find_color();
 
-    cv::Mat im = camera.getImage();
+    //cv::Mat im = camera.getImage();
+    cv::Mat im = camera.hls_histogram();
 
-    cv::imshow("image",im);
+    //cv::imshow("image",im);
 
-    std::string test_name = "camera_test_find_colour_6";
+
+    std::string test_name = "camera_hls_histogram_6";
     filePath = path.path().toStdString() + "/test_files/camera_screenshots//" + test_name + ".png";
     cv::imwrite(filePath,im);
 
