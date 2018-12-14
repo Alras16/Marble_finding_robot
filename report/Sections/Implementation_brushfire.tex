@@ -2,9 +2,9 @@
 \begin{document}
 \subsection{Model based planner}
 
-The implementation of the model based planner have been made from a set of key methods using qt-creator namely \textit{brushfireAlgorithm(int iterations}), \textit{findCornerPoints()}, \textit{findCenterPoints()}, \textit{findLinePoints()}, \textit{ConnectPoints()}, \textit{findPathPoints(Point curPos, Point goal)},\textit{ find(int x)}, \textit{unionSets(int V1, int V2)}, \textit{DFS(Point start, Point goal)} and \textit{getRoadPath()}.
+The implementation of the model based planner have been designed from a set of key methods namely \texttt{brushfireAlgorithm(int iterations}), \texttt{findCornerPoints()}, \texttt{findCenterPoints()}, \texttt{findLinePoints()}, \texttt{ConnectPoints()}, \texttt{findPathPoints(cv::Point curPos, cv::Point goal)},\texttt{find(int x)}, \texttt{unionSets(int V1, int V2)}, \texttt{DFS(cv::Point start, cv::Point goal)} and \texttt{getRoadPath()}.
 
-The method \textit{brusfireAlgorithm} takes and input as the number of iterations one wants to process. After doing so it is possible to get the pixels furthest away from an obstacle and thereby the center points of rooms and doors.   
+The method \texttt{brusfireAlgorithm(i)} takes and input as the number of iterations one wants to process. After doing so it is possible to get the pixels furthest away from an obstacle and thereby the center points of rooms and doors.   
 
 \begin{figure}[H]
   \begin{subfigure}[b]{0.49\textwidth}
@@ -24,8 +24,8 @@ The method \textit{brusfireAlgorithm} takes and input as the number of iteration
   
 As seen in figure \ref{fig:Brushfire1} and figure \ref{fig:Brusfire2} the algorithm start by consuming all free pixels closest to the obstacle and iterate through the map. For visualization the pixels furthest away from the obstacle, which have been assigned a value, are pictured green and the once closest to an obstacle are red. This gives a map with connections between rooms. 
   
-Now it is possible to find corner and center points via the newly created brushfire map. For this accomplish this two methods were used namely \textit{findCornerPoints} and \textit{findCenterPoints}. The idea here is the use a 4-point connectivity grid where each $pixel(i,j)$ value is compared to its neighbours. For instance if $pixel(i-1,j)$ equals $pixel(i+1,j)$ and the center point between them, $pixel(i,j)$, has a different value, it is considered to be a point on a line. The same thing goes for the horizontal case. To find corner points, the $pixel(i-1,j-1)$ must equal $pixel(i-1,j+1)$ and the point $pixel(i,j)$ must then be different from those two points. \par
-\subfile{../Pseudo/Find_center_points}      
+Now it is possible to find corner and center points via the newly created brushfire map. For this accomplish this two methods were used namely \textit{findCornerPoints} and \textit{findCenterPoints}.The idea is to compare $pixel(i,j)$ to its neighbours. For instance if $pixel(i-1,j)$ equals $pixel(i+1,j)$ and the center point between them, $pixel(i,j)$, has a different value, it is considered to be a point on a line. The same thing goes for the horizontal case. To find corner points, the $pixel(i-1,j)$ must equal to $pixel(i,j+1)$ and $pixel(i-1,j+1)$ must be different from $pixel(i,j)$. \par
+\subfile{../Pseudo/Find_center_points} This is just one of the instances of find corner points but the principles is the same for the four cases.           
 
 After completing this operation on the brushfire map it is possible to see corners and center lines in rooms as well as doors. This i visualized in figure \ref{fig:CornersAndCentersOfRoom}.
   
@@ -68,7 +68,7 @@ Now in the creation of the road map every point is considered to be a vertex and
   
 One can see all the vertexes in figure \ref{fig:Vertexes} and there connections to one another after using the method \textit{connectPoints} in figure \ref{fig:VertexesAndEdges}. Notice that the edges between vertexes do not contain any cycles which is one of the big advantages of using Kruskal's algorithm and thereby making it easier to make a path between vertexes.  
 
-Now the method \textit{findPathPoints} can be used to generate a map from an initial position to a target location giving the two points as parameters.   
+Now the method \textit{findPathPoints} can be used to generate a map from an initial position to a target location giving the two points as parameters. \textit{FindPathPoints} uses the methods \textit{find}, \textit{unionSets} and \textit{DFS} which are already discussed in the design phase. The outcome of this method is a set of points starting from a initial position to a target location.        
 
   \begin{figure}[H]
    \begin{subfigure}[b]{0.49\textwidth}
@@ -86,7 +86,25 @@ Now the method \textit{findPathPoints} can be used to generate a map from an ini
   \end{subfigure}
   \end{figure}  
 
-    
+The points can then be fetch with the method \textit{getRoadPath}. 
+
+Several test were made to see how well the model based planner worked. First of all 14 test was conducted to see if the robot was able to find all the rooms in the bigworld map starting from the origin of the map. The average success rate of this test was 100\% meaning that it found a way to all 14 rooms. The test also showed that the average distance to obstacle was 2.345 meters which is quite which was also expected because the points generated is most of the time far away from obstacles. Another important factor was that it was able to run through the entire map starting from the origin and then to all rooms from room 1 to 14. 
+
+  \begin{figure}[H]
+   \begin{subfigure}[b]{0.49\textwidth}
+    \centering
+    \includegraphics[width=0.9\textwidth]{Modelbased_vs_Sensorbased/brushfireAndBugTest14}
+    \caption{Illustration of findCornerPoints and centerPoints in use}
+    \label{fig:CornersAndCentersOfRoom}
+  \end{subfigure}
+  \hfill
+   \begin{subfigure}[b]{0.49\textwidth}
+    \centering
+    \includegraphics[width=0.9\textwidth]{Modelbased/brushfireTest15}
+    \caption{Illustration of findLinePoints in use}
+    \label{fig:LinePoints}
+  \end{subfigure}
+  \end{figure}  
 
 
 \end{document}
