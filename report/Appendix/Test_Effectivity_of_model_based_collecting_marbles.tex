@@ -1,28 +1,33 @@
 \documentclass[../Head/Main.tex]{subfiles}
 \begin{document}
 \subsection{Model based planners effectiveness to collect marbles}
+\label{subsec:testCollectMarbles}
 
-The purpose of this test is to figure out the effectiveness of the model based planner to collect marbles.
+The purpose of this test is to show the effectiveness of the fuzzy control to make the collect marbles. 
 
-\subsubsection{Description of test}        
+\subsubsection{Description of test}  
 
+The robot is placed in the origin of the map and set to visit all rooms starting from room 1 to 14. In this test the model based planner is used as motion planning. The sensor data from the robot to the closest obstacles is fetched so that is can be visualised when the robot collects a marble.         
 
 \subsubsection{Test parameters}
 
 \begin{tabular}{l r}
 	- World used                & bigworld\\	
-	- Speed of tangent bug      & -1 to 1\\
 	- Speed of model planer     & -2 to 2\\
 	- Number of tests           & 10 \\
 	- Number of marbles         & 20
 \end{tabular}
 
 \subsubsection{Data}
+Seen from figure \ref{Marble10}, test 10 is the only one when the robots actually visits all rooms. This was primarily due to a problem with a simulation problem gazebo. Many times when the robot picked up marbles gazebo crashed. This problem made it rather difficult to conduct useful tests about the effectiveness of collecting marbles. Figure \ref{Marble2} shows this case. One can see that after 42 seconds the distance to an obstacle is continuously close to zero meaning that gazebo have crashed and the test had to be aborted. From the same graph one can see the marbles been collected because of the spike very close to zero. It can also be visualized on the path on the robot, where red dot indicates a marble have been found.              
+
 \subfile{../Tables/Time_for_every_collected_marble}
 \subfile{../Figures/Model_based_planner_graph_of_collected_marbles}
 \subfile{../Figures/Model_based_planner_collecting_marbles}
 
 
 \subsubsection{Conclusion}
+
+It can be concluded that the fuzzy controller works and that the robot is able to find marbles. Due to problems with gazebo, only one of ten test lead to a complete search of marbles in all rooms. In test ten the robot was able to find 10 out of 20 marbles with a success rate of 50\%. But because the robot only made through all rooms once, no average of the effectiveness of finding marbles can be concluded.     
 
 \end{document}

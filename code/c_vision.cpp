@@ -14,7 +14,8 @@ c_vision::c_vision()
 
 void c_vision::set_image(cv::Mat &image)
 {
-    resize(image,ori_image,cv::Size(image.cols / 2, image.rows / 2));
+    //resize(image,ori_image,cv::Size(image.cols / 2, image.rows / 2));
+    ori_image = image.clone();
     image_updated = true;
 }
 
@@ -128,6 +129,11 @@ void c_vision::find_marbles()
         }
         //cv::imshow( "Contour demo", temp_image ); // Must have the same mutex lock
     }
+}
+
+cv::Mat c_vision::getImage()
+{
+    return processed_image;
 }
 
 /*

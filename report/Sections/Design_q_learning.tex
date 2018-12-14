@@ -24,6 +24,15 @@ It have also been chosen to implement the state with an integer storing the room
 		\item \texttt{bool isTerminal}
 	\end{Indentation}
 \end{Indentation}
+Due to the definition of the states, the number of states would grow rapidly with increasingly higher number of rooms. The nature of the state definition gives the possibility to divide the state space into smaller matrices and by adding a bit of logic the mapping between the matrices could be obtained.\\
+By defining a base state as the room number, and sub-states as whether specific rooms have been visited or not, the state space could be reduced to a matrix with the size $(rooms + 1)\times(rooms + 1)$ and depth of $2^{room}-1$. The last combination would not be relevant because all rooms would have been visited, all states in this matrix would be a terminal state, meaning it would not make sense to move from there and therefore not make sense to update the Q-value of those states.\\
+This principle can be seen on figure \ref{fig:3D-matrix}, where the numbers over the matrices describes the vector in the states.  
+\begin{figure}[H]
+	\centering
+	\subfile{../Figures/3D-Q-matrix}
+	\caption{Illustration of how the matrices are layered}
+	\label{fig:3D-matrix}
+\end{figure}
 
 
 %\begin{Pseudo}{$\epsilon$-greedy policy}{}
