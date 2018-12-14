@@ -42,6 +42,7 @@ cv::Mat c_vision::hls_histogram()
     int hist_w = 512; // cols
     int hist_h = 400; // rows
     cv::Mat histogram_image(hist_h,hist_w,CV_8UC3,cv::Scalar(0,0,0));
+    histogram_image.setTo(cv::Scalar({255,255,255}));
 
     // Normalize histogram to fit image
     int max = 0;
@@ -63,7 +64,7 @@ cv::Mat c_vision::hls_histogram()
             {
                 numb = i;
                 std::string text = "Max value at: " + std::to_string(numb);
-                cv::putText(histogram_image,text,cv::Point(250,offset), cv::FONT_HERSHEY_COMPLEX_SMALL,1.0,cv::Scalar(255,255,255),1,CV_AA);
+                cv::putText(histogram_image,text,cv::Point(250,offset), cv::FONT_HERSHEY_COMPLEX_SMALL,1.0,cv::Scalar(0,0,0),1,CV_AA);
                 offset+=25;
             }
         }
@@ -73,7 +74,7 @@ cv::Mat c_vision::hls_histogram()
             {
                 numb = i;
                 std::string text = "Max value at: " + std::to_string(numb);
-                cv::putText(histogram_image,text,cv::Point(250,offset), cv::FONT_HERSHEY_COMPLEX_SMALL,1.0,cv::Scalar(255,255,255),1,CV_AA);
+                cv::putText(histogram_image,text,cv::Point(250,offset), cv::FONT_HERSHEY_COMPLEX_SMALL,1.0,cv::Scalar(0,0,0),1,CV_AA);
                 offset+=25;
             }
         }
@@ -89,7 +90,7 @@ cv::Mat c_vision::hls_histogram()
             cv::line(histogram_image, cv::Point(bin_w*(i-width),0),cv::Point(bin_w*(i-width),(hist_h - 1)),cv::Scalar(255,255,0),1,8,0);
             cv::line(histogram_image, cv::Point(bin_w*(i+width),0),cv::Point(bin_w*(i+width),(hist_h - 1)),cv::Scalar(255,255,0),1,8,0);
         }
-        cv::line(histogram_image, cv::Point(bin_w*(i-1),hist_h - cvRound(histogram[i-1])),cv::Point(bin_w*(i),hist_h - cvRound(histogram[i])),cv::Scalar(255,0,0),2,8,0);
+        cv::line(histogram_image, cv::Point(bin_w*(i-1),hist_h - cvRound(histogram[i-1])),cv::Point(bin_w*(i),hist_h - cvRound(histogram[i])),cv::Scalar(0,0,0),2,8,0);
     }
     cv::imshow("Histogram",histogram_image);
     return histogram_image;

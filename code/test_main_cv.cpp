@@ -12,6 +12,7 @@ int main(int _argc, char **_argv)
     QDir path = QDir::current();
     path.cdUp();
     std::string name = "camera_test_image_6";
+    std::string test_name = "camera_hls_histogram_6";
     std::string filePath = path.path().toStdString() + "/test_files/camera_screenshots//" + name + ".png";
     cv::Mat image = cv::imread(filePath);
 
@@ -23,10 +24,8 @@ int main(int _argc, char **_argv)
 
     //cv::imshow("image",im);
 
-
-    std::string test_name = "camera_hls_histogram_6";
     filePath = path.path().toStdString() + "/test_files/camera_screenshots//" + test_name + ".png";
-    //cv::imwrite(filePath,im);
+    cv::imwrite(filePath,im);
 
     cv::waitKey(0);
 
