@@ -42,11 +42,12 @@ A condition for minimizing $\chi^2$ is done by solving the nonlinear equation sy
 \end{align}
 The solution of this nonlinear equation system is determined to the following:
 \begin{align}
-	r &= \overline{X}\cos(\alpha)+\overline{Y}\sin(\alpha) \\
-    \alpha &= \frac{1}{2}\arctan\left(\frac{-2\sum_{i=1}^{n}\left[\left(x_i-\overline{X}\right) - \left(y_i-\overline{Y}\right)\right]}{\sum_{i = 1}^{n}\left[\left(x_i-\overline{X}\right)^2 - \left(y_i-\overline{Y}\right)^2\right]}\right)
+	r &= \overline{x}\cos(\alpha)+\overline{y}\sin(\alpha) \label{eq:range} \\
+    \alpha &= \frac{1}{2}\arctan\left(\frac{-2\sum_{i=1}^{n}\left[\left(x_i-\overline{x}\right) - \left(y_i-\overline{y}\right)\right]}{\sum_{i = 1}^{n}\left[\left(x_i-\overline{x}\right)^2 - \left(y_i-\overline{y}\right)^2\right]}\right) \label{eq:theta}
 \end{align}
 where $\overline{x}$ and $\overline{y}$ are the means of $x$ and $y$. \par
-As explained earlier, the two-wheeled robot should avoid obstacles (walls). To do so, the robot needs to know the location of the walls. It is done by processing the datapoints from the lidar scanner and determining the points which fits to a straight line using a line extraction algorithm. There are several different line extraction algorithms to choose from. The incremental line extraction algorithm is chosen, because it is simple to implement. The pseudo code for the incremental algorithm is shown below. \par
+There are some practical considerations to take by using equation \ref{eq:range} and \ref{eq:theta}. Equation \ref{eq:theta} uses the four quadrant arc tangent by using the function \texttt{atan(y, x)}, which computes the quadrant in which the angle lies. This function will result in the same result in the case of $y  = x = -2$ and $y = x = 2$, which means that an distinction would be lost using this single-argument arc tangent function. Another practical consideration is the case of $r < 0$ in equation \ref{eq:range}, which is solved by multiplying the range $r$ with $-1$ and adding $\pi$ to the angle $\theta$. \par
+As explained earlier, the two-wheeled robot should avoid obstacles (walls). To do so, the robot needs to know the location of the walls. It is done by processing the datapoints from the LIDAR sensor and determining the points which fits to a straight line using a line extraction algorithm. There are several different line extraction algorithms to choose from. The incremental line extraction algorithm is chosen, because it is simple to implement. The pseudo code for the incremental algorithm is shown below. \par
 \subfile{../Pseudo/Incremental}
 This algorithm implements the Total Least Square method then computing the line parameters. Furthermore, the line model consists of points, which all must comply some line conditions. In that case all points must comply these conditions. The first condition is a threshold for the angle between the previous and current line model as shown on figure \ref{fig:Line_model_angle}. The threshold is defined to be the following:
 \begin{align*}
