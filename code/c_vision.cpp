@@ -229,7 +229,7 @@ void c_vision::find_marbles()
 
         //circle outline
         for (unsigned int i = 0; i < marbles.size(); i++)
-            cv::circle( temp_image, marbles[i].center, marbles[i].radius, cv::Scalar(0,0,255), 1, 8, 0 );
+            cv::circle( temp_image, marbles[i].center, marbles[i].radius, cv::Scalar(0,0,255), 2, 8, 0 );
         ori_image = temp_image;
         cv::imshow( "Contour demo", temp_image ); // Must have the same mutex lock
     }
