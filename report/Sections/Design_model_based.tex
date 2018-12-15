@@ -2,6 +2,7 @@
 \begin{document}
 
 \subsection{Model based planner}
+To be able to generate a complete road map a number of algorithms have been taken into consideration namely the brushfire algorithm, Kruskal's algorithm and an extended version of the Depth-First Search algorithm. 
 The brushfire algorithm uses a grid to approximate distance to obstacles. The idea is to give obstacles a starting value of 1 and free-space pixels a value of 0. Then continue until the $'fire'$ has consumed all free pixels thereby giving pixels furthest away from obstacles the highest value. It was decided to use a eight-point connectivity grid. \par
 \subfile{../Pseudo/Brushfire_algorithm}
 
@@ -10,7 +11,7 @@ The reason for choosing this algorithm is that it gives a set of values to the p
 Now the goal is to find center points from the bushfire algorithm so that they can be used to establish connections between rooms. The idea is to use Kruskal's algorithm to connect points to one another.  Kruskal's algorithm uses the \textit{disjoint set union/find} algorithm which is an algorithm used to find relations between vertexes. It starts by initializing a vector by the size of the number of edges and sets them to -1. The \texttt{unionSets(int V1, int V2)} connects two vertexes if there connection will not result in a cycle.  The \texttt{find(int V1)} method uses recursion to see if the vertexes are joint or disjoint, meaning that they form a cycle if they are connected.     
 \subfile{../Pseudo/Kruskals_algorithm}
 
-Now the idea of generating connections between all vertexes on the map is complete. The last thing which needs to be solved is to be able to generate a path between vertexes from an initial position to a target location. An extended version of the \textit{Depth-First Search} algorithm is used. This algorithm uses recursion to find a path between vertexes. It uses a vector of vectors (vertexes) to recursely generating a full path from a starting vertex to target vertex. 
+Now the idea of generating connections between all vertexes on the map is complete. The last thing which needs to be solved is to be able to generate a path between vertexes from an initial position to a target location. An extended version of the Depth-First Search algorithm is used. This algorithm uses recursion to find a path between vertexes. It uses a vector of vectors (vertexes) to recursely generating a full path from a starting vertex to target vertex. 
 \subfile{../Pseudo/DFS_extended}
 Thus the user should be able to give a start and target location from the number of vertexes from the list yielding a complete route for the robot to travel.
 \end{document}

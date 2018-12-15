@@ -2,7 +2,7 @@
 \begin{document}
 \subsection{Model based planner}
 
-The implementation of the model based planner have been designed from a set of key methods namely \texttt{brushfireAlgorithm(int iterations}), \texttt{findCornerPoints()}, \texttt{findCenterPoints()}, \texttt{findLinePoints()}, \texttt{ConnectPoints()}, \texttt{findPathPoints(cv::Point curPos, cv::Point goal)}, \texttt{find(int V)}, \texttt{unionSets(int V1, int V2)} and \texttt{DFS(cv::Point start, cv::Point goal)} from a class called \texttt{brushfire} 
+The implementation of the model based planner have been designed from a set of key methods namely \texttt{brushfireAlgorithm(int iterations}), \texttt{findCornerPoints()}, \texttt{findCenterPoints()}, \texttt{findLinePoints()}, \texttt{ConnectPoints()}, \texttt{findPathPoints(cv::Point curPos, cv::Point goal)}, \texttt{find(int V)}, \texttt{unionSets(int V1, int V2)} and \texttt{DFS(cv::Point start, cv::Point goal)} from a class called \texttt{brushfire}. Like the sensor based model, this model is also used in the class \texttt{motion\_planning} where one can call the method \texttt{model\_based\_planner(ct::current\_position pos,std::vector<cv::Point> points, float index, float indexRooms)}.  
 
 The method \texttt{brusfireAlgorithm(i)} takes and input as the number of iterations one wants to process. After doing so it is possible to get the pixels furthest away from an obstacle and thereby the center points of rooms and doors.   
 
@@ -84,37 +84,39 @@ Now the method \texttt{findPathPoints(c,p)} can be used to generate a map from a
   \end{subfigure}
   \end{figure}  
 
+Now the method \texttt{model\_based\_planner(p,p,i,i)} can be called using the robots current position, a vector of points which the robot have to follow, an index of the vector of points as well as an index to the wanted room number. 
+
 Several test were made to see how well the model based planner worked. First of all 14 test was conducted to see if the robot was able to find all the rooms in the bigworld map starting from the origin of the map. The average success rate of this test was 100\% meaning that it found a way to all 14 rooms. The test also showed that the average distance to obstacle was 2.345 meters. Another important factor was that it was able to run through the entire map starting from the origin and then to all rooms from room 1 to 14 which can be seen in figure \ref{fig:brushfireCompletePath}. 
 
   \begin{figure}[H]
    \begin{subfigure}[b]{0.49\textwidth}
     \centering
     \includegraphics[width=0.9\textwidth]{Modelbased_vs_Sensorbased/brushfireAndBugTest14}
-    \caption{Illustration of findCornerPoints and centerPoints in use}
+    \caption{Path from origin to room 14. Red line for model based.}
     \label{fig:brushfireToRoom14}
   \end{subfigure}
   \hfill
    \begin{subfigure}[b]{0.49\textwidth}
     \centering
     \includegraphics[width=0.9\textwidth]{Modelbased/brushfireTest15}
-    \caption{Illustration of findLinePoints in use}
+    \caption{All rooms visited with model based planer}
     \label{fig:brushfireCompletePath}
   \end{subfigure}
   \end{figure}  
 
-Figure \ref{fig:brushfireToRoom14} shows the working of the brushfire algorithm going from the origin to room 14 marked with a red path. The green path is the test of the sensor based planer. One can see that the model based planer follows the graph nicely and ends up in the target location. Another test using the model based planner was performed to test the fuzzy control and see if the robot was able to collect marbles. The was concluded that the fuzzy control works and that the robot was able to find marbles where on of the test resulted in a full search of all rooms with 10 marbles collected as seen in figure \ref{fig:brushfireCompletePath}. But unfortunately gazebo crashed several times while collecting marbles which affected the results.
+Figure \ref{fig:brushfireToRoom14} shows the working of the brushfire algorithm going from the origin to room 14 marked with a red path. Here the green path is the test of the sensor based planer. One can see that the model based planer follows the graph nicely and ends up in the target location. Another test using the model based planner was performed to test the fuzzy control and see if the robot was able to collect marbles. The was concluded that the fuzzy control works and that the robot was able to find marbles where on of the test resulted in a full search of all rooms with 10 marbles collected as seen in figure \ref{fig:brushfireCompletePath}. But unfortunately gazebo crashed several times while collecting marbles which affected the results.
   \begin{figure}[H]
    \begin{subfigure}[b]{0.49\textwidth}
     \centering
     \includegraphics[width=0.9\textwidth]{MatlabPlots/MarblesTest4}
-    \caption{Illustration of findCornerPoints and centerPoints in use}
+    \caption{Distance to the closest obstacles}
     \label{fig:matlabPlotMarbletest14}
   \end{subfigure}
   \hfill
    \begin{subfigure}[b]{0.49\textwidth}
     \centering
     \includegraphics[width=0.9\textwidth]{Modelbased/brushfireMarble4}
-    \caption{Illustration of findLinePoints in use}
+    \caption{Illustration of marble collection with red dots as marbles.}
     \label{fig:brushfireMarbleFindingTest}
   \end{subfigure}
   \end{figure}  

@@ -1,6 +1,6 @@
 \documentclass[../Head/Main.tex]{subfiles}
 \begin{document}
-\subsection{Tangent bug algorithm}
+\subsection{Sensor based planner}
 \label{subsec:tangentBug}
 
 The tangent bug algorithm have been implemented using fuzzy control and it is used in a class called \texttt{motion\_planning} with the methods \texttt{tanget\_bug\_algorithm(ct::current\_position pos, std::vector<ct::room> Rooms)} and \texttt{homogeneous\_transformation(ct::current\_position robot, cv::Point goal}). The \texttt{tanget\_bug\_algorithm(p,R)} takes the current position of the robot and a vector of room locations as inputs. Also this method gets the information about the shortest distance to obstacles from the robots lidar sensor which must be known for the robot to navigate along obstacles and avoid hitting them. The method \texttt{homogeneous\_transformation(r,g}) takes the current position of the robot and a goal location as inputs. This method is critical for the implementation of the tangent bug algorithm because it returns an orientation relative to the robot to the goal location. This method is actually used twice in the \texttt{tanget\_bug\_algorithm(p,R)} because both the orientation to the goal location as well as the orientation towards the closest obstacle must be known to be fetch by the fuzzy controller so that the robot can be giving the proper motion to reach the target position. 
