@@ -3,7 +3,7 @@
 \subsection{Search strategy}
 \label{subsec:searhStrategyDesign}
 
-For the robot to be able to avoid obstacles as well as navigating through the map Fuzzy Control will be used. For short the a fuzzy controller consist of a fuzzification interface that converts input into information that can be used by the inference mechanism. The inference mechanism evaluates the giving input in addition to the rule base based on the expert's linguistic description. The output of the fuzzy controller will then be defuzzified to crisp values which will be used as input to control the plant. The following linguistic terms will be used:
+For the robot to be able to avoid obstacles as well as navigating through the map, Fuzzy Control will be used. For short the a fuzzy controller consist of a fuzzification interface that converts input into information that can be used by the inference mechanism. The inference mechanism evaluates the giving input in addition to the rule base, which is based on the expert's linguistic description. The output of the fuzzy controller will then be defuzzified to crisp values which will be used as input to control the plant (robot). The following linguistic terms will be used:
 
 \begin{itemize}
 \item The linguistic input variable called $ObstacleDirection = \{right, center, left\}$ with the named linguistic values. The universe of discourse is set to ${U} = [-1.6, 1.6]$. It defines the direction towards and obstacle and the choose of \textit{U} is based on the angle range from the sensor.   
@@ -14,11 +14,15 @@ For the robot to be able to avoid obstacles as well as navigating through the ma
 \item The linguistic variable called $GoalDirection = \{right, straight, left\}$ with the named linguistic variables. The universe of discourse is set to ${U} = [-3.14, 3.14]$. It defines the direction in which a target location is located. The chose of \textit{U} is based on a complete rotation from the robot's point of view. 
 \item The linguistic input variable $BoundaryDirection = \{right, straight, left\}$ with the named linguistic values. The universe of discourse is set to ${U} = [-3.14, 3.14]$. It defines boundary direction on an obstacle in which the robot has to follow if it is in an obstacle following behaviour. The chose of \textit{U} is based on a complete rotation from the robot's point of view. 
 \item The linguistic output variable called $SteerDirection = \{sharpright, right, softright, straight, softleft, left$, $sharpleft\}$ with the named linguistic values. The universe of discourse is set to ${U} = [-1.57, 1.57]$. It defines the direction in which the robot has to navigate. The chose of \textit{U} was found suitable.
+<<<<<<< HEAD
 \item The linguistic output variable called $Velocity = \{backward, softbackward, softforward, forward\}$ with the named linguistic values. The universe of discourse is set to ${U} = [-1, 1]$. It defines the velocity giving to the robot and the chose of \textit{U} was found suitable for the implementation of the controller.      
       
+=======
+\item The linguistic output variable called $Speed = \{backward, softbackward, softforward, forward\}$ with the named linguistic values. The universe of discourse is set to ${U} = [-1, 1]$. It defines the speed giving to the robot and the chose of \textit{U} was found suitable for the implementation of the controller.      
+>>>>>>> cb7c7c58e7d6d96b7f67d7d52cb881d33cf18d65
 \end{itemize}
-
-In order for the inference mechanism to work, one has to define a rule base in which the linguistic variables and values are used. To be able to move the robot, find marbles and avoid obstacles the following rule base has been made:  
+\todo[inline]{maybe a reference to all figures from these linguistic values}
+In order for the inference mechanism to work, one has to define a rule base in which the linguistic variables and values are used. To be able to move the robot, find marbles and avoid obstacles the following rule base has been defined:  
 
 \begin{itemize}
 \item {\large \textbf{Rule 1:}} \textbf{\textit{if}} \textit{ObstacleDistance} is veryclose and \textit{ObstacleDirection} is left and \textit{MarbleFound} is no \textbf{\textit{then}} \textit{SteerDirection} is softright
@@ -57,8 +61,19 @@ In order for the inference mechanism to work, one has to define a rule base in w
  
 \item {\large \textbf{Rule 18:}} \textbf{\textit{if}} \textit{MarbleFound} is yes and \textit{MarbleDirection} is center \textbf{\textit{then}} \textit{Velocity} is forward
 \end{itemize}
+<<<<<<< HEAD
 
 Now the defuzzification interface will convert the conclusions from the inference mechanism into crisp values to be used as input to the plant. The following membership functions will be used as seen in the figures below.  
+=======
+\todo[inline]{Texttt should be used to mark all linguistic variables and values}
+
+Center of gravity will be used as the defuzzification method to convert the fuzzy output to crisp output which is defined as
+\begin{align}
+ x = \frac{ \int_{\mu_A}(x)xdx }{ \int_{\mu_A} (x) dx }
+\end{align}  
+where $x$ is the defuzzified output and $A$ is any fuzzy set.\par
+The following membership functions can be seen in the figures below.  
+>>>>>>> cb7c7c58e7d6d96b7f67d7d52cb881d33cf18d65
 
 \begin{figure}[H]
 	\centering
@@ -138,9 +153,15 @@ Now the defuzzification interface will convert the conclusions from the inferenc
 
 \begin{figure}[H]
 	\centering
+<<<<<<< HEAD
 	\subfile{../Membership_functions/MSF_Speed}
 	\caption{Membership function Velocity with a velocity to the target as output and $\mu$ as the degree of truth}
 	\label{fig:MSF_Speed}
+=======
+	\subfile{../Membership_functions/MSF_Velocity}
+	\caption{caption}
+	\label{fig:MSF_Velocity}
+>>>>>>> cb7c7c58e7d6d96b7f67d7d52cb881d33cf18d65
 \end{figure}
 
 

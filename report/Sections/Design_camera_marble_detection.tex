@@ -1,0 +1,22 @@
+\documentclass[../Head/Main.tex]{subfiles}
+\begin{document}
+\subsection{Camera marble detection}
+The camera fitted to the two-wheeled robot could be used to detect marbles at a greater distance than the LIDAR scanner, giving the robot the ability to search a room for marbles and then collect them using the LIDAR.\\
+To detect marbles in the image from the camera, a marble detecting algorithm must be written.\par 
+
+The size of the detected marbles would given an indication of the distance to it and the distance to the center of the image in the x direction would indicate the direction the robot should move in order to collect the marble. Because of this it have been chosen to implement a complex data structure to contain the information on the center in the image and radius, as well as the difference to the center of the image in the x direction.\par 
+
+Because the environment have different nuances of grey, and the marbles being blue, it was chosen to make a colour separation of what could be marbles and the background. This would result in a binary image where the white parts would have the colour of the marbles while the rest of the image being black.\par 
+This image could contain multiple marbles that should be detected. One way of doing this could be to the use the Hough transform for circles on the image.\\
+Even though the Hough transform are considered a very powerful algorithm , the drawback of using this algorithms cannot be overlooked. The Hough transform are very computationally heavy, and can be very difficult to tune correctly. The tuning parameters should also change depending on the size of the marbles. Furthermore there are a fine line between not detecting any circles to getting many falsely detected circles. These falsely detected circles should then be discarded, which would be an additional computational cost.\\
+Therefore this solution was considered infeasible and it was chosen to separate the different marbles using connectivity. By doing this non-overlaying marbles would be detected as different objects, and overlaying marbles would be detected as a single object.\\
+Due to this the height and width of the objects can be calculated. By assuming the objects are marbles, the center of the marble could be defined as the center of the object, and the radius as half of then height of the objects. Because the marbles could be blocked by walls or parts of the marble being left out of the image, the radius would be calculated based on the height and not the width of the object.\\
+This is a simple and crude way of detecting marbles, and it would be subject to the following errors. A marble being cut off at either the left or right side would have a shifted center. Marbles being cut off at either the top or bottom would have a smaller radius. Overlapping marbles would be detected as one with the radius of the larger one, and the center shifted towards the smaller one.\par 
+The problem of marbles being cut of at either the left or right side could be prevented, by shifting the center either further the left or further to the right.
+   
+ 
+
+
+
+
+\end{document}

@@ -3,7 +3,7 @@
 \subsection{The impact of $\alpha$ on Q-learning performance}
 \label{subsec:test_alpha}
 The purpose of this test is to show how different values of $\alpha$ influences the performance of Q-learning.
-\subsubsection{Description of test}
+\subsubsection*{Description of test}
 This test was done by performing 100 trials of each selected value of $\alpha$ for a range of episodes. The test was conducted using the world "5-room world" seen on figure \ref{fig:5_room_world_alpha}.\\
 The distance punishments are bases on those found in the test in appendix \ref{subsec:est_path_length}. The distance punishments was scaled with a factor of 1.2 to make the distance a bigger factor in final path.\\
 The probabilities used for each room was found in the test in appendix \ref{subsec:probability_test}. These probabilities was divided by the maximal value and scaled by a factor of 20. This was done to ensure that the total reward for entering a room the first time would be positive.\par 
@@ -16,7 +16,7 @@ The initial state for all tests was set to room 3 in order to ensure greatest nu
 	\label{fig:5_room_world_alpha}
 \end{figure}
 
-\subsubsection{Test parameters}
+\subsubsection*{Test parameters}
 In the following tables, the parameters for the test can be seen. It have been chosen to make the test on values of $\alpha$ between 0.01 and 0.5.\\
 \begin{minipage}[c]{0.35\textwidth}
 	\begin{tabular}{l r}
@@ -68,7 +68,7 @@ In the following tables, the parameters for the test can be seen. It have been c
 \end{minipage}
 
 \clearpage
-\subsubsection{Data}
+\subsubsection*{Data}
 On figure \ref{fig:q-learn_alpha_reward} the average reward for all tests can be seen. It can be seen that the lower the value of $\alpha$ the higher average reward, meaning that the policy will converge to the optimal policy. Whereas a higher value of $\alpha$ will result in a lower average reward. It would also seem like the average reward are oscillating more.\par
 On figure \ref{fig:q-learn_alpha_iterations} the average number of iterations per episoden can be seen. It can be seen that the higher the value of $\alpha$ the lower the average number of iterations will be. This is due to the fact, that the lower the learning rate are, the slower the algorithm learns, and will therefore need more steps to get to the goal.
 \begin{figure}[H]
@@ -91,7 +91,7 @@ On figure \ref{fig:q-learn_alpha_iterations} the average number of iterations pe
 \end{figure}
 A value of 0.025 have been chosen as the best compromise between a high average reward and a low average number of iterations per episode.
 
-\subsubsection{Conclusion}
+\subsubsection*{Conclusion}
 It can be concluded that the smaller the value of $\alpha$ the higher the average reward will be for a given number of episodes.\\
 It can as well be concluded that the higher the value of $\alpha$ the lower the number of iterations per episode will be.\\ 
 The value of 0.025 was chosen as the best compromise.
