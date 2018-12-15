@@ -9,6 +9,7 @@ class c_vision
 public:
     c_vision();
     void set_image(cv::Mat &image);
+    cv::Mat hls_histogram();
     void find_color();
     void find_marbles();
     cv::Mat getImage();
