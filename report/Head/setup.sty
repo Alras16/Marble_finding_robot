@@ -7,7 +7,7 @@
 \usepackage[english]{babel}
 %\usepackage[danish]{babel}
 \usepackage{booktabs}
-\usepackage[style=authoryear,maxnames=3]{biblatex}
+\usepackage[style=authoryear,maxnames=10]{biblatex}
 \usepackage[format=plain,font=it]{caption}
 \usepackage{changepage}
 \usepackage{inputenc}
@@ -151,3 +151,7 @@
     label={},
     noitemsep,
     }
+
+\newcommand{\notocsection}[3]{%
+    \refstepcounter{subsubsection}%
+    \subsubsection*{\thesubsubsection \quad #3}}%

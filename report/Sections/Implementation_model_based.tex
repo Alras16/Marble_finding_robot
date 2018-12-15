@@ -1,11 +1,20 @@
 \documentclass[../Head/Main.tex]{subfiles}
 \begin{document}
-\subsection{Model based planner}
+\subsubsection{Model based planner}
 
-The implementation of the model based planner have been designed from a set of key methods namely \texttt{brushfireAlgorithm(int iterations}), \texttt{findCornerPoints()}, \texttt{findCenterPoints()}, \texttt{findLinePoints()}, \texttt{ConnectPoints()}, \texttt{findPathPoints(cv::Point curPos, cv::Point goal)}, \texttt{find(int V)}, \texttt{unionSets(int V1, int V2)} and \texttt{DFS(cv::Point start, cv::Point goal)} from a class called \texttt{brushfire} 
-
-The method \texttt{brusfireAlgorithm(i)} takes and input as the number of iterations one wants to process. After doing so it is possible to get the pixels furthest away from an obstacle and thereby the center points of rooms and doors.   
-
+The implementation of the model based planner is implemented in the classes \texttt{motion\_planning} and \texttt{brushfire} contain the key methods.
+\begin{itemize}
+	\item \texttt{brushfireAlgorithm(int iterations)}
+	\item \texttt{findCornerPoints()}
+	\item \texttt{findCenterPoints()}
+	\item \texttt{findLinePoints()}
+	\item \texttt{ConnectPoints()}
+	\item \texttt{findPathPoints(cv::Point curPos, cv::Point goal)}
+	\item \texttt{find(int V)}
+	\item \texttt{unionSets(int V1, int V2)}
+	\item \texttt{DFS(cv::Point start, cv::Point goal)}
+\end{itemize}
+The classes uses fuzzy logic to control the robot. The method \texttt{brusfireAlgorithm(i)} takes and input as the number of iterations one wants to process. After doing so it is possible to get the pixels furthest away from an obstacle and thereby the center points of rooms and doors.   
 \begin{figure}[H]
   \begin{subfigure}[b]{0.49\textwidth}
     \centering
@@ -47,6 +56,7 @@ After completing this operation on the brushfire map it is possible to see corne
 It is quite interesting to see the amount of possible points that can be used to make connections between rooms after using the method just mentioned. Because the goal is to make full connections between all rooms, the vertical and horizontal lines on figure\ref{fig:CornersAndCentersOfRoom} is going to be taken into consideration as it will satisfy the objective of finding a path between all points without hitting an obstacle. The method \texttt{findLinePoints()} was created to solve this task. The method iterates through a matrix containing all values on the map and pushes the found line points on a vector and then saves the center point on that detected line. It is worth noting that there are horizontal as well as vertical lines. This will lead to a set of lines points as shown in figure \ref{fig:LinePoints}. 
 
 Now in the creation of the road map every point is considered to be a vertex and a connection between two vertexes is an edge. Now the interesting part is to find out which vertexes that can be connected to one another without hitting an obstacle. Because all obstacles have been assigned the value of 1 it is possible to iterate through the map and see if $pixel(i,j) == 1$ is located somewhere on the edge between these two vertexes. If that is not the case, the edge is considered valid and saved as an edge and thereby a possible connection between two vertexes. This is done in the method \texttt{connectPoints()}. It is critical to point out that Kruskal's algorithm is used in this method as it is a big part of the procedure of connecting the vertexes by the shortest edge first (Kruskal's algorithm was discussed in the design phase of the model based planner). 
+\todo[inline]{Make a reference here instead of this}
 
   \begin{figure}[H]
    \begin{subfigure}[b]{0.49\textwidth}
@@ -67,7 +77,7 @@ Now in the creation of the road map every point is considered to be a vertex and
 One can see all the vertexes in figure \ref{fig:Vertexes} and there connections to one another after using the method \texttt{connectPoints()} in figure \ref{fig:VertexesAndEdges}. Notice that the edges between vertexes do not contain any cycles which is one of the big advantages of using Kruskal's algorithm and thereby making it easier to make a path between vertexes.  
 
 Now the method \texttt{findPathPoints(c,p)} can be used to generate a map from an initial position to a target location giving the two points as parameters. \texttt{FindPathPoints} uses the methods \texttt{find(int V)}, \texttt{unionSets(V1,V2)} and \texttt{DFS(s,g)} which are already discussed in the design phase. The outcome of this method is a set of points starting from an initial position to a target location.        
-
+\todo[inline]{Make a reference here as well}
   \begin{figure}[H]
    \begin{subfigure}[b]{0.49\textwidth}
     \centering

@@ -4,19 +4,19 @@
 \label{subsec:probability_test}
 The purpose of this test is to determine the probability of a marble spawning in each of the 14 rooms described in section \ref{subsec:design_environment}.
 
-\subsubsection{Description of test}
+\subsubsection*{Description of test}
 This test was done by conduction a total of 50 tests, where the position of the 20 marbles in the Gazebo environment are saved resulting in a total of 1000 samples.\par 
 These marbles was then mapped to one of the 14 rooms using the  class \texttt{map\_class}. The total amount of marbles found in each room can be seen in table \ref{tab:probability_raw_data}. This data was then divided by the total number of marbles, to find the probability.\par 
 Due to the fact that the rooms are not the same size, this probability was divided by the size of the room (number of pixels in the map) and the normalised. The result can be ssen in table \ref{tab:probability_data}.
 
-\subsubsection{Test parameters}
+\subsubsection*{Test parameters}
 \begin{tabular}{l r}
 	- World used                & bigworld\\	
 	- Number of spawned marbles & 20\\
 	- Number of tests           & 50
 \end{tabular}
 
-\subsubsection{Data}
+\subsubsection*{Data}
 \begin{minipage}[c]{0.45\textwidth}
 	\subfile{../Tables/Distribution_of_marbles}
 \end{minipage}
@@ -25,6 +25,6 @@ Due to the fact that the rooms are not the same size, this probability was divid
 	\subfile{../Tables/Probability_of_marbles}
 \end{minipage}
 
-\subsubsection{Conclusion}
+\subsubsection*{Conclusion}
 It can be concluded that the highest number of marbles was found in room 12 closely followed by 6 and 8. But due to the size of the rooms, the highest probability is found in room 12, followed by 5 and 9.
 \end{document}
