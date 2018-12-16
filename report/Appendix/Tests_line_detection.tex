@@ -1,12 +1,13 @@
 \documentclass[../Head/Main.tex]{subfiles}
 \begin{document}
 
-\subsection{Effectiveness of LIDAR line detection}
+\subsection{Robustness and performance of LIDAR line detection}
+\label{test:LineDetection}
 
-The purpose of this test is establish the effectiveness of the line detection algorithm for the LIDAR sensor.
+The purpose of this test is establish the robustness and performance of the line detection algorithm for the LIDAR sensor.
 
 \subsubsection*{Description of test}
-The initial position of the robot for this test is the origin of the environment \texttt{bigworld}. Here the robot is steered around in the environment using the keypad. The idea of this test is to test if all marbles detected by the algorithm actually corresponds to marbles in the environment.     
+The initial position of the robot for this test is the origin of the environment bigworld. Here the robot is steered around in the environment using the keypad. The idea of this test is to test if all marbles detected by the algorithm actually corresponds to marbles in the environment.     
 
 \subsubsection*{Test parameters}
 \begin{tabular}{l r}
@@ -91,5 +92,6 @@ The initial position of the robot for this test is the origin of the environment
 \end{figure}
 
 \subsubsection*{Conclusion}
-It can be concluded that the line detection algorithm is reliable, since it all obstacles such as wall in all tests. 
+It can be concluded that line detecting part of this algorithm is robustness and has a good performance, since it detects all obstacles in all cases. \par
+It can also be concluded that the line merging part of this algorithm is robust and has a good performance, but it relies on the marble detection algorithm, which is the opposite.
 \end{document}
