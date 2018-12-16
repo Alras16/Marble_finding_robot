@@ -5,6 +5,8 @@
 *.bcf
 *.out
 *.bak
+*.bbl
+*.blg
 *.xml
 *.gz
 *.toc
