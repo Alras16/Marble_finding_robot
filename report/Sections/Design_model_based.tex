@@ -1,7 +1,8 @@
 \documentclass[../Head/Main.tex]{subfiles}
 \begin{document}
-
 \subsubsection{Model based planner}
+
+To be able to generate a complete road map a number of algorithms have been taken into consideration namely the brushfire algorithm, Kruskal's algorithm and an extended version of the Depth-First Search algorithm. 
 \todo[inline]{Short introduction is missing, where you tell the reason for chosing this algorithm}
 The brushfire algorithm uses a grid to approximate distance to obstacles. The idea is to give obstacles a starting value of 1 and free-space pixels a value of 0. Then continue until the $'fire'$ has consumed all free pixels thereby giving pixels furthest away from obstacles the highest value. It was decided to use a eight-point connectivity grid. \par
 \todo[inline]{Figure to show what eight-point connectivity grid}
@@ -13,7 +14,7 @@ Now the goal is to find center points from the bushfire algorithm so that they c
 \todo[inline]{Cycle?}     
 \subfile{../Pseudo/Kruskals_algorithm}
 
-Now the idea of generating connections between all vertexes on the map is complete. The last thing which needs to be solved is to be able to generate a path between vertexes from an initial position to a target location. An extended version of the \textit{Depth-First Search} algorithm is used. This algorithm uses recursion to find a path between vertexes. It uses a vector of vectors (vertexes) to recursely generating a full path from a starting vertex to target vertex. 
+Now the idea of generating connections between all vertexes on the map is complete. The last thing which needs to be solved is to be able to generate a path between vertexes from an initial position to a target location. An extended version of the Depth-First Search algorithm is used. This algorithm uses recursion to find a path between vertexes. It uses a vector of vectors (vertexes) to recursely generating a full path from a starting vertex to target vertex. 
 \subfile{../Pseudo/DFS_extended}
 Thus the user should be able to give a start and target location from the number of vertexes from the list yielding a complete route for the robot to travel.
 \todo[inline]{Either you should use textit when marking all algortihm or not}

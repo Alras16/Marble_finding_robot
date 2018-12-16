@@ -2,12 +2,12 @@
 \begin{document}
 
 \subsubsection{Line detection}
-It is usually important for a mobile robot to know its environment. There are several reasons for that, one is that robot must know the location of the obstacles (walls) relative to it to avoid driving into them. In the "bigworld" environment, the obstacles is walls which can be represented as lines from the filtered datapoints. These lines can be represented using a normal parametrization in polar coordinates, given by the following formula:
+It is usually important for a mobile robot to know its environment. There are several reasons for that. One is that robot must know the location of the obstacles (walls) relative to it to avoid driving into them. In the "bigworld" environment, the obstacles are walls which can be represented as lines from the filtered datapoints. These lines can be represented using a normal parametrization in polar coordinates, given by the following formula:
 \begin{align}
     l:~~~~r = x\cdot\cos(\alpha)+y\cdot\sin(\alpha)
     \label{eq:line}
 \end{align}
-where $r$ represents the distance from the origin to the closest point on the line and $\alpha$ is the angle between the x-axis and the plane normal. (\cite{TLSM}) 
+where $r$ represents the distance from the origin to the closest point on the line and $\alpha$ is the angle between the x-axis and the plane normal. (\cite{TLSM}) \todo[inline]{Mangler alpha på tegningen?}
 \par
 \begin{wrapfigure}{r}{6cm}
 	\vspace{-12pt}
@@ -27,7 +27,7 @@ The separation between those two lines ($l$ and $l_i$) is given by the differenc
     d_i = x_i\cdot\cos(\alpha)+y_i\cdot\sin(\alpha) - r
 \end{align}
 This only applies if we assume that there is no noise on the measurements. \par
-This method gives an solution to the problem of fitting a straight line to a dataset of points $p$ with $n$ measurements having errors. The problem of fitting a line can be determined using the following sum:
+This method gives a solution to the problem of fitting a straight line to a dataset of points $p$ with $n$ measurements having errors. The problem of fitting a line can be determined using the following sum:
 \begin{align}
     \chi^2\left(l, z_1, ..., z_n\right) = \sum_{i = 1}^{n} \left[\frac{\left(x_k - X_k\right)^2}{u_{x, k}^{2}} + \frac{\left(y_k - Y_k\right)^2}{u_{y, k}^{2}}\right]
 \end{align}
@@ -50,11 +50,11 @@ where $\overline{x}$ and $\overline{y}$ are the means of $x$ and $y$. \par
 There are some practical considerations to take by using equation \ref{eq:range} and \ref{eq:theta}. Equation \ref{eq:theta} uses the four quadrant arc tangent by using the function \texttt{atan(y, x)}, which computes the quadrant in which the angle lies. This function will result in the same result in the case of $y  = x = -2$ and $y = x = 2$, which means that an distinction would be lost using this single-argument arc tangent function. Another practical consideration is the case of $r < 0$ in equation \ref{eq:range}, which is solved by multiplying the range $r$ with $-1$ and adding $\pi$ to the angle $\theta$. \par
 As explained earlier, the two-wheeled robot should avoid obstacles (walls). To do so, the robot needs to know the location of the walls. It is done by processing the datapoints from the LIDAR sensor and determining the points which fits to a straight line using a line extraction algorithm. There are several different line extraction algorithms to choose from. The incremental line extraction algorithm is chosen, because it is simple to implement. The pseudo code for the incremental algorithm is shown below. \par
 \subfile{../Pseudo/Incremental}
-This algorithm implements the Total Least Square method then computing the line parameters. Furthermore, the line model consists of points, which all must comply some line conditions. In that case all points must comply these conditions. The first condition is a threshold for the angle between the previous and current line model as shown on figure \ref{fig:Line_model_angle}. The threshold is defined to be the following:
+This algorithm implements the Total Least Square method then computing the line parameters. Furthermore, the line model consists of points which all must comply some line conditions. In that case, all points must comply these conditions. The first condition is a threshold for the angle between the previous and current line model as shown on figure \ref{fig:Line_model_angle}. The threshold is defined to be the following:
 \begin{align*}
 	\theta_{max} = 0,0025
 \end{align*}
-The second condition is the angle between two points relative to the robot location as shown on figure \ref{fig:Datapoints_angle}. This angle should be greater than this difference, but not twice as great, since this condition should separate the points into two lines, if one point is missing on the list as shown on figure \ref{fig:Line_separation}. This angle is therefore defined to be the following:
+The second condition is the angle between two points relative to the robot location as shown on figure \ref{fig:Datapoints_angle}. This angle should be greater than this difference, but not twice as great, since this condition should separate the points into two lines if one point is missing on the list as shown in figure \ref{fig:Line_separation}. This angle is therefore defined to be the following:
 \begin{align*}
 	\Delta\theta = \left(\theta_0 - \theta_1\right)\cdot 1,25
 \end{align*}
