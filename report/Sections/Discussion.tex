@@ -1,0 +1,16 @@
+\documentclass[../Head/Main.tex]{subfiles}
+\begin{document}
+\section{Discussion}
+
+The reason the line detection algorithm was not used, was that the marble detection algorithm was not properly performing at times. This means that the merging part of the line detecting algorithm would merge lines that should not have been merged. Threshold on the angle between two lines could prevent this behaviour to some extent if this threshold was tuned. The main issue was the falsely detected marbles. This was due to the marble detection algorithms tendency to detect marbles in corners. This could have been prevented by detecting how good the points fitted the found circles and by setting a threshold on the radius of the circles. 
+
+Due to time constrains the motion planning was not coupled together with q-learning. If this had been the case, the robot would have been able to search for marbles in rooms in the most optimised way from reinforcement learning. 
+
+The marble detection on camera data gave falsely results when two marbles were overlapping or when a marble was cut off on either the top or bottom. To solve these issues it could be checked whether or not white pixels would appear in the top or bottom row in the binary image if the detected objects are wider than they are tall. If this is not the case it is a possibility that the detected object are two overlapping marbles. These issues were not addressed due to time constraints. 
+
+
+
+   
+
+
+\end{document}

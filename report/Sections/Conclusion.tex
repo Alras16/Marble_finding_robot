@@ -1,7 +1,18 @@
-\documentclass[../Main.tex]{subfiles}
+\documentclass[../Head/Main.tex]{subfiles}
 \begin{document}
 \section{Conclusion}
 
+A line detecting algorithm was developed to detect obstacles and marbles from the LIDAR data. It can be concluded that the algorithm was able to distinguish marbles from obstacles and the algorithm  performed well in detecting lines and corners, but often falsely detecting marbles in corners. This lead to the general limitations of the algorithm where a marble detected in a corner would result in two perpendicular lines being merged.
 
 
+ This algorithm performed good in general, but has some limitations when obstacles were blocked by a marble. This happened when marbles were detected in corners resulting in to perpendicular lines being merged. 
+
+The marble detecting algorithm based on camera data performed quite when one or several none cut off marbles, as well as marbles where cut off on either the left or right side. Marbles cut off on either top or bottom caused issues with a falsely detected radius. When marbles were overlapping the algorithm was only capable of detecting one of the marbles and placed the center slightly shifted towards the smaller overlapping marble. 
+
+Both sensor and model based algorithms were made as planning algorithms for the robot. The tests showed the sensor based planer had an average success rate of 64.3\% of finding rooms compared to the model based on 100\%. On average, the sensor based planner would have an 40.47\% shorter path. The shortest distance to obstacles was 0.258 meters for the model based planner and 0.4 for the sensor based planner which satisfied the specification requirements. 
+
+For robot control a fuzzy controller was made. Tests showed that the fuzzy controller was able in controlling the robot around the environment as well as avoiding obstacles and finding marbles.
+
+Q-learning was applied to optimise the search strategy for an environment with 5 rooms. The test showed that that a solution was found in all cases and that the planned path got better for each episode. It can be concluded that a path was found only consisting of 6 movements where only one room was visiting more than more time.  
+     
 \end{document}

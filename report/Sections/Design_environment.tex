@@ -1,0 +1,9 @@
+\documentclass[../Head/Main.tex]{subfiles}
+\begin{document}
+\subsection{Environment}
+\label{subsec:design_environment}
+The two-wheeled robot should navigate around the environment called bigworld shown in figure (\ref{fig:bigworld_white}). To do so, it have been chosen to divide the environment into rooms. The natural definition of \textit{'rooms'} have been taken into account, resulting in a 14 room layout. This can be seen in figure (\ref{fig:bigworld_14_rooms}), where each room can be distinguished by different grey scale colours. 
+\subfile{../Figures/Environment}
+The division into rooms are useful in terms of knowing which rooms that have been searched and which that not yet have been searched for marbles.\\
+It is also useful as an abstract state space for reinforcement learning such that it can be found which order the rooms  should be visited.
+\end{document}

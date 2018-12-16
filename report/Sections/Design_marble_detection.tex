@@ -1,0 +1,26 @@
+\documentclass[../Head/Main.tex]{subfiles}
+\begin{document}
+
+\subsubsection{Marble detection}
+\label{subsec:DesignMarbleDetection}
+The objective for the two-wheeled robot is to collect marbles effectively while avoiding obstacles such as walls. 
+The Hough transform is a algorithm that maps from image space to the probability of the existence of features such as lines, circles or other general shapes. The algorithm is also capable of detecting partial object as in the case of the LIDAR scanner. \\
+However the algorithm are not very robust to noise and can be very hard to calibrate in order to make the result from the algorithm useful. Furthermore the algorithm have a high computational cost. Because of this, it have been chosen to design a simpler method for finding marbles in the LIDAR data. \par  
+Due to the fact that only a part of the circles would be visible from the data, it was chosen to calculate the center and radius of the circles from the chord and arch height of the circles. This can be used to determine the location of the marbles relative to the robot. Given this information the planner would be able to drive towards the marbles and "collect" them. \\
+It is assumed that the two detected outer points on the circle periphery defines the circle chord. It is also assumed that the orthogonal distance from the detected middle point on the circle periphery to the circle chord defines the circle arch height. This only applies for an uneven number of detected point.\\
+The circle chord can be determined using the formula:
+\begin{align*}
+	C = 2r\cdot\sin\left(\frac{\theta}{2}\right)
+\end{align*}
+The circle camber can be determined using the formula:
+\begin{align*}
+	h = r\left(1-\cos\left(\frac{\theta}{2}\right)\right)
+\end{align*}
+Solving this equation system, the circle radius was found to be:
+\begin{align*}
+	r = \frac{C^2+4h^2}{8h}
+\end{align*}
+The polar coordinates of the circle center can be found by adding the radius to the range of the detected middle point.
+\subfile{../Figures/Marble_determination}
+
+\end{document}

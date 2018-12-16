@@ -1,0 +1,21 @@
+\documentclass[../Head/Main.tex]{subfiles}
+\begin{document}
+
+\subsection{LIDAR Sensor}
+The two-wheeled robot given for this project is among other equipped with a 2D LIDAR (Light Detecting and Ranging) sensor. A LIDAR scanner detects the distance to targets by emitting a laser pulse and analysing the time it takes for the beam to reflect and return to its source. The LIDAR sensor maps the environment and has a detecting range of 10 pixels in Gazebo and a 260 degrees field of view. \par
+The script converts this range into mm by first scaling the pixel map to double size, such that the detecting range is 20 pixels. Afterwards, the script trace the pixel map to a eps-figure using 72 dpi as standard for the postscript. Then the script converts this range from inches to mm by using a conversion factor of 25.4 mm per inch. This means that this range can be converted into mm by using the following formula:
+\begin{align*}
+\frac{20~pixels}{72~dpi}\cdot 25.4~\frac{mm}{inch} = 7.06~mm
+\end{align*}
+Now the script scales the world from mm to m, which means that the range of the LIDAR sensor therefore is 7.06 m.
+The LIDAR sensor maps the surrounding environment by collecting 200 datapoint, which must be processed in order to recognise objects such as walls and marbles. This means that circle and line detecting algorithms must be writing.
+
+\clearpage
+The datapoints from the LIDAR sensor is first visualised by drawing white lines from the robots location to each of the 200 datapoints using the \texttt{cv::line()} function as shown in figure (\ref{fig:white_lines}). Afterwards the datapoints are sorted by checking if the range is equal to sensor range in order to get the points that reflects from different objects.\par
+
+The filtered datapoints are drawn as lines upon the unsorted data. These lines can be distinguished by different blue colours depending on the range between the two points ranging from blue to cyan. This blue coloured and white lines are shown in figure (\ref{fig:blue_lines}).
+\subfile{../Figures/Visualisation_of_lidar_data}
+The two sections below, describes the design of a line and a marble detection algorithm.
+\subfile{../Sections/Design_marble_detection}
+\subfile{../Sections/Design_line_detection}
+\end{document}

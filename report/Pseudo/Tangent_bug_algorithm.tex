@@ -1,0 +1,52 @@
+\documentclass[../Head/Main.tex]{subfiles}
+\begin{document}
+\begin{Pseudo}{Tangent Bug Algorithm}{}
+	\begin{Indentation}
+		\item \textbf{Input:} A robot with a range sensor
+		\item \textbf{Output:} A path to the $q_{goal}$	or a conclusion no such path exist 
+		\begin{Indentation}
+		
+		\item \textbf{while} True \textbf{do}
+			
+			\begin{Indentation}
+			
+			\item \textbf{repeat}
+			
+				\begin{Indentation}
+
+				\item Continuously move toward the point \textit{n} $\epsilon$ $\left(T,~O_i\right)$ which minimises $d(x,~n) + d \left(n,~q_{goal}\right)$
+				
+				\item \textbf{until}
+				\begin{itemize}
+					\item The goal is encountered \textbf{or}
+					\item The direction that minimises ${d(x,n)}$ +d$\left(n,~q_{goal}\right)$ begins to increase d$\left(x,~q_{goal}\right)$ so the robot detects a local minimum d$\left(x,~O_i\right)$ + 
+					d$\left(O_i,~q_{goal}\right)$ on the boundary \textit{i}.
+					\item[ ]		
+				\end{itemize}
+				Now choose the boundary following direction which continuous in the same direction as the most recent motion-to-goal direction. 
+				
+				
+				\item \textbf{repeat}
+				\item Continuously update $d_{reach}$, $d_{followed}$ and $O_i$. 
+				\item Continuously moves toward n $\epsilon$ \{$O_i$\} that is the chosen boundary direction.  
+				
+				\item \textbf{until}
+				
+				\begin{itemize}
+				\item The goal is reached 
+				\item The robot completes a cycle around the obstacle in which case the goal cannot be reached. 
+				\item $d_{reach} < d_{followed}$
+				
+				\end{itemize}	
+														
+				\end{Indentation}			
+			
+			\end{Indentation}
+		\item \textbf{end while}
+		\end{Indentation}
+
+	\end{Indentation}
+	
+\end{Pseudo}
+
+\end{document}

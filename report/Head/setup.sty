@@ -1,4 +1,5 @@
 \ProvidesPackage{setup}
+
 \usepackage[headheight=10pt, top=3cm, bottom=3cm, left=2cm, right=2cm]{geometry}
 \usepackage{algorithm}
 \usepackage{algpseudocode}
@@ -7,7 +8,7 @@
 \usepackage[english]{babel}
 %\usepackage[danish]{babel}
 \usepackage{booktabs}
-\usepackage[style=authoryear,maxnames=3]{biblatex}
+\usepackage[backend=bibtex,style=authoryear,maxnames=10]{biblatex}
 \usepackage[format=plain,font=it]{caption}
 \usepackage{changepage}
 \usepackage{inputenc}
@@ -36,6 +37,7 @@
 \usepackage{pgfplots}
 \usepackage{soul}
 \usepackage{setspace}
+\usepackage{spverbatim}
 \usepackage{listings}
 \usepackage{subfiles}
 \usepackage{sidecap}
@@ -46,7 +48,6 @@
 \usepackage{tocvsec2}
 \usepackage{tabularx}
 \usepackage{tikz}
-\usepackage[nottoc]{tocbibind}
 \usepackage{todonotes}
 %\usepackage{ulem}
 \usepackage{wrapfig}
@@ -122,7 +123,7 @@
   } 
 }{prf}
 
-\newtcbtheorem[no counter]{Pseudo}{Pseudocode}{
+\newtcbtheorem[no counter]{Pseudo}{Algorithm}{
   enhanced,
   sharp corners = northwest,
   attach boxed title to top left={
@@ -150,3 +151,7 @@
     label={},
     noitemsep,
     }
+
+\newcommand{\notocsection}[3]{%
+    \refstepcounter{subsubsection}%
+    \subsubsection*{\thesubsubsection\quad#3}}%

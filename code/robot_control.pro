@@ -2,21 +2,21 @@ TEMPLATE = app
 CONFIG += console c++11
 CONFIG -= app_bundle
 
-SOURCES += main.cpp \
+SOURCES += test_main.cpp \
     fuzzybugcontroller.cpp \
+    laserscanner.cpp \
+    motion_planning.cpp \
+    setup.cpp \
     bst_coordinates.cpp \
     map_class.cpp \
     c_vision.cpp \
     testdata.cpp \
-    lidar_sensor.cpp \
     dataloggin.cpp \
     ct.cpp \
- #   value_iteration.cpp \
+    value_iteration.cpp \
     q_learning.cpp \
-    motion_planning.cpp \
-    setup.cpp \
+    lidar_sensor.cpp \
     brushfire.cpp \
-    laserscanner.cpp \
 
 CONFIG += link_pkgconfig
 PKGCONFIG += gazebo
@@ -28,19 +28,19 @@ DEPENDPATH += /media/kenni/usb1/linuxUbuntu/fuzzylite-6.0-linux64/fuzzylite-6.0
 
 HEADERS += \
     fuzzybugcontroller.h \
+    laserscanner.h \
+    motion_planning.h \
+    setup.h \
     bst_coordinates.h \
     map_class.h \
     c_vision.h \
     testdata.h \
-    lidar_sensor.h \
     dataloggin.h \
     ct.h \
-  #  value_iteration.h \
-    motion_planning.h \
-    setup.h \
+    value_iteration.h \
     q_learning.h \
+    lidar_sensor.h \
     brushfire.h \
-    laserscanner.h \
 
 DISTFILES += \
     fuzzybugcontroller.fll

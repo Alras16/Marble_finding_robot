@@ -28,7 +28,6 @@ public:
 
     void findMedianPoints(int threshold);
     void plotMedianPoints();
-
     void findCornerPoints();
     void findCenterPoints();
     void findLinePoints();

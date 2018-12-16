@@ -2,7 +2,11 @@
 **/build-robot_control-Desktop-Debug
 *.aux
 *.log
+*.bcf
 *.out
+*.bak
+*.bbl
+*.blg
 *.xml
 *.gz
 *.toc

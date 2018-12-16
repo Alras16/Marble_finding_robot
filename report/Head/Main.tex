@@ -17,34 +17,29 @@
     \subfile{../Sections/Abstract}
     \clearpage
     
-    \setcounter{tocdepth}{2}
+    \setcounter{tocdepth}{3}
     \setcounter{page}{0}	
 	\tableofcontents 
 	\thispagestyle{empty}
     \clearpage
 	\thispagestyle{fancy}    
        
-    \fancyhead[R]{\normalsize\rightmark}
-    \fancyhead[L]{\large \textsc{Section }\normalsize\thesection}
+    \fancyhead[R]{\normalsize\rightmark}    \fancyhead[L]{\large \textsc{Section }\normalsize\thesection}
       
     % Sections
     \subfile{../Sections/Introduction}
     \clearpage
-    \subfile{../Sections/Robot_modelling}
+    \subfile{../Sections/Design}
+    \subfile{../Sections/Implementation}
     \clearpage
-    \subfile{../Sections/Robot_sensoring}
-    \subfile{../Sections/q_learning}
-    \clearpage
-    \subfile{../Sections/Motion_planning}
-    \clearpage
-    \subfile{../Sections/Path_planning}
-    \clearpage
+    \subfile{../Sections/Discussion}
     \subfile{../Sections/Conclusion}
-    \clearpage
-    \subfile{../Sections/Tests_doc}
-    
-    % Citations
+	% Citations
     \clearpage
 	\printbibliography[heading=bibintoc]
+
+	% Appendix
+	\clearpage
+	\subfile{../Appendix/Main_appendix}
 	
 \end{document}

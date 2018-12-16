@@ -1,29 +1,55 @@
 \documentclass[../Head/Main.tex]{subfiles}
 \begin{document}
 \section{Introduction}
-
+Mobile robots are an increasingly larger part of our world. This increases the demand for algorithms that enables the robot to navigate around in its environment, and effectively search the environment. This sets focus on creating planning algorithms and using reinforcement learning to optimise different problems.\par 
+In this report a mobile robot platform will be given the task of navigating an environment and collect marbles. While optimising its strategy for each run. The robot will be fitted with a camera, and a LIDAR scanner.\\
+To accomplish this algorithms must be written to enable the robot to navigate the environment. To do this marble detecting and obstacle detecting algorithms must be written, so the robot would be able to localise the marbles and circumnavigate the obstacles.\\
+To ensure that the robot will learn from its previous trials, and optimisation algorithm based on reinforcement learning must be written.    
 
 \subsection{Problem statement}
-\subsubsection{Problems}
-The following problems are stated to better describe the focus points throughout the project.\todo{XXXX}
-\begin{enumerate}
-        \item How can an algorithm, which can find marbles in a closed map, be designed?
-        \item How can this algorithm be optimized, so the robot can find the ball faster, based on previous trails? 
-        \item How can marbles and obstacles be detected from lidar data?
-        \item How can marbles and obstacles be detected from camera data?
-        \item How can a Fuzzy-control algorithm be constructed?
-        \item How can computer vision be used to detect marbles and obstacles, and to construct the map? \todo[inline]{XXXX}
-\end{enumerate}
-\subsubsection{Limitations}
-The robot must be able to find marbles in a closed map and optimize itself based on previous trails. Thus the following limitations to the algorithms is listed: 
-\begin{enumerate}
-    \item To detect marbles and obstacles.
-    \item To construct a map.
-    \item To optimize for the shortest distance and time.
-\end{enumerate}
-QT Creator, Fuzzy Lite, Gazebo and Matlab will be used throughout the project.
+The overall problem was to design and implement algorithms, that would enable the robot platform to navigate an environment, collect marbles, circumnavigate obstacles as well as optimise its strategy for each trial.\\
+This should be done utilising the knowledge of reinforcement learning, computer vision and robot motion theory.\par
+For this project a two-wheeled robot platform was given the task of collecting blue marbles in a simulated environment. The following problems needs to be solved in order to fulfil the overall objective.
 
-\subsection{Report structure}
+%\subsubsection{Problems}
+\begin{enumerate}
+        \item How can marbles and obstacles be detected from LIDAR and camera data?
+		\item How can a planning algorithm be designed and implemented?
+		\item How can Fuzzy-logic be applied to control the robot?
+		\item How can reinforcement learning be applied to path optimisation?
+\end{enumerate}
+To solve the problems stated above, the following tools will be utilised: QT Creator, Gazebo, Fuzzy Lite, OpenCV and Matlab.
+
+\subfile{../Sections/Specification_of_requirements}
+
+\clearpage
+\subsection{Readers guide}
+
+In this report the following references will be used:
+
+\begin{itemize}
+
+\item[-] Figures and tables will be referred to by numbers in parentheses (1) or (1.a)
+\item[-] Sections will be referred to by numbers 1 or 1.1.
+\item[-] Equations will be referred to by numbers in parentheses (1) or (1.1).
+\item[-] Citations will be referred to by author and year as well as page numbers in parentheses (Weiss, 2014, p. 417-419). 
+\item[-] Sections in appendix will be referred to by the capital letter followed by a number in parentheses (A.1).   
+\end{itemize}
+
+\vspace{20pt}
+The following will be used to describe software elements in this report:
+
+\begin{itemize}
+\item[-] Classes, data types and methods will be shown in \texttt{verbatim}. 
+\item[-] Linguistic variables will be shown in \textit{italic}.
+\item[-] Code commands in the report will be shown in \textbf{bold style}.
+ 
+\end{itemize}
+\vspace{20pt}
+The following will be used to show algorithms in the report: 
+
+\subfile{../Pseudo/Find}
+
 
 
 \end{document}

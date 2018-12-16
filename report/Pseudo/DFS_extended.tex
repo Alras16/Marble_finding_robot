@@ -1,0 +1,29 @@
+\documentclass[../Head/Main.tex]{subfiles}
+\begin{document}
+\begin{Pseudo}{DFS extended}{}
+
+\textbf{Input:} Start and target location 
+
+\textbf{Output:} Vector of vertices in order
+
+
+	\begin{Indentation}
+		\item push start on vector 
+		\item mark start as visited 
+		\item[ ] 
+		\item \textbf{if} start $==$ target
+		\item return vector
+		\item[ ]
+		\item \textbf{for} all vertices adjacent to start
+		\item \textbf{if} adjacent $==$ target
+		\item push adjacent on vector 
+		\item return vector
+		\item[ ]
+		\item \textbf{else if} adjacent $\neq$ visited
+		\item DFS(adjacent, target)
+		\item pop last element from vector 
+	\end{Indentation}
+	
+	
+\end{Pseudo} 
+\end{document}

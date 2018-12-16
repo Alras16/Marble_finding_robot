@@ -24,8 +24,6 @@ public:
     cv::Point getCurrentLocation();
     void find_center_of_mass();
 
-    void paintRoom(ct::room* theRoom, cv::Vec3i color);
-
     std::vector<std::vector<float>> genStateMap(float freeSpaceVal, float wallVal);
 
 private:

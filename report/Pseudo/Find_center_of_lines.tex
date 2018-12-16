@@ -1,0 +1,29 @@
+\documentclass[../Head/Main.tex]{subfiles}
+\begin{document}
+\begin{Pseudo}{FindLinePoints (Horizontal case)}{}
+
+ 	\textbf{for} \textit{i} hight of image 
+	\begin{Indentation}
+		\item 
+	\begin{Indentation}
+	\item \textbf{for} all \textit{j} width of image 
+	\item \textbf{while} True \textbf{do}
+	\item push $pixel(i,j)$ on vector
+	
+	\item \textbf{until}
+				
+	\begin{itemize}
+	\item $pixel(i,j) \neq weight$  
+	\end{itemize}
+	
+	\item end \textbf{while} 
+	
+	\item if size of vector $>$ 2
+	\item push the middle $pixel(i,j)$ of vector on list of wanted points
+	\end{Indentation}
+	
+	\end{Indentation}
+
+	
+\end{Pseudo} 
+\end{document}

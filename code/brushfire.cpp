@@ -131,7 +131,6 @@ void brushfire::brushfireAlgorithm(int iterations)
     for (int h = 0; h < iterations; h++)
     {
         label++;
-
         for(unsigned int i = 1; i < matrix.size() - 1; i++)
         {
             for(unsigned int j = 1; j < matrix[i].size() - 1; j++)
@@ -182,6 +181,36 @@ void brushfire::plotMedianPoints()
 { 
     for (int i = 0; i < imagePoints.size(); i++)
         *point_map.ptr<cv::Vec3b>(imagePoints[i].y,imagePoints[i].x) = cv::Vec3b({255, 0, 0});
+}
+
+void brushfire::findCenterPoints()
+{
+    for(unsigned int i = 1; i < matrix.size() - 1; i++)
+    {
+        for(unsigned int j = 1; j < matrix[i].size() - 1; j++)
+        {
+            if (matrix[i][j] != 1)
+            {
+                int neighbor[4] = {0, 0, 0, 0};
+                neighbor[0] = matrix[i][j - 1];
+                neighbor[1] = matrix[i + 1][j];
+                neighbor[2] = matrix[i][j + 1];
+                neighbor[3] = matrix[i - 1][j];
+
+                if (matrix[i][j] == neighbor[0] && matrix[i][j] == neighbor[2] && matrix[i][j] == (neighbor[1] - 1) && matrix[i][j] == (neighbor[3] - 1))
+                   centerPoints.push_back(cv::Point(j,i));
+                else if (matrix[i][j] == neighbor[1] && matrix[i][j] == neighbor[3] && matrix[i][j] == (neighbor[0] - 1) && matrix[i][j] == (neighbor[2] - 1))
+                   centerPoints.push_back(cv::Point(j,i));
+
+            }
+        }
+    }
+
+    for (unsigned int i = 0; i < centerPoints.size(); i++)
+    {
+        *point_map.ptr<cv::Vec3b>(centerPoints[i].y,centerPoints[i].x) = cv::Vec3b({0, 0, 255});
+        std::cout << centerPoints.size() << std::endl;
+    }
 }
 
 void brushfire::findCornerPoints()
@@ -257,9 +286,6 @@ void brushfire::findCenterPoints()
 
     for (unsigned int i = 0; i < centerPoints.size(); i++)
         *point_map.ptr<cv::Vec3b>(centerPoints[i].y,centerPoints[i].x) = cv::Vec3b({0, 0, 255});
-
-
-
 }
 
 void brushfire::findLinePoints()

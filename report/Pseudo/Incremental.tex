@@ -1,0 +1,13 @@
+\documentclass[../Head/Main.tex]{subfiles}
+\begin{document}
+	\begin{Pseudo}{Incremental}{}
+	\begin{enumerate}
+		\item Start by the first 2 points, construct a line
+		\item Add the next point to the current line model
+		\item Recompute the line parameters
+		\item If it satisfies line condition (go to 2)
+		\item Otherwise, put back the last point, recompute the line parameters, return the line
+		\item Continue to the next 2 points, go to 2
+	\end{enumerate}
+\end{Pseudo}
+\end{document}
