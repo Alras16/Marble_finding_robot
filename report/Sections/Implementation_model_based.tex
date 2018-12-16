@@ -33,7 +33,7 @@ The classes uses fuzzy logic to control the robot. The method \texttt{brusfireAl
   \end{subfigure}
   \end{figure}
   
-As seen in figure (\ref{fig:Brushfire1}) and figure (\ref{fig:Brusfire2}) the algorithm start by consuming all free pixels closest to the obstacle and iterate through the map. For visualization the pixels furthest away from the obstacle, which have been assigned a value, are pictured green and the once closest to an obstacle are red. This gives a map with connections between rooms. 
+As seen in figure (\ref{fig:Brushfire1}) and figure (\ref{fig:Brusfire2}) the algorithm start by consuming all free pixels closest to the obstacle and iterate through the map. For visualisation the pixels furthest away from the obstacle, which have been assigned a value, are pictured green and the once closest to an obstacle are red. This gives a map with connections between rooms. 
   
 Now it is possible to find corner and center points via the newly created brushfire map. For this to be accomplish this two methods were used namely \texttt{findCornerPoints()} and \texttt{findCenterPoints()}. The idea is to use four-point connectivity by comparing $pixel(i,j)$ to its neighbours. For instance if $pixel(i-1,j)$ equals $pixel(i+1,j)$ and the center point between them, $pixel(i,j)$, has a different value, it is considered to be a point on a line. The same thing goes for the horizontal case. To find corner points, the $pixel(i-1,j)$ must equal to $pixel(i,j+1)$ and $pixel(i-1,j+1)$ must be different from $pixel(i,j)$. This is just one of the instances of find corner points but the principles is the same for the four cases.           
 
@@ -115,7 +115,7 @@ Several test were made to see how well the model based planner worked, this test
   \end{figure}  
 
 Figure (\ref{fig:brushfireToRoom14}) shows the working of the brushfire algorithm going from the origin to room 14 marked with a red path. Here the green path is the test of the sensor based planer. One can see that the model based planer follows the graph nicely and ends up in the target location.\\ 
-Another test using the model based planner was performed to test the fuzzy control and see if the robot was able to collect marbles, this test can be seen in appendix (\ref{subsec:testCollectMarbles}). The was concluded that the fuzzy control works and that the robot was able to find marbles where on of the test resulted in a full search of all rooms with 10 marbles collected as seen in figure (\ref{fig:brushfireCompletePath}). But unfortunately gazebo crashed several times while collecting marbles which affected the results.
+Another test using the model based planner was performed to test the fuzzy control and see if the robot was able to collect marbles, this test can be seen in appendix (\ref{subsec:testCollectMarbles}). The was concluded that the fuzzy control works and that the robot was able to find marbles where on of the test resulted in a full search of all rooms with 10 marbles collected as seen in figure (\ref{fig:brushfireCompletePath}). But unfortunately Gazebo crashed several times while collecting marbles which affected the results.
   \begin{figure}[H]
    \begin{subfigure}[b]{0.49\textwidth}
     \centering

@@ -2,7 +2,7 @@
 \begin{document}
 
 \subsubsection{Line detection}
-It is usually important for a mobile robot to know its environment. There are several reasons for that. One is that robot must know the location of the obstacles (walls) relative to it to avoid driving into them. In the "bigworld" environment, the obstacles are walls which can be represented as lines from the filtered datapoints. These lines can be represented using a normal parametrization in polar coordinates, given by the following formula:
+It is usually important for a mobile robot to know its environment. There are several reasons for that. One is that robot must know the location of the obstacles (walls) relative to it to avoid driving into them. In the "bigworld" environment, the obstacles are walls which can be represented as lines from the filtered datapoints. These lines can be represented using a normal parametrisation in polar coordinates, given by the following formula:
 \begin{align}
     l:~~~~r = x\cdot\cos(\alpha)+y\cdot\sin(\alpha)
     \label{eq:line}
@@ -18,7 +18,7 @@ where $r$ represents the distance from the origin to the closest point on the li
 	\label{fig:orthogonal_distance}
 	\vspace{-5pt}
 \end{wrapfigure}
-The Total Least Square method assumes that a line can be represented as in equation (\ref{eq:line}). This method also involves a determination of the orthogonal distance (the shortest distance) from a point $p_i$ to a line $l$ as shown in  figure (\ref{fig:orthogonal_distance}). The normal parametrization of the line $l_i$ is given by the following formula:
+The Total Least Square method assumes that a line can be represented as in equation (\ref{eq:line}). This method also involves a determination of the orthogonal distance (the shortest distance) from a point $p_i$ to a line $l$ as shown in  figure (\ref{fig:orthogonal_distance}). The normal parametrisation of the line $l_i$ is given by the following formula:
 \begin{align}
     l_i:~~~~r_i = x_i\cdot\cos(\alpha)+y_i\cdot\sin(\alpha)
 \end{align}
@@ -33,17 +33,17 @@ This method gives a solution to the problem of fitting a straight line to a data
 \begin{equation}
     \chi^2\left(l, z_1, ..., z_n\right) = \sum_{i = 1}^{n} \left[\frac{\left(x_k - X_k\right)^2}{u_{x, k}^{2}} + \frac{\left(y_k - Y_k\right)^2}{u_{y, k}^{2}}\right]
 \end{equation}
-where $(x_k,y_k)$ are the points coordinates with corresponding uncertainties $(u_{x, k},u_{y, k})$ and $(X_k,Y_k)$ denote its corresponding point of the straight line l. In the case of fitting the best line to the dataset, minimizes the expression for $\chi^2$ by setting $u_{x, k}=u_{y, k}=\sigma$ and $k=1,…,n$. This reduces the problem to the Total Least Square method and minimizing is equal to minimizing the orthogonal distance of the measurements to the fitting line. Therefore, in the case  of fitting the best line minimizes the expression above to the following:
+where $(x_k,y_k)$ are the points coordinates with corresponding uncertainties $(u_{x, k},u_{y, k})$ and $(X_k,Y_k)$ denote its corresponding point of the straight line l. In the case of fitting the best line to the dataset, minimises the expression for $\chi^2$ by setting $u_{x, k}=u_{y, k}=\sigma$ and $k=1,…,n$. This reduces the problem to the Total Least Square method and minimising is equal to minimising the orthogonal distance of the measurements to the fitting line. Therefore, in the case  of fitting the best line minimises the expression above to the following:
 \begin{align}
     \chi^2\left(l; Z\right) &= \sum_{i = 1}^{n} \frac{d_i^2}{\sigma^2} \\
     &= \sum_{i = 1}^{n}\frac{\left(x_i\cos(\alpha) + y_i\sin⁡(\alpha)-r\right)^2}{\sigma^2}\\
     &= \frac{1}{\sigma^2}\cdot\sum_{i = 1}^{n}\left(x_i\cos(\alpha) + y_i\sin⁡(\alpha)-r\right)^2
 \end{align}
-A condition for minimizing $\chi^2$ is done by solving the nonlinear equation system with respect to each of the two line parameters ($r$ and $\alpha$)
+A condition for minimising $\chi^2$ is done by solving the non-linear equation system with respect to each of the two line parameters ($r$ and $\alpha$)
 \begin{align}
     \frac{\partial\chi^2}{\partial r} = 0 \hspace{1.5cm} \frac{\partial\chi^2}{\partial\alpha} = 0
 \end{align}
-The solution of this nonlinear equation system is determined to the following:
+The solution of this non-linear equation system is determined to the following:
 \begin{align}
 	r &= \overline{x}\cos(\alpha)+\overline{y}\sin(\alpha) \label{eq:range} \\
     \alpha &= \frac{1}{2}\arctan2\left(\frac{-2\sum_{i=1}^{n}\left[\left(x_i-\overline{x}\right) - \left(y_i-\overline{y}\right)\right]}{\sum_{i = 1}^{n}\left[\left(x_i-\overline{x}\right)^2 - \left(y_i-\overline{y}\right)^2\right]}\right) \label{eq:theta}

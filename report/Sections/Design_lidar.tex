@@ -8,10 +8,10 @@ The script converts this range into mm by first scaling the pixel map to double 
 \frac{20~pixels}{72~dpi}\cdot 25.4~\frac{mm}{inch} = 7.06~mm
 \end{align*}
 Now the script scales the world from mm to m, which means that the range of the LIDAR sensor therefore is 7.06 m.
-The LIDAR sensor maps the surrounding environment by collecting 200 datapoint, which must be processed in order to recognize objects such as walls and marbles. This means that circle and line detecting algorithms must be writing.
+The LIDAR sensor maps the surrounding environment by collecting 200 datapoint, which must be processed in order to recognise objects such as walls and marbles. This means that circle and line detecting algorithms must be writing.
 
 \clearpage
-The datapoints from the LIDAR sensor is first visualized by drawing white lines from the robots location to each of the 200 datapoints using the \texttt{cv::line()} function as shown in figure (\ref{fig:white_lines}). Afterwards the datapoints are sorted by checking if the range is equal to sensor range in order to get the points that reflects from different objects.\par
+The datapoints from the LIDAR sensor is first visualised by drawing white lines from the robots location to each of the 200 datapoints using the \texttt{cv::line()} function as shown in figure (\ref{fig:white_lines}). Afterwards the datapoints are sorted by checking if the range is equal to sensor range in order to get the points that reflects from different objects.\par
 
 The filtered datapoints are drawn as lines upon the unsorted data. These lines can be distinguished by different blue colours depending on the range between the two points ranging from blue to cyan. This blue coloured and white lines are shown in figure (\ref{fig:blue_lines}).
 \subfile{../Figures/Visualisation_of_lidar_data}
