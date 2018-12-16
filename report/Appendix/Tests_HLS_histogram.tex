@@ -4,7 +4,9 @@
 \label{subsec:test_HLS_hist}
 The purpose of this test was to find the hue value of the blue marbles, in order to convert the image to a binary image. 
 
+
 \subsubsection*{Description of test}
+
 This test was conducted using the method \texttt{hls\_histogram()}, from the class \texttt{c\_vision}. This method generates a histogram for the hue channel of the HLS colour-space, and marks local maxima.\\
 The test was conducted using three different scenarios, one where no marbles would appear, one where a marble would fill a small part of the image, and one where a marble would will most of the image.\\
 This was done to ensure that the right spike was found, by having knowledge of its peak compared to the background.  
@@ -63,6 +65,7 @@ The spike was found at the same value as in test 2, and both spikes correspond t
 	\hfill
 	\begin{subfigure}[b]{0.5\textwidth}
 		\centering
+
 		\includegraphics[width=\textwidth]{CV/camera_test_image_5}
 		\caption{Image for test 3}
 		\label{fig:image_test_3}
