@@ -1,4 +1,5 @@
 \ProvidesPackage{setup}
+
 \usepackage[headheight=10pt, top=3cm, bottom=3cm, left=2cm, right=2cm]{geometry}
 \usepackage{algorithm}
 \usepackage{algpseudocode}
@@ -47,7 +48,6 @@
 \usepackage{tocvsec2}
 \usepackage{tabularx}
 \usepackage{tikz}
-\usepackage[nottoc]{tocbibind}
 \usepackage{todonotes}
 %\usepackage{ulem}
 \usepackage{wrapfig}
@@ -154,4 +154,4 @@
 
 \newcommand{\notocsection}[3]{%
     \refstepcounter{subsubsection}%
-    \subsubsection*{\thesubsubsection \quad #3}}%
+    \subsubsection*{\thesubsubsection\quad#3}}%
