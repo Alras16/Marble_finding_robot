@@ -9,13 +9,46 @@ The method \texttt{find\_marbles()} was implemented by first finding the number 
 Then max and min value of both the x and y direction was found. Based on these informations the height and width of the objects where found.\\
 The center of the marbles was set in between min and max values on both axis, and the radius was found based on the height of the object.\\
 To check whether the marbles was cut off at either the left or the right side, the height and the width of the objects was compared. If the width was smaller or equal to the height, the marbles was considered cut at either side. To find out which side the center of the marbles was checked. If the marbles where to the left of the center of the image, the marbles was considered cut off in the left side, and if the marbles where to the right of the center of the image, the marbles was considered to be cut off at the right side.\\
- 
+The center of the detected marbles would in these cases not be correctly placed, but shifted towards the middle of the image. To overcome this the difference was found by calculation the difference between the edge of the object, and the edge of the detected marble. The marbles center could then be shifted either left or right with value.\par 
+A final test was conducted to find the performance of the methods. 
+
+\begin{figure}[H]
+	\centering
+	\begin{subfigure}[b]{0.196\textwidth}
+		\centering
+		\includegraphics[width=\textwidth]{CV/camera_detected_marbles_2}
+		\caption{Marble detection on scenario 1}
+	\end{subfigure}
+	\hfill
+	\begin{subfigure}[b]{0.196\textwidth}
+		\centering
+		\includegraphics[width=\textwidth]{CV/camera_detected_marbles_3}
+		\caption{Marble detection on scenario 2}
+	\end{subfigure}
+	\hfill
+	\begin{subfigure}[b]{0.196\textwidth}
+		\centering
+		\includegraphics[width=\textwidth]{CV/camera_detected_marbles_4}
+		\caption{Marble detection on scenario 3}
+	\end{subfigure}
+	\hfill
+	\begin{subfigure}[b]{0.196\textwidth}
+		\centering
+		\includegraphics[width=\textwidth]{CV/camera_detected_marbles_5}
+		\caption{Marble detection on scenario 4}
+	\end{subfigure}
+	\hfill
+	\begin{subfigure}[b]{0.196\textwidth}
+		\centering
+		\includegraphics[width=\textwidth]{CV/camera_detected_marbles_6}
+		\caption{Marble detection on scenario 5}
+	\end{subfigure}
+	\caption{Marble detection of scenario 1 to 5}
+	\label{fig:md_1_5}
+\end{figure} 
 
 
 
-
-All these methods was implemented in a class called \texttt{q\_learning}. This gives the possibility of initialising all matrices and parameters in the constructor, only given the number of rooms as argument. This makes code scalable to any number of rooms.\\
-It have been chosen to initialise all rewards to $-100$ except those on the main diagonal, whose initial value was set to $0$.\\
 
 
 \end{document}
