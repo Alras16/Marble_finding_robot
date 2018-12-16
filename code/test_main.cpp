@@ -4,6 +4,7 @@
 
 setup beginSetup;
 static boost::mutex mutex;
+
 int main() {
 
   beginSetup.initGazebo();
@@ -15,7 +16,7 @@ int main() {
   ct::marble closest_marble;
   ct::robot_action robotAction;
   ct::current_position pos1;
- // beginSetup.motion_planning_object.get_room_info(beginSetup.map_class_object.getRooms());
+  // beginSetup.motion_planning_object.get_room_info(beginSetup.map_class_object.getRooms());
   std::vector<ct::room> rooms1 = beginSetup.map_class_object.getRooms();
   std::vector<cv::Point> pathPoints;
 
@@ -23,14 +24,19 @@ int main() {
   brush.paintMap();
   brush.findCornerPoints();
   brush.findCenterPoints();
-  brush.findIntersectingPoints();
+  brush.findLinePoints();
   brush.scaleImage(5);
   brush.connectPoints();
- // brush.showImage("Brushfire algorithm");
- // brush.showValues("Voronoi diagram");
+  // brush.showConnectedPoints("Kruskal's algorithm and DFS");
+  // brush.findPathPoints(cv::Point(-36,23), cv::Point(-4,-20));
+  // brush.showConnectedPoints("Kruskal's algorithm and DFS");
+  // pathPoints = brush.getRoadPath();
+  // brush.showImage("Brushfire algorithm");
+  // brush.showValues("Voronoi diagram");
 
    while(indexRooms <= rooms1.size())
    {
+
 
       if (beginSetup.motion_planning_object.target_location())
            index++;
@@ -38,9 +44,8 @@ int main() {
       if (index == pathPoints.size() || indexRooms == 0)
       {
          pathPoints.clear();
-         brush.findPathPoints(beginSetup.get_robot_position().robot_pos, rooms1[indexRooms++].centerOfMass);
-         brush.showConnectedPoints("Kruskal's algorithm and DFS");
-         pathPoints = brush.getRoadPath();
+        brush.findPathPoints(beginSetup.get_robot_position().robot_pos, rooms1[indexRooms++].centerOfMass);
+        pathPoints = brush.getRoadPath();
          index = 1;
       }
 
@@ -54,7 +59,8 @@ int main() {
     //  beginSetup.motion_planning_object.show_path_of_robot(beginSetup.get_robot_position().robot_pos_pic);
     //  beginSetup.motion_planning_object.tangent_bug_algoritm(pos1,rooms1);
 
-      beginSetup.motion_planning_object.model_based_planner(pos1,pathPoints,index);
+
+      beginSetup.motion_planning_object.model_based_planner(pos1, pathPoints,index, indexRooms, rooms1[0].centerOfMass);
 
       robotAction = beginSetup.controller.getControlOutput(closest_marble,angle);
       speed = robotAction.speed;

@@ -28,17 +28,21 @@ brushfire::brushfire(std::string fileName)
 
 void brushfire::showImage(std::string name)
 {
+
+   // cv::imwrite("/media/kenni/usb1/linuxUbuntu/Robotics5semesterProject/Tests/RoadMap/Brushfire1.png", ori_map);
     cv::imshow(name, ori_map);
 }
 
 
 void brushfire::showValues(std::string name)
 {
-    cv::imshow(name, point_map);
+   // cv::imwrite("/media/kenni/usb1/linuxUbuntu/Robotics5semesterProject/Tests/RoadMap/RoadPoints1.png", point_map);
+   cv::imshow(name, point_map);
 }
 
 void brushfire::showConnectedPoints(std::string name)
 {
+  //  cv::imwrite("/media/kenni/usb1/linuxUbuntu/Robotics5semesterProject/Tests/RoadMap/RoadMap1.png", connected_map);
     cv::imshow(name, connected_map);
 }
 
@@ -258,7 +262,7 @@ void brushfire::findCenterPoints()
 
 }
 
-void brushfire::findIntersectingPoints()
+void brushfire::findLinePoints()
 {
 
     std::vector<std::vector<float>> matrix1 = matrix;
@@ -272,10 +276,10 @@ void brushfire::findIntersectingPoints()
 
 
    // Horisontal
-   for(unsigned int i = 2; i < matrix1.size() - 1; i++)
+   for(unsigned int i = 1; i < matrix1.size() - 1; i++)
        {
 
-       for(unsigned int j = 2; j < matrix1[i].size() - 1; j++)
+       for(unsigned int j = 1; j < matrix1[i].size() - 1; j++)
          {
 
                  while (matrix1[i][j] == 20)
@@ -300,10 +304,10 @@ void brushfire::findIntersectingPoints()
      }
 
    // Vertical
-   for(unsigned int j = 2; j < matrix1[0].size() - 1; j++)
+   for(unsigned int j = 1; j < matrix1[0].size() - 1; j++)
        {
 
-       for(unsigned int i = 2; i < matrix1.size() - 1; i++)
+       for(unsigned int i = 1; i < matrix1.size() - 1; i++)
          {
 
                  while (matrix1[i][j] == 20)
@@ -478,17 +482,18 @@ void brushfire::connectPoints()
 
     for (unsigned int i = 0; i < intersectionPoins.size(); i++)
          cv::circle(connected_map,intersectionPoins[i]*5,3,cv::Scalar({255,0,0}),-1);
+
 }
 
 void brushfire::findPathPoints(cv::Point curPos, cv::Point goal)
 {
 
   // Scaling from gazebo coordinates to picture pixels
-  curPos.x = curPos.x*1.411764706+60; // (120/2)/(85/2) = 1.411..
-  curPos.y = (-1)*curPos.y*1.428571429+40; // (80/2)/(56/2) = 1.428..
+  curPos.x = (curPos.x*1.411764706)+60; // (120/2)/(85/2) = 1.411..
+  curPos.y = ((-1)*curPos.y*1.428571429)+40; // (80/2)/(56/2) = 1.428..
 
-  goal.x = goal.x*1.411764706+60; // (120/2)/(85/2) = 1.411..
-  goal.y = (-1)*goal.y*1.428571429+40; // (80/2)/(56/2) = 1.428..
+  goal.x =(goal.x*1.411764706)+60; // (120/2)/(85/2) = 1.411..
+  goal.y = ((-1)*goal.y*1.428571429)+40; // (80/2)/(56/2) = 1.428..
 
   cv::Point start, end;
   float closest_point_start = 1000, closest_point_end = 1000;
@@ -544,13 +549,20 @@ void brushfire::findPathPoints(cv::Point curPos, cv::Point goal)
   }
 
 */
+
   DFS(start,end);
 
- // for (int i = 0; i < pathPointsResult.size(); i++)
- //     std::cout << std::endl << "Point" << i+1 << ": " << pathPointsResult[i] << std::endl;
+  // for (int i = 0; i < pathPointsResult.size(); i++)
+  //    std::cout << std::endl << "Point" << i+1 << ": " << pathPointsResult[i] << std::endl;
 
   for (unsigned int i = 0; i < pathPointsResult.size(); i++)
        cv::circle(connected_map,pathPointsResult[i]*5,4,cv::Scalar({0,0,0}),-1);
+
+  // cv::imwrite("/media/kenni/usb1/linuxUbuntu/Robotics5semesterProject/Tests/KruskalsAndDFSTest/PathTest3.png", connected_map);
+
+  // To make the last point the goal
+  // pathPointsResult.pop_back();
+  // pathPointsResult.push_back(goal);
 
 }
 

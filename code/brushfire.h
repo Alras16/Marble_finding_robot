@@ -31,7 +31,7 @@ public:
 
     void findCornerPoints();
     void findCenterPoints();
-    void findIntersectingPoints();
+    void findLinePoints();
     void connectPoints();
     void findPathPoints(cv::Point curPos, cv::Point goal);
 
