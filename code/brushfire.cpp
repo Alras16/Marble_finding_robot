@@ -183,7 +183,7 @@ void brushfire::plotMedianPoints()
         *point_map.ptr<cv::Vec3b>(imagePoints[i].y,imagePoints[i].x) = cv::Vec3b({255, 0, 0});
 }
 
-void brushfire::findCenterPoints()
+/*void brushfire::findCenterPoints()
 {
     for(unsigned int i = 1; i < matrix.size() - 1; i++)
     {
@@ -211,7 +211,7 @@ void brushfire::findCenterPoints()
         *point_map.ptr<cv::Vec3b>(centerPoints[i].y,centerPoints[i].x) = cv::Vec3b({0, 0, 255});
         std::cout << centerPoints.size() << std::endl;
     }
-}
+}*/
 
 void brushfire::findCornerPoints()
 {

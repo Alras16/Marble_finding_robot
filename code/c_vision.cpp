@@ -93,7 +93,7 @@ cv::Mat c_vision::hls_histogram()
         }
         cv::line(histogram_image, cv::Point(bin_w*(i-1),hist_h - cvRound(histogram[i-1])),cv::Point(bin_w*(i),hist_h - cvRound(histogram[i])),cv::Scalar(0,0,0),2,8,0);
     }
-    cv::imshow("Histogram",histogram_image);
+    //cv::imshow("Histogram",histogram_image);
     return histogram_image;
 }
 
@@ -128,7 +128,7 @@ void c_vision::find_color()
         //processed_image = binary_image.clone();
         processed_image = binary_image.clone();
         //image_updated = false;
-        cv::imshow("Color found",binary_image);
+    //    cv::imshow("Color found",binary_image);
     }
 
 
@@ -195,7 +195,7 @@ void c_vision::find_marbles()
         for (unsigned int i = 0; i < small_images.size(); i++)
         {
             std::string name = "contour " + std::to_string(i);
-            cv::imshow(name,small_images[i]);
+           // cv::imshow(name,small_images[i]);
         }
 
 
@@ -231,7 +231,7 @@ void c_vision::find_marbles()
         for (unsigned int i = 0; i < marbles.size(); i++)
             cv::circle( temp_image, marbles[i].center, marbles[i].radius, cv::Scalar(0,0,255), 2, 8, 0 );
         ori_image = temp_image;
-        cv::imshow( "Contour demo", temp_image ); // Must have the same mutex lock
+       // cv::imshow( "Contour demo", temp_image ); // Must have the same mutex lock
     }
 }
 
