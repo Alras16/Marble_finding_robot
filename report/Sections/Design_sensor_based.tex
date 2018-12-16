@@ -1,10 +1,10 @@
 \documentclass[../Head/Main.tex]{subfiles}
 \begin{document}
 \subsubsection{Sensor based planner}
-The tangent bug algorithm is a sensor based planer which relies on inputs from a sensor to determine whether it should continue towards a  specified location $q_{goal}$ or to follow an obstacle $O_i$ until a free path is available. The advantage of using this algorithm is the computational minimisation and the fact that it only needs a start and end point. The reason for using this algorithm is the benefits just explained and that it will always try to achieve a shortest path solution to the goal location. Pseudo code for the implementation for the tangent bug algorithm is shown below.        
+The tangent bug algorithm is a sensor based planer which relies on inputs from a sensor to determine whether it should continue towards a  specified location $q_{goal}$ or to follow an obstacle $O_i$ until a free path is available. The advantage of using this algorithm is the computational minimisation and the fact that it only needs a start and end point. The reason for using this algorithm is the benefits just explained and that it will always try to achieve a shortest path solution to the goal location. Pseudo code for the implementation for the tangent bug algorithm is shown below. (\cite[23-37]{ROB})    
 \subfile{../Pseudo/Tangent_bug_algorithm}
 It has been decided to make small changes to the algorithm and make it greedy. Instead of following the boundary $d_{reach} < d_{followed}$, the robot will follow that obstacle that minimises ${d(x,n)}$ + d$\left(n,~q_{goal}\right)$. The reason for doing this is to reduce the path from a giving point to a target location. \par
-Because the point giving to the tangent bug is relative to the world frame in Gazebo a mapping between to configurations is needed. The robot is shifted $\pi$ radians relative to the world frame which give the following transformation matrix.
+Because the point giving to the tangent bug is relative to the world frame in Gazebo a mapping between to configurations is needed. The robot is shifted $\pi$ radians relative to the world frame which give the following transformation matrix. (\cite[60-66]{ROB})
 \begin{equation}
 	T = \begin{bmatrix} 
 	   cos(\theta-\frac{\pi}{2}) &  -sin(\theta-\frac{\pi}{2}) & robotPos.x \\ 

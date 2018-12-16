@@ -3,6 +3,7 @@
 \begin{figure}[H]
 	\begin{subfigure}[b]{0.49\textwidth}
 		\centering
+		\scalebox{0.9}{		
 		\begin{tikzpicture}
 			\draw [->](0,-0.5)--(0,6) node[right]{$y$};
 			\draw [->](-0.5,0)--(6,0) node[right]{$x$};
@@ -50,13 +51,14 @@
 			\node at (2.65,3) {$h$};
 			\node[right] at (3.17, 2.8) {$c$};
 			\node at (3.4,3.4) {$\theta$};
-		\end{tikzpicture}
+		\end{tikzpicture}}
 		\caption{Illustration of detected points (marked as ending point of the black lines), the circle chord and arch heigh can be found from the LIDAR data}
 		\label{fig:lidar_marble_detec}
   	\end{subfigure}
   	\hfill
   	\begin{subfigure}[b]{0.49\textwidth}
 		\centering
+		\scalebox{0.9}{
 		\begin{tikzpicture}
 			\draw (3.5, 3.5) -- (3.5, 6);
 			\draw (3.5, 4.75) node[right]{$r$};
@@ -77,7 +79,7 @@
 			\draw [blue, thick] (3.1724, 1.02) -- (1.02, 3.1724);
 			\draw [green, thick] (1.7322, 1.7322) -- (2.096, 2.096);
 			\draw [white] (3.5, 0);
-		\end{tikzpicture}
+		\end{tikzpicture}}
 		\caption{Illustration of the circle chord and arch heigh can be found from the LIDAR data and thereby can determine the circle's radius and the chord angle}
 		\label{fig:lidar_marble_scaled}
   	\end{subfigure}

@@ -37,8 +37,8 @@ This method gives a solution to the problem of fitting a straight line to a data
 where $(x_k,y_k)$ are the points coordinates with corresponding uncertainties $(u_{x, k},u_{y, k})$ and $(X_k,Y_k)$ denote its corresponding point of the straight line l. In the case of fitting the best line to the dataset, minimises the expression for $\chi^2$ by setting $u_{x, k}=u_{y, k}=\sigma$ and $k=1,…,n$. This reduces the problem to the Total Least Square method and minimising is equal to minimising the orthogonal distance of the measurements to the fitting line. Therefore, in the case  of fitting the best line minimises the expression above to the following (\cite[1-3]{TLSM})
 \begin{align}
     \chi^2\left(l; Z\right) &= \sum_{i = 1}^{n} \frac{d_i^2}{\sigma^2} \\
-    &= \sum_{i = 1}^{n}\frac{\left(x_i\cos(\alpha) + y_i\sin⁡(\alpha)-r\right)^2}{\sigma^2}\\
-    &= \frac{1}{\sigma^2}\cdot\sum_{i = 1}^{n}\left(x_i\cos(\alpha) + y_i\sin⁡(\alpha)-r\right)^2
+    &= \sum_{i = 1}^{n}\frac{\left(x_i\cos(\alpha) + y_i\sin(\alpha)-r\right)^2}{\sigma^2}\\
+    &= \frac{1}{\sigma^2}\cdot\sum_{i = 1}^{n}\left(x_i\cos(\alpha) + y_i\sin(\alpha)-r\right)^2
 \end{align}
 A condition for minimising $\chi^2$ is done by solving the non-linear equation system with respect to each of the two line parameters ($r$ and $\alpha$). (\cite[1-3]{TLSM})
 \begin{align}
@@ -57,11 +57,11 @@ As explained earlier, the two-wheeled robot should avoid obstacles (walls). To d
 \subfile{../Pseudo/Incremental}
 This algorithm implements the Total Least Square method then computing the line parameters. Furthermore, the line model consists of points which all must comply some line conditions. In that case, all points must comply these conditions. The first condition is a threshold for the angle between the previous and current line model as shown in figure (\ref{fig:Line_model_angle}). The threshold is defined to be the following 
 \begin{align*}
-	\theta_{max} = 0,0025
+	\theta_{max} = 0.0025
 \end{align*}
 The second condition is the angle between two points relative to the robot location as shown in figure (\ref{fig:Datapoints_angle}). This angle should be greater than this difference, but not twice as great, since this condition should separate the points into two lines if one point is missing on the list as shown in figure (\ref{fig:Line_separation}). This angle is therefore defined to be the following
 \begin{align*}
-	\Delta\theta = \left(\theta_0 - \theta_1\right)\cdot 1,25
+	\Delta\theta = \left(\theta_0 - \theta_1\right)\cdot 1.25
 \end{align*}
 \subfile{../Figures/Visualisation_of_line_conditions}
 \end{document}

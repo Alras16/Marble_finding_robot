@@ -2,6 +2,10 @@
 \begin{document}
 \section{Abstract}
 
+This project is about motion planning and controlling a robot in a closed environment. The idea is to implement a number of algorithms to be used in motion control to navigate the robot.
 
+In order to do so two different planning algorithms were implemented, one sensor based and a model based planner. The model based planner had a higher success rate in navigating around the environment compared to the sensor based planner. However, the sensor based planner had a shorter average path when navigating successfully. The robot must be able to collect marbles and optimise its search strategy through the use of reinforcement learning. The protect the robot from colliding with obstacles, a minimum distance of 0.2 meters must be kept. This was accomplished by making a fuzzy controller, which was used to control the robot. Through the use of Q-learning the robot was able to optimise its search strategy. 
+
+In order to detect marbles and obstacles a number of algorithms were designed and implemented utilising both LIDAR and camera data. In general the algorithm based on LIDAR performed well, but the marbles detecting algorithm had a tendency to detect marbles in corners yielding the line detecting method to merge perpendicular lines. The marble detecting algorithm based on the camera generally performed well, but produced falsely results when marbles overlapping or cut off at either top or bottom.  
 
 \end{document}
