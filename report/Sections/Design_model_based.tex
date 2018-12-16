@@ -1,21 +1,18 @@
 \documentclass[../Head/Main.tex]{subfiles}
 \begin{document}
 \subsubsection{Model based planner}
+\label{subsec:design_model_based}
+To be able to generate a complete road map a number of algorithms have been taken into consideration namely the brushfire algorithm, Kruskal's algorithm and an extended version of the Depth-First Search algorithm. In the beginning of the project other algorithms were taken into consideration like the trapezoidal decomposition. The problem about this algorithm is that it works well on polygons and other odd structures, but because the map used in the project mainly consist of rectangles oriented either along the x-axis or perpendicular to the x-axis this algorithm was rejected. Instead the brushfire algorithm was considered appropriate.\\ 
+The reason for choosing this algorithm is that it gives a set of values to the pixels furthest away from the obstacles, which can be used to generate a path for the robot by picking out the pixels that leads to a complete road map for the robot to navigate through the entire map. To be able to connect the points on the map, Kruskal's algorithm was used. Using this algorithm, one can connect points on a map and avoid cycles between points, which makes path planning easier. An extended version of the Depth-First Search algorithm is used to generate a set of points which the robot has to follow to reach its goal. This algorithm was seen efficient to solve the problem of path generation and therefore used.\par 
 
-To be able to generate a complete road map a number of algorithms have been taken into consideration namely the brushfire algorithm, Kruskal's algorithm and an extended version of the Depth-First Search algorithm. 
-\todo[inline]{Short introduction is missing, where you tell the reason for chosing this algorithm}
 The brushfire algorithm uses a grid to approximate distance to obstacles. The idea is to give obstacles a starting value of 1 and free-space pixels a value of 0. Then continue until the $'fire'$ has consumed all free pixels thereby giving pixels furthest away from obstacles the highest value. It was decided to use a eight-point connectivity grid. \par
 \todo[inline]{Figure to show what eight-point connectivity grid}
 \subfile{../Pseudo/Brushfire_algorithm}
+Now the goal is to find center points from the bushfire algorithm so that they can be used to establish connections between rooms. The idea is to use Kruskal's algorithm to connect points to one another.  Kruskal's algorithm uses the disjoint set union/find algorithm which is an algorithm used to find relations between vertices. It starts by initialising a vector by the size of the number of vertices and sets them to -1. The \texttt{find(int V1)} method uses recursion to see if the vertices are joint or disjoint, meaning that they form a cycle if they are connected. If they are not connected the method  \texttt{unionSets(int V1, int V2)} connects the two vertices, which would otherwise result in a cycle between a number of vertices.
 
-The reason for choosing this algorithm is that it gives a set of values to the pixels furthest away from the obstacles, which can be used to generate a path for the robot by picking out the pixels that leads to a complete road map for the robot to navigate through the entire map. \par
-\todo[inline]{Maybe say something about finding the centred points in a room and the center point between the door frames}
-Now the goal is to find center points from the bushfire algorithm so that they can be used to establish connections between rooms. The idea is to use Kruskal's algorithm to connect points to one another.  Kruskal's algorithm uses the \textit{disjoint set union/find} algorithm which is an algorithm used to find relations between vertexes. It starts by initializing a vector by the size of the number of edges and sets them to -1. The \texttt{unionSets(int V1, int V2)} connects two vertexes if there connection will not result in a cycle.  The \texttt{find(int V1)} method uses recursion to see if the vertexes are joint or disjoint, meaning that they form a cycle if they are connected.
-\todo[inline]{Cycle?}     
 \subfile{../Pseudo/Kruskals_algorithm}
 
-Now the idea of generating connections between all vertexes on the map is complete. The last thing which needs to be solved is to be able to generate a path between vertexes from an initial position to a target location. An extended version of the Depth-First Search algorithm is used. This algorithm uses recursion to find a path between vertexes. It uses a vector of vectors (vertexes) to recursely generating a full path from a starting vertex to target vertex. 
+Now the idea of generating connections between all vertices on the map is complete. The last thing which needs to be solved is to be able to generate a path between vertices from an initial position to a target location. Depth-First Search algorithm uses recursion to find a path between vertices. It uses a vector of vectors (vertices) to recursively generating a full path from a starting vertex to target vertex. 
 \subfile{../Pseudo/DFS_extended}
-Thus the user should be able to give a start and target location from the number of vertexes from the list yielding a complete route for the robot to travel.
-\todo[inline]{Either you should use textit when marking all algortihm or not}
+Thus the user should be able to give a start and target location from the number of vertices from the list yielding a complete route for the robot to travel.
 \end{document}

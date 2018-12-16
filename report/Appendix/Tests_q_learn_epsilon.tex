@@ -4,9 +4,9 @@
 \label{subsec:test_epsilon}
 The purpose of this test is to show how different values of $\epsilon$ influences the performance of Q-learning.
 \subsubsection*{Description of test}
-This test was done by performing 100 trials of each selected value of $\epsilon$ for a range of episodes. The test was conducted using the world "5-room world" seen on figure \ref{fig:5_room_world_epsilon}.\\
-The distance punishments are bases on those found in the test in appendix \ref{subsec:est_path_length}. The distance punishments was scaled with a factor of 1.2 to make the distance a bigger factor in final path.\\
-The probabilities used for each room was found in the test in appendix \ref{subsec:probability_test}. These probabilities was divided by the maximal value and scaled by a factor of 20. This was done to ensure that the total reward for entering a room the first time would be positive.\par 
+This test was done by performing 100 trials of each selected value of $\epsilon$ for a range of episodes. The test was conducted using the world "5-room world" seen on figure (\ref{fig:5_room_world_epsilon}).\\
+The distance punishments are bases on those found in the test in appendix(\ref{subsec:est_path_length}). The distance punishments was scaled with a factor of 1.2 to make the distance a bigger factor in final path.\\
+The probabilities used for each room was found in the test in appendix (\ref{subsec:probability_test}). These probabilities was divided by the maximal value and scaled by a factor of 20. This was done to ensure that the total reward for entering a room the first time would be positive.\par 
 The initial state for all tests was set to room 3 in order to ensure greatest number of possible paths.
 \begin{figure}[H]
 	\centering
@@ -61,14 +61,14 @@ In the following tables, the parameters for the test can be seen. In order not t
 		Room 3 to room 5  & -2.544\\
 		\hline
 	\end{tabular}
-	\caption{Table of the distance punishments. The distances are found in the test in appendix \ref{subsec:est_path_length}}
+	\caption{Table of the distance punishments. The distances are found in the test in appendix (\ref{subsec:est_path_length})}
 	\label{tab:distance_punishment_5_rooms}
 \end{table}
 \end{minipage}
 
 \subsubsection*{Data}
-On figure \ref{fig:q-learn_epsilon_reward} the average reward for all tests can be seen. It can be seen that the lower the value of $\epsilon$ the higher average reward, meaning that the policy will converge to the optimal policy.\par
-On figure \ref{fig:q-learn_epsilon_iterations} the average number of iterations per episoden can be seen. It can be seen that the higher the value of $\epsilon$ the lower the average number of iterations will be. Given the fact that the more random the agent acts, the faster the agent will search alternative paths to the policy, and find its way through the environment.  
+In figure (\ref{fig:q-learn_epsilon_reward}) the average reward for all tests can be seen. It can be seen that the lower the value of $\epsilon$ the higher average reward, meaning that the policy will converge to the optimal policy.\par
+In figure (\ref{fig:q-learn_epsilon_iterations}) the average number of iterations per episoden can be seen. It can be seen that the higher the value of $\epsilon$ the lower the average number of iterations will be. Given the fact that the more random the agent acts, the faster the agent will search alternative paths to the policy, and find its way through the environment.  
 \begin{figure}[H]
 	\centering
 	\begin{subfigure}[b]{0.49\textwidth}

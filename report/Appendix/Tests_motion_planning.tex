@@ -7,23 +7,34 @@ The purpose of this test is to find out how well the motion planners work in an 
 
 \subsubsection*{Description of test}
 
-The initial position of the robot will be in the origin of the environment of the gazebo simulator. Here 14 test of both the tangent bug algorithm and model based planner was conducted for the 14 rooms of the \textit{bigworld} map. The idea is to test the success rate of finding rooms, the robots distance to the closest obstacle on the path to the goal and the distance travelled along the way. The model based planer will be tested with a higher speed than the tangent bug algorithm because it will be further away from obstacle most of the time and thereby less likely of hitting obstacles.           
+The initial position of the robot will be in the origin of the environment of the gazebo simulator. Here 14 test of both the tangent bug algorithm and model based planner was conducted for the 14 rooms of the bigworld map. The idea is to test the success rate of finding rooms, the robots distance to the closest obstacle on the path to the goal and the distance travelled along the way. The model based planer will be tested with a higher speed than the tangent bug algorithm because it will be further away from obstacle most of the time and thereby less likely of hitting obstacles.           
 
 \subsubsection*{Test parameters}
 
-\begin{tabular}{l r}
-	- World used                & bigworld\\	
-	- Speed of tangent bug      & -1 to 1\\
-	- Speed of model planer     & -2 to 2\\
-	- Number of tests           & 14
+\begin{tabular}{l r l}
+	- World used                    & bigworld & \\	
+	- Velocity of tangent bug       & $U=\{-1~to~1\}$ & (Universe of discourse)\\
+	- Velocity of model planner     & $U=\{-2~to~2\}$ & (Universe of discourse)\\
+	- Number of tests               & 14 & 
 \end{tabular}
 
 \subsubsection*{Data}
 
-If one compares the model based planer in table \ref{modelbased} with the sensor based planer in table \ref{sensorbased} many observations is observed. The model based planner has a success rate of finding rooms at 100\% with and average travelled distance of 46.882 meters. Compared to the sensor based planner with a success rate of 64.286\% and average distance on 27.909 meters, the model based performs very well in finding rooms, but it comes with a cost of distance travelled compared to the sensor based. It is clear from figure \ref{fig:Test9} that when the sensor based planner performs well, it outperforms the model based planner in distance travelled.    
+If one compares the model based planner in table (\ref{tab:modelbased}) with the sensor based planner in table (\ref{tab:sensorbased}) many observations is observed. The model based planner has a success rate of finding rooms at 100 \% with and average travelled distance of 46.9 meters. Compared to the sensor based planner with a success rate of 64.3 \% and average distance on 27.9 meters, the model based performs very well in finding rooms, but it comes with a cost of distance travelled compared to the sensor based. It is clear from figure (\ref{fig:Test9}) that when the sensor based planner performs well, it outperforms the model based planner in distance travelled.    
 
-\subfile{../Tables/Dist_travelled_and_dist_to_obstacle_modelbased}
-\subfile{../Tables/Dist_travelled_and_dist_to_obstacle_tangent_bug}
+\begin{table}[H]
+	\subfile{../Tables/Dist_travelled_and_dist_to_obstacle_modelbased}
+	\caption{Table over test data for the model based planner}
+	\label{tab:modelbased}
+\end{table}
+
+\begin{table}[H]
+	\subfile{../Tables/Dist_travelled_and_dist_to_obstacle_tangent_bug}
+	\caption{Table over test data for the sensor based planner}
+	\label{tab:sensorbased}
+\end{table}
+
+
 \subfile{../Figures/Graphs_dist_to_obstacle}
 \subfile{../Figures/Comparason_motion_planners}
 
@@ -36,6 +47,6 @@ If one compares the model based planer in table \ref{modelbased} with the sensor
 
 \subsubsection*{Conclusion}
 
-The model based planner is more reliable than the sensor based planner in that it has a success rate of finding rooms at 100\% compared to 64.286\% for the sensor based. However the sensor based planner has an average distance travelled about 27.909 meters compared to the model based about 46.882 meters. It can therefore be concluded that the sensor based planner outperforms the model based in certain scenarios, but the model based is more reliable in finding rooms. 
+The model based planner is more reliable than the sensor based planner in that it has a success rate of finding rooms at 100 \% compared to 64.3 \% for the sensor based. However the sensor based planner has an average distance travelled about 27.9 meters compared to the model based about 46.9 meters. It can therefore be concluded that the sensor based planner outperforms the model based in certain scenarios, but the model based is more reliable in finding rooms. 
 
 \end{document}

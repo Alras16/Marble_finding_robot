@@ -1,18 +1,19 @@
 \documentclass[../Head/Main.tex]{subfiles}
 \begin{document}
 \subsubsection{Sensor based planner}
-\todo[inline]{Before this you need to give a reason for chosen the tangent bug}The tangent bug algorithm is a sensor based planer which relies on inputs from a sensor to determine whether it should continue towards a  specified location $q_{goal}$ or to follow an obstacle $O_i$ until a free path is available. The advantage of using this algorithm is the computational minimization and the fact that it only needs a start and end point. The reason for using this algorithm is the benefits just explained and that it will always try to achieve a shortest path solution to the goal location. Pseudo code for the implementation for the tangent bug algorithm is shown below.        
+The tangent bug algorithm is a sensor based planer which relies on inputs from a sensor to determine whether it should continue towards a  specified location $q_{goal}$ or to follow an obstacle $O_i$ until a free path is available. The advantage of using this algorithm is the computational minimization and the fact that it only needs a start and end point. The reason for using this algorithm is the benefits just explained and that it will always try to achieve a shortest path solution to the goal location. Pseudo code for the implementation for the tangent bug algorithm is shown below.        
 \subfile{../Pseudo/Tangent_bug_algorithm}
 It has been decided to make small changes to the algorithm and make it greedy. Instead of following the boundary $d_{reach} < d_{followed}$, the robot will follow that obstacle that minimizes ${d(x,n)}$ + d$\left(n,~q_{goal}\right)$. The reason for doing this is to reduce the path from a giving point to a target location. \par
 Because the point giving to the tangent bug is relative to the world frame in gazebo a mapping between to configurations is needed. The robot is shifted $\pi$ radians relative to the world frame which give the following transformation matrix.
-\begin{align}
-	T &= \begin{bmatrix} 
+\begin{equation}
+	T = \begin{bmatrix} 
 	   cos(\theta-\frac{\pi}{2}) &  -sin(\theta-\frac{\pi}{2}) & robotPos.x \\ 
 	    sin(\theta-\frac{\pi}{2}) &  cos(\theta-\frac{\pi}{2}) & robotPos.y \\
 	    0 & 0 & 1					
-	\end{bmatrix} \\
-	p^{robot} &= T^{-1} \cdot {p^{world}} \label{Transformations matrix}
-\end{align}
-Now by calculating equation \ref{Transformations matrix} one can get the desired orientation to the target location from $p_{robot}$ by using atan2.
-\todo[inline]{Reference to my section about line detection, since I describes the cases where this applies}
+	\end{bmatrix}
+\end{equation}
+\begin{equation}\label{eq:world_transformation}
+	p^{robot} = T^{-1} \cdot {p^{world}}
+\end{equation}	
+Now by calculating equation (\ref{eq:world_transformation}) one can get the desired orientation to the target location from $p_{robot}$ by using atan2.
 \end{document}

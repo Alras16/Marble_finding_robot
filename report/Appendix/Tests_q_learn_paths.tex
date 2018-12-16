@@ -5,9 +5,9 @@
 The purpose of this test was to find the optimal path for covering 5-room world in the best possible way
 \subsubsection*{Description of test}
 This test consisted of 5 subtest, where each test was started in different rooms. This was to find out, which room was the most optimal to start in. Each subtest consisted of 10 trials, where all parameters where the same.\\
-The test was conducted using the world "5-room world" seen on figure \ref{fig:5_room_world_path}.\\
-The distance punishments are bases on those found in the test in appendix \ref{subsec:est_path_length}. The distance punishments was scaled with a factor of 1.2 to make the distance a bigger factor in final path.\\
-The probabilities used for each room was found in the test in appendix \ref{subsec:probability_test}. These probabilities was divided by the maximal value and scaled by a factor of 20. This was done to ensure that the total reward for entering a room the first time would be positive.\\
+The test was conducted using the world 5-room world seen in figure (\ref{fig:5_room_world_path}).\\
+The distance punishments are bases on those found in the test in appendix (\ref{subsec:est_path_length}). The distance punishments was scaled with a factor of 1.2 to make the distance a bigger factor in final path.\\
+The probabilities used for each room was found in the test in appendix (\ref{subsec:probability_test}). These probabilities was divided by the maximal value and scaled by a factor of 20. This was done to ensure that the total reward for entering a room the first time would be positive.\\
 All tests ran for 2000 episodes, with $\epsilon$ varying from 0.5 to 0.05. $\epsilon$ was started on 0.5 and reduced by 0.05 for each 200 episodes, enabling the algorithm to make larger learning steps in the beginning.  
 \begin{figure}[H]
 	\centering
@@ -44,7 +44,7 @@ In the following tables, the parameters for the test can be seen.\\
 		Room 3 to room 5  & -2.544\\
 		\hline
 	\end{tabular}
-	\caption{Table of the distance punishments. The distances are found in the test in appendix \ref{subsec:est_path_length}}
+	\caption{Table of the distance punishments. The distances are found in the test in appendix (\ref{subsec:est_path_length})}
 	\label{tab:distance_punishment_5_rooms_2}
 \end{table}
 \end{minipage}

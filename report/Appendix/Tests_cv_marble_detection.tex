@@ -7,8 +7,8 @@ The purpose of this test was to test the performance of the marble detecting met
 In this test a total of 5 tests was conducted to see the performance of the method in different cases. The tests was conducted by first separation the marbles from the background using the method \texttt{find\_color()}, and the run the marble detection method on the binary image.	
 
 \subsubsection*{Data}
-On figure \ref{fig:md_1} a single marbe can be seen, without another marble being visible behind it or being blocked a wall. This marble was detected without any errors, meaning that the marble detecting method works very well in this case.\\
-On figure \ref{fig:md_2} two marbles can be seen, one further into the distance and behind the first closer marble. In this case the methods only detects a single marble consistent with the closer marble, but the center slightly shifted to the right, due to the methods inability do distinguish the two marbles. In this case direction to the marble would be slightly off, which could lead to the robot missing the marble.\\   
+In figure (\ref{fig:md_1}) a single marble can be seen, without another marble being visible behind it or being blocked a wall. This marble was detected without any errors, meaning that the marble detecting method works very well in this case.\\
+In figure (\ref{fig:md_2}) two marbles can be seen, one further into the distance and behind the first closer marble. In this case the methods only detects a single marble consistent with the closer marble, but the center slightly shifted to the right, due to the methods inability do distinguish the two marbles. In this case direction to the marble would be slightly off, which could lead to the robot missing the marble.\\   
 \begin{figure}[H]
 	\centering
 	\begin{subfigure}[b]{0.45\textwidth}
@@ -27,8 +27,8 @@ On figure \ref{fig:md_2} two marbles can be seen, one further into the distance 
 	\label{fig:md_2}
 \end{figure}
 
-On figure \ref{fig:md_3} two marbles can be seen, on further away than the other. There are no overlap between the two marbles resulting in good detection of both marbles.\\
-On figure \ref{fig:md_4} a single very close marble can be seen. It can be seen that the detected marble has a smaller radius than the actual marble, due to the fact that a part of the marble are out of the image. This means that center of the marble are shifted slightly downwards.
+In figure (\ref{fig:md_3}) two marbles can be seen, on further away than the other. There are no overlap between the two marbles resulting in good detection of both marbles.\\
+In figure (\ref{fig:md_4}) a single very close marble can be seen. It can be seen that the detected marble has a smaller radius than the actual marble, due to the fact that a part of the marble are out of the image. This means that center of the marble are shifted slightly downwards.
 \begin{figure}[H]
 	\centering
 	\begin{subfigure}[b]{0.45\textwidth}
@@ -47,7 +47,7 @@ On figure \ref{fig:md_4} a single very close marble can be seen. It can be seen 
 	\caption{Marble detection of scenario 3 and 4}
 \end{figure}
 
-On figure \ref{fig:md_5} two marbles can be seen, one slightly covered by a wall, and the other slightly in the image. Both marbles was detected correctly. The closet one with a slightly off radius and the one further away with a slightly off center. 
+In figure (\ref{fig:md_5}) two marbles can be seen, one slightly covered by a wall, and the other slightly in the image. Both marbles was detected correctly. The closet one with a slightly off radius and the one further away with a slightly off center. 
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=0.45\textwidth]{CV/camera_detected_marbles_6}

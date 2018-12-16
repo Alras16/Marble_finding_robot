@@ -6,60 +6,57 @@
 For the robot to be able to avoid obstacles as well as navigating through the map, Fuzzy Control will be used. For short the a fuzzy controller consist of a fuzzification interface that converts input into information that can be used by the inference mechanism. The inference mechanism evaluates the giving input in addition to the rule base, which is based on the expert's linguistic description. The output of the fuzzy controller will then be defuzzified to crisp values which will be used as input to control the plant (robot). The following linguistic terms will be used:
 
 \begin{itemize}
-\item The linguistic input variable called $ObstacleDirection = \{right, center, left\}$ with the named linguistic values. The universe of discourse is set to ${U} = [-1.6, 1.6]$. It defines the direction towards and obstacle and the choose of \textit{U} is based on the angle range from the sensor.   
-\item The linguistic input variable called $obstacleFree = \{right, center, left\}$ with the named linguistic values. The universe of discourse is set to ${U} = [-1.6, 1.6]$. It defines the angle to which and obstacle is furthest away from the robot. This is used when the robot is driving towards a corner and has to avoid collision. The choose of \textit{U} is based on the angle range from the sensor.
-\item The linguistic input variable called $ObstacleDistance = \{veryclose, close, far\}$ with the named linguistic values.  The universe of discourse is set to ${U} = [0, 10]$. It defines the distance to an obstacle and the chose of \textit{U} is based on the sensors maximum detection range.
-\item The linguistic input variable called $MarbleDirection = \{right, center, left\}$ with the named linguistic values. The universe of discourse is set to ${U} = [-30, 30]$. It defines the direction from the robot's point of view as a changes in pixel values in the picture from the camera placed on the robot. The universe of discourse was found as a suitable deviation from the center point.
-\item The linguistic variable called $MarbleFound = \{no, yes\}$ with the named linguistic values.  The universe of discourse is set to ${U} = [0, 50]$. It defines if an marble is detected where the input is a radius of the marble on the picture from the camera on the robot. The chose of \textit{U} was found suitable. 
-\item The linguistic variable called $GoalDirection = \{right, straight, left\}$ with the named linguistic variables. The universe of discourse is set to ${U} = [-3.14, 3.14]$. It defines the direction in which a target location is located. The chose of \textit{U} is based on a complete rotation from the robot's point of view. 
-\item The linguistic input variable $BoundaryDirection = \{right, straight, left\}$ with the named linguistic values. The universe of discourse is set to ${U} = [-3.14, 3.14]$. It defines boundary direction on an obstacle in which the robot has to follow if it is in an obstacle following behaviour. The chose of \textit{U} is based on a complete rotation from the robot's point of view. 
-\item The linguistic output variable called $SteerDirection = \{sharpright, right, softright, straight, softleft, left$, $sharpleft\}$ with the named linguistic values. The universe of discourse is set to ${U} = [-1.57, 1.57]$. It defines the direction in which the robot has to navigate. The chose of \textit{U} was found suitable.
-\item The linguistic output variable called $Velocity = \{backward, softbackward, softforward, forward\}$ with the named linguistic values. The universe of discourse is set to ${U} = [-1, 1]$. It defines the velocity giving to the robot and the chose of \textit{U} was found suitable for the implementation of the controller.      
+\item The linguistic input variable called $ObstacleDirection = \{right, center, left\}$ with the named linguistic values. The universe of discourse is set to ${U} = [-1.6, 1.6]$. It defines the direction towards and obstacle and the choose of \textit{U} is based on the angle range from the sensor. The membership function for this linguistic variable can be seen in figure (\ref{fig:MSF_Obstacle_direction}).
+\item The linguistic input variable called $obstacleFree = \{right, center, left\}$ with the named linguistic values. The universe of discourse is set to ${U} = [-1.6, 1.6]$. It defines the angle to which and obstacle is furthest away from the robot. This is used when the robot is driving towards a corner and has to avoid collision. The choose of \textit{U} is based on the angle range from the sensor. The membership function for this linguistic variable can be seen in figure (\ref{fig:MSF_Obstacle_free}).
+\item The linguistic input variable called $ObstacleDistance = \{veryclose, close, far\}$ with the named linguistic values.  The universe of discourse is set to ${U} = [0, 10]$. It defines the distance to an obstacle and the chose of \textit{U} is based on the sensors maximum detection range. The membership function for this linguistic variable can be seen in figure (\ref{fig:MSF_Obstacle_distance}).
+\item The linguistic input variable called $MarbleDirection = \{right, center, left\}$ with the named linguistic values. The universe of discourse is set to ${U} = [-30, 30]$. It defines the direction from the robot's point of view as a changes in pixel values in the picture from the camera placed on the robot. The universe of discourse was found as a suitable deviation from the center point. The membership function for this linguistic variable can be seen in figure (\ref{fig:MSF_Marble_direction}).
+\item The linguistic variable called $MarbleFound = \{no, yes\}$ with the named linguistic values.  The universe of discourse is set to ${U} = [0, 50]$. It defines if an marble is detected where the input is a radius of the marble on the picture from the camera on the robot. The chose of \textit{U} was found suitable. The membership function for this linguistic variable can be seen in figure (\ref{fig:MSF_Marble_found}).
+\item The linguistic variable called $GoalDirection = \{right, straight, left\}$ with the named linguistic variables. The universe of discourse is set to ${U} = [-3.14, 3.14]$. It defines the direction in which a target location is located. The chose of \textit{U} is based on a complete rotation from the robot's point of view. The membership function for this linguistic variable can be seen in figure (\ref{fig:MSF_Goal_direction}).
+	\item The linguistic input variable $BoundaryDirection = \{right, straight, left\}$ with the named linguistic values. The universe of discourse is set to ${U} = [-3.14, 3.14]$. It defines boundary direction on an obstacle in which the robot has to follow if it is in an obstacle following behaviour. The chose of \textit{U} is based on a complete rotation from the robot's point of view. The membership function for this linguistic variable can be seen in figure (\ref{fig:MSF_Boundary_direction}).
+\item The linguistic output variable called $SteerDirection = \{sharpright, right, softright, straight, softleft, left$, $sharpleft\}$ with the named linguistic values. The universe of discourse is set to ${U} = [-1.57, 1.57]$. It defines the direction in which the robot has to navigate. The chose of \textit{U} was found suitable. The membership function for this linguistic variable can be seen in figure (\ref{fig:MSF_Steer_direction}).
+\item The linguistic output variable called $Velocity = \{backward, softbackward, softforward, forward\}$ with the named linguistic values. The universe of discourse is set to ${U} = [-1, 1]$. It defines the velocity giving to the robot and the chose of \textit{U} was found suitable for the implementation of the controller. The membership function for this linguistic variable can be seen in figure (\ref{fig:MSF_Velocity}).   
 \end{itemize}
-\todo[inline]{maybe a reference to all figures from these linguistic values}
 In order for the inference mechanism to work, one has to define a rule base in which the linguistic variables and values are used. To be able to move the robot, find marbles and avoid obstacles the following rule base has been defined:  
 
 \begin{itemize}
-\item {\large \textbf{Rule 1:}} \textbf{\textit{if}} \textit{ObstacleDistance} is veryclose and \textit{ObstacleDirection} is left and \textit{MarbleFound} is no \textbf{\textit{then}} \textit{SteerDirection} is softright
+\item {\large \textbf{Rule 1:}} \textbf{\textit{if}} \textit{ObstacleDistance} is \textit{veryclose} and \textit{ObstacleDirection} is \textit{left} and \textit{MarbleFound} is \textit{no} \textbf{\textit{then}} \textit{SteerDirection} is \textit{softright}
  
-\item {\large \textbf{Rule 2:}} \textbf{\textit{if}} \textit{ObstacleDistance} is veryclose and \textit{ObstacleDirection} is right and \textit{MarbleFound} is no \textbf{\textit{then}} \textit{SteerDirection} is softleft
+\item {\large \textbf{Rule 2:}} \textbf{\textit{if}} \textit{ObstacleDistance} is \textit{veryclose} and \textit{ObstacleDirection} is \textit{right} and \textit{MarbleFound} is \textit{no} \textbf{\textit{then}} \textit{SteerDirection} is \textit{softleft}
  
-\item {\large \textbf{Rule 3:}} \textbf{\textit{if}} \textit{ObstacleDistance} is veryclose and \textit{ObstacleDirection} is center and \textit{ObstacleFree} is left and \textit{MarbleFound} is no \textbf{\textit{then}} \textit{SteerDirection} is softleft
+\item {\large \textbf{Rule 3:}} \textbf{\textit{if}} \textit{ObstacleDistance} is \textit{veryclose} and \textit{ObstacleDirection} is \textit{center} and \textit{ObstacleFree} is \textit{left} and \textit{MarbleFound} is \textit{no} \textbf{\textit{then}} \textit{SteerDirection} is \textit{softleft}
  
-\item {\large \textbf{Rule 4:}} \textbf{\textit{if}} \textit{ObstacleDistance} is veryclose and \textit{ObstacleDirection} is center and \textit{ObstacleFree} is right and \textit{MarbleFound} is no \textbf{\textit{then}} \textit{SteerDirection} is softright
+\item {\large \textbf{Rule 4:}} \textbf{\textit{if}} \textit{ObstacleDistance} is \textit{veryclose} and \textit{ObstacleDirection} is \textit{center} and \textit{ObstacleFree} is \textit{right} and \textit{MarbleFound} is \textit{no} \textbf{\textit{then}} \textit{SteerDirection} is \textit{softright}
  
-\item {\large \textbf{Rule 5:}} \textbf{\textit{if}} \textit{ObstacleDistance} is veryclose and \textit{MarbleFound} is no \textbf{\textit{then}} \textit{Velocity} is forward
+\item {\large \textbf{Rule 5:}} \textbf{\textit{if}} \textit{ObstacleDistance} is \textit{veryclose} and \textit{MarbleFound} is \textit{no} \textbf{\textit{then}} \textit{Velocity} is \textit{forward}
 
-\item {\large \textbf{Rule 6:}} \textbf{\textit{if}} \textit{ObstacleDistance} is close and \textit{MarbleFound} is no and \textit{BoundaryDirection} is left and \textit{GoalDirection} is left \textbf{\textit{then}} \textit{SteerDirection} is softleft
+\item {\large \textbf{Rule 6:}} \textbf{\textit{if}} \textit{ObstacleDistance} is \textit{close} and \textit{MarbleFound} is \textit{no} and \textit{BoundaryDirection} is \textit{left} and \textit{GoalDirection} is \textit{left} \textbf{\textit{then}} \textit{SteerDirection} is \textit{softleft}
  
-\item {\large \textbf{Rule 7:}} \textbf{\textit{if}} \textit{ObstacleDistance} is close and \textit{MarbleFound} is no and \textit{BoundaryDirection} is right and \textit{GoalDirection} is right \textbf{\textit{then}} \textit{SteerDirection} is softright
+\item {\large \textbf{Rule 7:}} \textbf{\textit{if}} \textit{ObstacleDistance} is \textit{close} and \textit{MarbleFound} is \textit{no} and \textit{BoundaryDirection} is \textit{right} and \textit{GoalDirection} is \textit{right} \textbf{\textit{then}} \textit{SteerDirection} is \textit{softright}
  
-\item {\large \textbf{Rule 8:}} \textbf{\textit{if}} \textit{ObstacleDistance} is close and \textit{MarbleFound} is no and \textit{BoundaryDirection} is left and \textit{GoalDirection} is right \textbf{\textit{then}} \textit{SteerDirection} is softleft
+\item {\large \textbf{Rule 8:}} \textbf{\textit{if}} \textit{ObstacleDistance} is \textit{close} and \textit{MarbleFound} is \textit{no} and \textit{BoundaryDirection} is \textit{left} and \textit{GoalDirection} is \textit{right} \textbf{\textit{then}} \textit{SteerDirection} is \textit{softleft}
  
-\item {\large \textbf{Rule 9:}} \textbf{\textit{if}} \textit{ObstacleDistance} is close and \textit{MarbleFound} is no and \textit{BoundaryDirection} is right and \textit{GoalDirection} is left \textbf{\textit{then}} \textit{SteerDirection} is softright
+\item {\large \textbf{Rule 9:}} \textbf{\textit{if}} \textit{ObstacleDistance} is \textit{close} and \textit{MarbleFound} is \textit{no} and \textit{BoundaryDirection} is \textit{right} and \textit{GoalDirection} is \textit{left} \textbf{\textit{then}} \textit{SteerDirection} is \textit{softright}
  
-\item {\large \textbf{Rule 10:}} \textbf{\textit{if}} \textit{ObstacleDistance} is close and \textit{MarbleFound} is no and \textit{BoundaryDirection} is straight then \textit{SteerDirection} is straight
+\item {\large \textbf{Rule 10:}} \textbf{\textit{if}} \textit{ObstacleDistance} is \textit{close} and \textit{MarbleFound} is \textit{no} and \textit{BoundaryDirection} is \textit{straight} then \textit{SteerDirection} is \textit{straight}
 
-\item {\large \textbf{Rule 11:}} \textbf{\textit{if}} \textit{ObstacleDistance} is close and \textit{MarbleFound} is no \textbf{\textit{then}} \textit{Velocity} is forward
+\item {\large \textbf{Rule 11:}} \textbf{\textit{if}} \textit{ObstacleDistance} is \textit{close} and \textit{MarbleFound} is \textit{no} \textbf{\textit{then}} \textit{Velocity} is \textit{forward}
 
-\item {\large \textbf{Rule 12:}} \textbf{\textit{if}} \textit{ObstacleDistance} is far and \textit{MarbleFound} is no and \textit{GoalDirection} is right \textbf{\textit{then}} \textit{SteerDirection} is right
+\item {\large \textbf{Rule 12:}} \textbf{\textit{if}} \textit{ObstacleDistance} is \textit{far} and \textit{MarbleFound} is \textit{no} and \textit{GoalDirection} is \textit{right} \textbf{\textit{then}} \textit{SteerDirection} is \textit{right}
 
-\item {\large \textbf{Rule 13:}} \textbf{\textit{if}} \textit{ObstacleDistance} is far and \textit{MarbleFound} is no and \textit{GoalDirection} is left \textbf{\textit{then}} \textit{SteerDirection} is left
+\item {\large \textbf{Rule 13:}} \textbf{\textit{if}} \textit{ObstacleDistance} is \textit{far} and \textit{MarbleFound} is \textit{no} and \textit{GoalDirection} is \textit{left} \textbf{\textit{then}} \textit{SteerDirection} is \textit{left}
 
-\item {\large \textbf{Rule 14:}} \textbf{\textit{if}} \textit{ObstacleDistance} is far and \textit{MarbleFound} is no and \textit{GoalDirection} is straight \textbf{\textit{then}} \textit{SteerDirection} is straight
+\item {\large \textbf{Rule 14:}} \textbf{\textit{if}} \textit{ObstacleDistance} is \textit{far} and \textit{MarbleFound} is \textit{no} and \textit{GoalDirection} is \textit{straight} \textbf{\textit{then}} \textit{SteerDirection} is \textit{straight}
  
-\item {\large \textbf{Rule 15:}} \textbf{\textit{if}} \textit{ObstacleDistance} is far and \textit{MarbleFound} is no and \textit{GoalDirection} is straight \textbf{\textit{then}} \textit{Speed} is forward
+\item {\large \textbf{Rule 15:}} \textbf{\textit{if}} \textit{ObstacleDistance} is \textit{far} and \textit{MarbleFound} is \textit{no} and \textit{GoalDirection} is \textit{straight} \textbf{\textit{then}} \textit{Speed} is \textit{forward}
 
-\item {\large \textbf{Rule 16:}} \textbf{\textit{if}} \textit{MarbleFound} is yes and \textit{MarbleDirection} is left \textbf{\textit{then}} \textit{SteerDirection} is softleft
+\item {\large \textbf{Rule 16:}} \textbf{\textit{if}} \textit{MarbleFound} is \textit{yes} and \textit{MarbleDirection} is \textit{left} \textbf{\textit{then}} \textit{SteerDirection} is \textit{softleft}
 
-\item {\large \textbf{Rule 17:}} \textbf{\textit{if}} \textit{MarbleFound} is yes and \textit{MarbleDirection} is right \textbf{\textit{then}} \textit{SteerDirection} is softright
+\item {\large \textbf{Rule 17:}} \textbf{\textit{if}} \textit{MarbleFound} is \textit{yes} and \textit{MarbleDirection} is \textit{right} \textbf{\textit{then}} \textit{SteerDirection} is \textit{softright}
  
-\item {\large \textbf{Rule 18:}} \textbf{\textit{if}} \textit{MarbleFound} is yes and \textit{MarbleDirection} is center \textbf{\textit{then}} \textit{Velocity} is forward
+\item {\large \textbf{Rule 18:}} \textbf{\textit{if}} \textit{MarbleFound} is \textit{yes} and \textit{MarbleDirection} is \textit{center} \textbf{\textit{then}} \textit{Velocity} is \textit{forward}
 \end{itemize}
 
-Now the defuzzification interface will convert the conclusions from the inference mechanism into crisp values to be used as input to the plant. The following membership functions will be used as seen in the figures below.  
-
-\todo[inline]{Texttt should be used to mark all linguistic variables and values}
+The inputs to the fuzzy controller can be seen in \ref{fig:MSF_Overview}. It takes the inputs and makes a fuzzyfication of the crisp values which will be used in the controller. The inference mechanism will evaluate the fuzzyfied inputs by the rule base of the fuzzy controller. The defuzzification interface will then convert the conclusions into crisp values as outputs of the fuzzy controller to be used as input to the plant. 
 
 \begin{figure}[H]
 	\centering
@@ -67,6 +64,8 @@ Now the defuzzification interface will convert the conclusions from the inferenc
 	\caption{Illustration of inputs and outputs to the fuzzy controller.}
 	\label{fig:MSF_Overview}
 \end{figure}
+
+The membership functions used in the fuzzy controller can be seen in the figures below.
 
 \begin{figure}[H]
 	\centering
