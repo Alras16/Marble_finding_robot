@@ -15,23 +15,21 @@ ct::robot_action FuzzyBugController::getControlOutput(ct::marble marble_input, c
     ct::angle_to_obstacle fAngle;
 
     obstacleDistance = m_pcLaserScanner->getClosestDistance(-1.57, 1.57);
-    fAngle = m_pcLaserScanner->getClosestDirection(-1.2,1.2);
-
-    //std::cout << fAngle.fFurthestReading<< std::endl;
+    fAngle = m_pcLaserScanner->getClosestDirection(-1.57,1.57);
 
     m_pflObstacleDistance->setValue(obstacleDistance);
-    m_pflObstacleDirection->setValue(fAngle.fSmallestReading);
-    m_pflObstacleFree->setValue(fAngle.fFurthestReading);
+    m_pflObstacleDirection->setValue((-1)*fAngle.fSmallestReading);
+    m_pflObstacleFree->setValue((-1)*fAngle.fFurthestReading);
     m_pflMarbleFound->setValue(marble_input.radius);
     m_pflMarbleDirection->setValue(marble_input.distance_to_center);
-    m_pflGoalDirection->setValue(angle.orientation_to_goal);
-    m_pflBoundaryDirection->setValue(angle.orientation_to_obstacle);
+    m_pflGoalDirection->setValue((-1)*angle.orientation_to_goal);
+    m_pflBoundaryDirection->setValue((-1)*angle.orientation_to_obstacle);
 
    // std::cout << "FL - Distance " << m_pcLaserScanner->getClosestDistance(-1.57, 1.57) << ", direction " << m_pcLaserScanner->getClosestDirection(-1.57, 1.57) << std::endl;
 
     m_pcFLEngine->process();
 
-    robot_action_output.dir = m_pflSteerDirection->getValue();
+    robot_action_output.dir = (m_pflSteerDirection->getValue());
     robot_action_output.speed = m_pflSpeed->getValue();
 
     return robot_action_output;
@@ -57,7 +55,7 @@ void FuzzyBugController::buildController()
     m_pflGoalDirection     = m_pcFLEngine->getInputVariable("GoalDirection");
     m_pflBoundaryDirection = m_pcFLEngine->getInputVariable("BoundaryDirection");
     m_pflSteerDirection    = m_pcFLEngine->getOutputVariable("SteerDirection");
-    m_pflSpeed             = m_pcFLEngine->getOutputVariable("Speed");
+    m_pflSpeed             = m_pcFLEngine->getOutputVariable("Velocity");
 }
 
 /*************************************************************/

@@ -28,34 +28,34 @@ InputVariable: ObstacleDistance
 
 InputVariable: MarbleDirection
   enabled: true
-  range: -200 200
+  range: -30 30
   lock-range: false
-  term: marbleRight Ramp -1 -10
-  term: marbleCenter Triangle -3 0 3
-  term: marbleLeft Ramp 1 10
+  term: right Ramp -5 -15
+  term: center Triangle -20 0 20
+  term: left Ramp 5 15
 
 InputVariable: MarbleFound
   enabled: true
-  range: 0 100
+  range: 0 50
   lock-range: false
-  term: no Ramp 8 0
-  term: yes Ramp 5 30
+  term: no Ramp 10 0
+  term: yes Ramp 8 15
 
 InputVariable: GoalDirection
   enabled: true
   range: -3.14 3.14
   lock-range: false
-  term: goalLeft Ramp 0 -0.7
-  term: goalStraight Triangle -0.5 0 0.5
-  term: goalRight Ramp 0 0.7
+  term: right Ramp 0 -0.7
+  term: straight Triangle -0.5 0 0.5
+  term: left Ramp 0 0.7
 
 InputVariable: BoundaryDirection
   enabled: true
   range: -3.14 3.14
   lock-range: false
-  term: boundLeft Ramp 0 -0.7
-  term: boundStraight Triangle -0.5 0 0.5
-  term: boundRight Ramp 0 0.7
+  term: right Ramp 0 -0.7
+  term: straight Triangle -0.5 0 0.5
+  term: left Ramp 0 0.7
 
 OutputVariable: SteerDirection
   enabled: true
@@ -69,13 +69,13 @@ OutputVariable: SteerDirection
   term: right      Triangle -1.57 -1.3 -1
   term: softright  Triangle -1.3 -1.1 -0.9
   term: straight   Triangle -0.6 0 0.6
-  term: softleft   Triangle 0.9 1.1 1.2
+  term: softleft   Triangle 0.9 1.1 1.3
   term: left       Triangle 1 1.3 1.57
   term: sharpleft  Ramp  1 1.57
 
-OutputVariable: Speed
+OutputVariable: Velocity
   enabled: true
-  range: -1 1
+  range: -1.5 1.5
   lock-range: false
   aggregation: Maximum
   defuzzifier: Centroid 100
@@ -94,25 +94,25 @@ RuleBlock: mamdani
   implication: Minimum
   activation: General
 
-  rule: if ObstacleDistance is veryclose and ObstacleDirection is left and MarbleFound is no then SteerDirection is softleft
-  rule: if ObstacleDistance is veryclose and ObstacleDirection is right and MarbleFound is no then SteerDirection is softright
-  rule: if ObstacleDistance is veryclose and ObstacleDirection is center and ObstacleFree is left and MarbleFound is no then SteerDirection is softright
-  rule: if ObstacleDistance is veryclose and ObstacleDirection is center and ObstacleFree is right and MarbleFound is no then SteerDirection is softleft
-  rule: if ObstacleDistance is veryclose and MarbleFound is no then Speed is forward
+  rule: if ObstacleDistance is veryclose and ObstacleDirection is left and MarbleFound is no then SteerDirection is softright
+  rule: if ObstacleDistance is veryclose and ObstacleDirection is right and MarbleFound is no then SteerDirection is softleft
+  rule: if ObstacleDistance is veryclose and ObstacleDirection is center and ObstacleFree is left and MarbleFound is no then SteerDirection is softleft
+  rule: if ObstacleDistance is veryclose and ObstacleDirection is center and ObstacleFree is right and MarbleFound is no then SteerDirection is softright
+  rule: if ObstacleDistance is veryclose and MarbleFound is no then Velocity is forward
 
-  rule: if ObstacleDistance is close and MarbleFound is no and BoundaryDirection is boundLeft and GoalDirection is goalLeft then SteerDirection is softleft
-  rule: if ObstacleDistance is close and MarbleFound is no and BoundaryDirection is boundRight and GoalDirection is goalRight then SteerDirection is softright
-  rule: if ObstacleDistance is close and MarbleFound is no and BoundaryDirection is boundLeft and GoalDirection is goalRight then SteerDirection is softright
-  rule: if ObstacleDistance is close and MarbleFound is no and BoundaryDirection is boundRight and GoalDirection is goalLeft then SteerDirection is softleft
-  rule: if ObstacleDistance is close and MarbleFound is no and BoundaryDirection is boundStraight then SteerDirection is straight
-  rule: if ObstacleDistance is close and MarbleFound is no then Speed is forward
+  rule: if ObstacleDistance is close and MarbleFound is no and BoundaryDirection is left and GoalDirection is left then SteerDirection is softleft
+  rule: if ObstacleDistance is close and MarbleFound is no and BoundaryDirection is right and GoalDirection is right then SteerDirection is softright
+  rule: if ObstacleDistance is close and MarbleFound is no and BoundaryDirection is left and GoalDirection is right then SteerDirection is softleft
+  rule: if ObstacleDistance is close and MarbleFound is no and BoundaryDirection is right and GoalDirection is left then SteerDirection is softright
+  rule: if ObstacleDistance is close and MarbleFound is no and BoundaryDirection is straight then SteerDirection is straight
+  rule: if ObstacleDistance is close and MarbleFound is no then Velocity is forward
 
-  rule: if ObstacleDistance is far and MarbleFound is no and GoalDirection is goalRight then SteerDirection is right
-  rule: if ObstacleDistance is far and MarbleFound is no and GoalDirection is goalLeft then SteerDirection is left
-  rule: if ObstacleDistance is far and MarbleFound is no and GoalDirection is goalStraight then SteerDirection is straight
-  rule: if ObstacleDistance is far and MarbleFound is no and GoalDirection is goalStraight then Speed is forward
+  rule: if ObstacleDistance is far and MarbleFound is no and GoalDirection is right then SteerDirection is right
+  rule: if ObstacleDistance is far and MarbleFound is no and GoalDirection is left then SteerDirection is left
+  rule: if ObstacleDistance is far and MarbleFound is no and GoalDirection is straight then SteerDirection is straight
+  rule: if ObstacleDistance is far and MarbleFound is no and GoalDirection is straight then Velocity is forward
 
-  rule: if MarbleFound is yes and MarbleDirection is marbleLeft then SteerDirection is softleft
-  rule: if MarbleFound is yes and MarbleDirection is marbleRight then SteerDirection is softright
-  rule: if MarbleFound is yes and MarbleDirection is marbleCenter then Speed is forward
+  rule: if MarbleFound is yes and MarbleDirection is left then SteerDirection is softleft
+  rule: if MarbleFound is yes and MarbleDirection is right then SteerDirection is softright
+  rule: if MarbleFound is yes and MarbleDirection is center then Velocity is forward
 

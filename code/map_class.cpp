@@ -72,7 +72,6 @@ std::vector<cv::Point> map_class::find_color(int color)
             cv::Vec3b cur_pixel = *ori_map.ptr<cv::Vec3b>(i,j);
             if ((int(cur_pixel[0]) == color) && (int(cur_pixel[1]) == color) && (int(cur_pixel[2]) == color))
                 points.push_back(cv::Point(j,i));
-
         }
     return points;
 }
@@ -101,13 +100,12 @@ void map_class::init_rooms(int numb_of_rooms)
     {
         for (int i = 0; i < numb_of_rooms; i++)
         {
-            ct::room tempRoom;
+            ct::room tempRoom; // = new ct::room;
             tempRoom.roomNumber = roomNumb++;
             tempRoom.probabilityOfMarbles = 0.0;
             std::vector<cv::Point> temp = find_color(color);
             tempRoom.numbOfPixels = temp.size();
             tempRoom.coordinates = temp;
-            tempRoom.roomNumber = roomNumb++;
             listOfRooms.push_back(tempRoom);
             color -= 10;
         }

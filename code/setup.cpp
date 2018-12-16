@@ -33,8 +33,8 @@ void setup::lidarCallback(ConstLaserScanStampedPtr &msg)
     bool lidarCalledOne = true;
     laser_scanner.parseLaserScannerMessage(msg);
     cv::Point goal;
-    goal.x = -30;
-    goal.y = 13;
+    goal.x = 35;
+    goal.y = 16;
     std::vector<ct::polarPoint> data;
     cv::Point best_point_end, best_point_start, best_point;
     int point_number;
@@ -124,17 +124,10 @@ void setup::lidarCallback(ConstLaserScanStampedPtr &msg)
 
     }
 
-    cv::line(im, best_point_start * 16, best_point_end * 16, cv::Scalar(255, 100, 255, 255), 1,
-             cv::LINE_AA, 4);
-/*    pos_robot.obstacle_point = best_point;
-
-    std::cout << "Current pos: " << x_1 << "," << y_1 << "   " << "Obstacle pos: " << best_point.x <<","<< best_point.y << std::endl;
-    std::cout << obstacle_to_goal << std::endl;
-    std::cout << robot_to_goal << std::endl;
-    std::cout << robot_to_obstacle << std::endl;
-*/
-
-    //std::getchar();
+   // REMEMBER to uncomment when testing targent bug!!!!!!!!!
+   //  cv::line(im, best_point_start * 16, best_point_end * 16, cv::Scalar(255, 255, 100), 1,
+   //          cv::LINE_AA, 4);
+   // cv::circle(im, best_point_end, 3, cv::Scalar(0, 0, 255),-1);
 
       if (!lidarCalledOne)
           std::cout << "new data generated!" << std::endl;
@@ -148,6 +141,7 @@ void setup::lidarCallback(ConstLaserScanStampedPtr &msg)
                 cv::Point(10, 20), cv::FONT_HERSHEY_PLAIN, 1.0,
                 cv::Scalar(255, 0, 0));
 
+   // cv::imwrite("/media/kenni/usb1/linuxUbuntu/Robotics5semesterProject/Tests/TangentbugTest/Analysis5.png", im);
     mutex1.lock();
     cv::imshow("lidar", im);
     cv::waitKey(1);

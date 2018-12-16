@@ -3,7 +3,10 @@
 #include <ctime>
 
 
-motion_planning::motion_planning(){}
+motion_planning::motion_planning()
+{
+    former_position = cv::Point(0,0);
+}
 
 
 float motion_planning::target_location()
@@ -45,14 +48,14 @@ void motion_planning::get_room_info(std::vector<ct::room> rooms)
 
     for (unsigned i = 0; i < room_info.size(); i++)
     {
-       cv::circle(world,room_info[i].centerOfMassPic,3,cv::Scalar({255,255,0}),-1);
+       cv::circle(world,room_info[i].centerOfMassPic,2,cv::Scalar({0,255,255}),-1);
     }
 
    cv::imshow("World",world);
 
 }
 
-void motion_planning::show_path_of_robot(cv::Point pos, cv::Point room_start, cv::Point room_end, bool target_reached)
+void motion_planning::show_path_of_robot(cv::Point pos, cv::Point goal, cv::Point nextPoint, bool target_reached)
 
 {
     if (!dummy)
@@ -60,18 +63,22 @@ void motion_planning::show_path_of_robot(cv::Point pos, cv::Point room_start, cv
         cv::Point start;
         start.x = path_of_robot.cols/2;
         start.y = path_of_robot.rows/2;
-        cv::circle(path_of_robot,room_start,4,cv::Scalar({0,0,0}),-1);
-        cv::circle(path_of_robot,room_end,4,cv::Scalar({0,0,255}),-1);
+        cv::circle(path_of_robot,start,3,cv::Scalar({0,0,0}),-1);
+        cv::circle(path_of_robot,nextPoint,4,cv::Scalar({0,0,0}),-1);
         dummy++;
     }
-     cv::circle(path_of_robot,pos,1,cv::Scalar({100,255,255}),-1);
-     cv::imshow("Path of robot",path_of_robot);
 
-     if ( target_reached && (dummy == 1) )
-     {
-        cv::imwrite("/media/kenni/usb1/linuxUbuntu/Robotics5semesterProject/Tests/test3.png", path_of_robot);
-        dummy++;
-     }
+    cv::circle(path_of_robot,pos,1,cv::Scalar({0,0,255}),-1);
+    cv::imshow("Path of robot",path_of_robot);
+
+    if ( target_reached )
+    {
+       cv::circle(path_of_robot,nextPoint,3,cv::Scalar({255,0,0}),-1);
+       // cv::imwrite("/media/kenni/usb1/linuxUbuntu/Robotics5semesterProject/Tests/TangentbugTest/Analysis4.png", path_of_robot);
+       dummy++;
+    }
+
+
 }
 
 float motion_planning::homogeneous_transformation(ct::current_position robot, cv::Point goal)
@@ -129,21 +136,12 @@ float motion_planning::homogeneous_transformation(ct::current_position robot, cv
 void motion_planning::tangent_bug_algoritm(ct::current_position pos, std::vector<ct::room> Rooms){
 
 
-    cv::Point test_point, obstacle, obstacle_point;
-    ct::polarPoint robot_to_goal;
+    cv::Point obstacle;
     std::vector<ct::polarPoint> data = data_ori;
 
-    float result1, result2 = 1000, goal_x, goal_y, boundary_x, boundary_y,dis_robot_to_obstacle, dis_obstacle_to_goal, dis_robot_to_goal;
-    float d_followed, d_reach, shortest_distance_to_obstacle = 100;
-    cv::Point2f goal; // = Rooms[index].centerOfMass;
-
-    // Find the point on the obstacle (if there are any) that minimizes the path from the robot to the obstacle and then to the goal
-    goal.x = -30; //Rooms[index].centerOfMass.x;
-    goal.y = 13; //Rooms[index].centerOfMass.y;
-
-    d_followed = sqrt( pow((pos.obstacle_point.x-goal.x),2) + pow((pos.obstacle_point.y-goal.y),2));
-    d_reach = sqrt( pow((goal.x-pos.robot_pos.x),2) + pow((goal.y-pos.robot_pos.y),2));
-    dis_robot_to_goal = sqrt( pow((goal.x-pos.robot_pos.x),2)+pow((goal.y-pos.robot_pos.y),2));
+    float result1, result2 = 1000, boundary_x, boundary_y,dis_robot_to_obstacle, dis_obstacle_to_goal, dis_robot_to_goal;
+    float shortest_distance_to_obstacle = 100;
+    cv::Point2f goal(35, 16); // = Rooms[index].centerOfMass;
 
     for (int i = 0; i < data.size(); i++)
     {
@@ -176,9 +174,15 @@ void motion_planning::tangent_bug_algoritm(ct::current_position pos, std::vector
     // The laser scanner has radius 10 pixels. We have 72 dots per inch (dpi) and converting it to
     // to millimeter we multiply by 25.4. Thereby getting the result in mm which is converted to m in gazebo
 
-    obstacle_range.push_back( ((shortest_distance_to_obstacle/72)*25.4) );
-    pos.obstacle_point = obstacle;
+    dist_traveled += sqrt( pow((former_position.x - pos.robot_pos.x),2)+pow((former_position.y - pos.robot_pos.y),2));
+    former_position = pos.robot_pos;
 
+    obstacle_range.push_back( (((shortest_distance_to_obstacle*2)/72)*25.4) );
+    distance_traveled.push_back( (((dist_traveled*2)/72)*25.4) );
+
+
+    // Used for tests
+/*
     // Calculate running time of robot path
     timeval curTime;
     gettimeofday(&curTime, NULL);
@@ -188,44 +192,78 @@ void motion_planning::tangent_bug_algoritm(ct::current_position pos, std::vector
 
     time_steps.push_back( path_time/10000 );
 
-    // std::cout << "Time: " << path_time/10000 << std::endl;
-    //std:: cout << dis_robot_to_obstacle << std::endl;
-
-    if (dis_robot_to_goal < 0.5 && !target_location_reached )
+    if (dis_robot_to_goal < 1 && !target_allowed)
     {
-        std::ofstream myfile ("/media/kenni/usb1/linuxUbuntu/Robotics5semesterProject/Tests/test3.txt");
-          if (myfile.is_open())
+        target_allowed = true;
+
+        std::cout << "Target location reached!" << std::endl;
+
+        std::ofstream testRange ("/media/kenni/usb1/linuxUbuntu/Robotics5semesterProject/Tests/TangentbugTest/tangentbugObs.txt");
+          if (testRange.is_open())
           {
               for (int i = 0; i < obstacle_range.size(); i++)
               {
-                  myfile << time_steps[i];
-                  myfile << " ";
-                  myfile << obstacle_range[i];
-                  myfile << std::endl;
+                  testRange << time_steps[i];
+                  testRange << " ";
+                  testRange << obstacle_range[i];
+                  testRange << std::endl;
               }
-           myfile.close();
+           testRange.close();
           }
           else {
               std::cout << "Cannot open file!" << std::endl;
           }
 
+         std::ofstream testDis ("/media/kenni/usb1/linuxUbuntu/Robotics5semesterProject/Tests/TangentbugTest/tangentbugDis.txt");
+            if (testDis.is_open())
+            {
+                for (int j = 0; j < distance_traveled.size(); j++)
+                {
+                    testDis << time_steps[j];
+                    testDis << " ";
+                    testDis << distance_traveled[j];
+                    testDis << std::endl;
+                }
+             testDis.close();
+            }
+            else {
+                std::cout << "Cannot open file!" << std::endl;
+            }
         std::cout << "Target location reached!";
-        target_location_reached = true;
+      //  target_location_reached = true;
     }
-
-/*
-    std::cout << "Current pos: " << pos.robot_pos.x << "," << pos.robot_pos.y << "   " << "Obstacle pos: " << obstacle.x<<","<< obstacle.y << std::endl;
-    std::cout << dis_obstacle_to_goal << std::endl;
-    std::cout << dis_robot_to_goal << std::endl;
-    std::cout << dis_robot_to_obstacle << std::endl;
 */
+
     rotation.orientation_to_goal = homogeneous_transformation(pos,goal);
     rotation.orientation_to_obstacle = homogeneous_transformation(pos,pos.obstacle_point);
 
-    show_path_of_robot(pos.robot_pos_pic,Rooms[9].centerOfMassPic, Rooms[1].centerOfMassPic, target_location_reached);
+    goal.x = (goal.x*1.411764706+60)*5; // (120/2)/(85/2) = 1.411..
+    goal.y = ((-1)*goal.y*1.428571429+40)*5; // (80/2)/(56/2) = 1.428.
 
-  //  std::cout << "Current pos: " << pos.robot_pos.x << "," << pos.robot_pos.y << "   " << "Goal pos: " << goal.x<<","<< goal.y << std::endl;
+    show_path_of_robot(pos.robot_pos_pic, cv::Point(0,0), goal, target_location_reached);
+}
 
+void motion_planning::model_based_planner(ct::current_position pos, std::vector<cv::Point> points, float index, float indexRooms, cv::Point room)
+{
+   rotation.orientation_to_goal = homogeneous_transformation(pos,points[index]);
+   cv::Point start, nextPoint;
 
+   if ( sqrt( pow( (pos.robot_pos.x - points[index].x),2) + pow( (pos.robot_pos.y - points[index].y),2) ) < 0.02 )
+       target_location_reached = true;
+   else
+       target_location_reached = false;
+
+   cv::Point2f goal = points[points.size()-1];
+
+   start.x = (points[0].x*1.411764706+60)*5; // (120/2)/(85/2) = 1.411..
+   start.y = ((-1)*points[0].y*1.428571429+40)*5; // (80/2)/(56/2) = 1.428..
+
+   nextPoint.x = ((points[index].x)*1.411764706+60)*5; // (120/2)/(85/2) = 1.411..
+   nextPoint.y = (((-1)*points[index].y)*1.428571429+40)*5; // (80/2)/(56/2) = 1.428..
+
+   goal.x = (points[points.size()-1].x*1.411764706+60)*5; // (120/2)/(85/2) = 1.411..
+   goal.y = ((-1)*points[points.size()-1].y*1.428571429+40)*5; // (80/2)/(56/2) = 1.428.
+
+   show_path_of_robot(pos.robot_pos_pic, goal, nextPoint, target_location_reached);
 }
 
