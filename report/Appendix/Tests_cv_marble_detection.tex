@@ -3,10 +3,10 @@
 \subsection{Test of marble detection on camera data}
 \label{subsec:test_cv_marble}
 The purpose of this test was to test the performance of the marble detecting method on different scenarios of camera data.
-\subsubsection{Description of test}
+\subsubsection*{Description of test}
 In this test a total of 5 tests was conducted to see the performance of the method in different cases. The tests was conducted by first separation the marbles from the background using the method \texttt{find\_color()}, and the run the marble detection method on the binary image.	
 
-\subsubsection{Data}
+\subsubsection*{Data}
 On figure \ref{fig:md_1} a single marbe can be seen, without another marble being visible behind it or being blocked a wall. This marble was detected without any errors, meaning that the marble detecting method works very well in this case.\\
 On figure \ref{fig:md_2} two marbles can be seen, one further into the distance and behind the first closer marble. In this case the methods only detects a single marble consistent with the closer marble, but the center slightly shifted to the right, due to the methods inability do distinguish the two marbles. In this case direction to the marble would be slightly off, which could lead to the robot missing the marble.\\   
 \begin{figure}[H]
@@ -55,7 +55,7 @@ On figure \ref{fig:md_5} two marbles can be seen, one slightly covered by a wall
 	\label{fig:md_5}
 \end{figure}
 
-\subsubsection{Conclusion}
+\subsubsection*{Conclusion}
 It can be concluded that the marble detecting method works great if the entire marble are visible in the image without another marble hiding behind it. If another marble was to be seen behind the first, it can be concluded that the center would be shifted towards the marble further away. \\
 It can be concluded that marbles cut off on either the left or the right side would be detected correctly, but might have slightly off center and radius.\\
 It can be concluded that a marble cut off on either the top or the bottom would result in incorrectly  radius. The center would be placed correctly on the x-axis and off on the y-axis. 
